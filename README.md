@@ -11,3 +11,14 @@ Afspraken jinja template inheritance:
 - Gebruik een block voor de navigation bar.
 - Gebruik een block voor de footer.
 - Gebruik een block voor de sidebar.
+
+Folder structuur
+```python
+.
+├── database/  # sqlite database bestand(en)
+├── docs/      # documentatie van het project
+├── lib/       # libraries (database generator en gpt module)
+├── src/       # source code voor test-correct taxonomie programma
+├── static/    # Statische bestanden (PNG, JPG, JS, CSS, Ect.)
+└── template/  # Jinja/HTML bestanden
+```
