@@ -1,6 +1,16 @@
 {% extends "layout.html" %}
 {% block title %}Vragen Importeren{% endblock %}
 {% block content %}
-    <!-- Bestand selecteren (*.json) -->
-    <!-- Importeer knop -->
+    <div class="container d-flex justify-content-center align-items-center">
+        <form class="col-6 d-flex flex-column justify-content-center p-4 rounded-5 bg-white shadow-sm">
+            <h2 class="fw-light mb-4">Vragen importeren</h2>
+            <!-- Bestand selecteren (*.json) -->
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Importeer vragen vanaf je computer</label>
+                <input type="file" class="form-control" accept="application/json" id="formFile">
+            </div>
+            <!-- Importeer knop -->
+            <input type="submit" class="btn btn-primary" value="Importeer">
+        </form>
+    </div>
 {% endblock %}
