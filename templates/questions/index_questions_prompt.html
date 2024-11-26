@@ -1,0 +1,18 @@
+{% extends "questions/index_questions.html" %}
+{% block index_content %}
+    <!-- Als prompt selecteren: -->
+    <form class="row">
+        <!-- - Een prompt selecteren -->
+        <div class="col-auto">
+            <select required class="form-select" aria-label="Prompt selecteren">
+                <option value="" selected disabled class="text-secondary">Kies een prompt</option>
+                <option value="1">Prompt naam</option>
+                <option value="2">Andere prompt naam</option>
+            </select>
+        </div>
+        <!-- - Een genereer knop -->
+        <div class="col-auto">
+            <input type="submit" class="btn btn-primary" value="Genereer voorstel">
+        </div>
+    </form>
+{% endblock %}

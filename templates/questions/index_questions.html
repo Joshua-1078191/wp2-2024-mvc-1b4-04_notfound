@@ -1,17 +1,42 @@
 {% extends "layout.html" %}
 {% block title %}Vragen Importeren{% endblock %}
 {% block content %}
-    <!-- Common -->
-    <h1>Vragen indexeren maar taxonomie</h1>
+    <div class="mt-5 mb-5 d-flex justify-content-center align-items-baseline">
+        <div class="col-sm-10">
+            <!-- Common -->
+            <h1 class="fw-light">Vragen indexeren naar taxonomie</h1>
+            <h2 class="h5">Vraag:</h2>
+            <div class="overflow-auto">
+                <p>Wat is het verschil tussen geslachtelijke en ongeslachtelijke voortplanting? Geef bij beide vormen een voorbeeld van een organisme dat zich op die manier voortplant.</p>
+            </div>
 
-    <!-- Als prompt selecteren: -->
-    <!-- - Een prompt selecteren -->
-    <!-- - Een genereer knop -->
+            <h2 class="h5">Antwoord:</h2>
+            <div class="overflow-auto">
+                <ul>
+                    <li>
+                        Geslachtelijke voortplanting is een voortplantingsmethode waarbij twee ouders (met verschillende geslachtscellen: zaad- en eicellen) betrokken zijn. De nakomelingen krijgen een combinatie van genetisch materiaal van beide ouders. Voorbeeld: mensen, bloemen, en dieren zoals vogels.
+                    </li>
+                    <li>
+                        Ongeslachtelijke voortplanting is een voortplantingsmethode waarbij een organisme zich zonder hulp van een andere ouder voortplant. De
+                    </li>
+                </ul>
+            </div>
 
-    <!-- Als taxonomie beoordelen: -->
-    <!-- - ChatGPT's voorstel en reden geven -->
-    <!-- - Een taxonomie selecteren voor de vraag (standaard gezet naar chatgpt's antwoord) -->
-    <!-- - (optioneel) chatgpt's originele taxonomie categorie laten zien als redacteur een andere heeft gekozen    -->
-    <!-- - (optioneel) confirmatie popup als je taxonomie wijzigt -->
-    <!-- - Taxonomie opslaan knop -->
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th scope="row" class="col-2">Vak</th>
+                    <td>Biologie</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Onderwijsniveau</th>
+                    <td>HAVO</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Leerjaar</th>
+                    <td>3</td>
+                </tr>
+            </table>
+            {% block index_content %}{% endblock %}
+        </div>
+    </div>
 {% endblock %}
