@@ -20,5 +20,5 @@ Folder structuur
 ├── lib/       # libraries (database generator en gpt module)
 ├── src/       # source code voor test-correct taxonomie programma
 ├── static/    # Statische bestanden (PNG, JPG, JS, CSS, Ect.)
-└── template/  # Jinja/HTML bestanden
+└── templates/  # Jinja/HTML bestanden
 ```
