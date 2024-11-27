@@ -8,14 +8,14 @@ def main():
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_questions():
-    return render_template("questions/import_questions.html")
+    return render_template("questions/import_questions.html.jinja")
 
 @app.route('/index', methods=['GET', 'POST'])
 def index_questions_prompt():
     if request.method == 'POST':
         return redirect(url_for('index') + '/1')
-    return render_template("questions/index_questions_prompt.html")
+    return render_template("questions/index_questions_prompt.html.jinja")
 
 @app.route('/index/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(prompt_id:int):
-    return render_template("questions/index_questions_taxonomy.html")
+    return render_template("questions/index_questions_taxonomy.html.jinja")
