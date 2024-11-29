@@ -3,11 +3,14 @@
 {% block content %}
     <div>
         <h1>Prompt details</h1>
+
         <h2>Jorik prompt V1.0</h2>
+
         <p>Wij zijn vragen aan het categoriseren. Kun je de volgende vraag indexeren naar de taxonomie van Bloom? We willen maar 1 categorie per vraag.<br>
             <br>
             Kun je het antwoord geven in een RFC8259JSON met de volgende opmaak:
         </p>
+
         <code>
             {<br>
             &emsp;"categorie":"Categorie",<br>
@@ -15,16 +18,14 @@
             }
         </code>
 
-        <!--Code beneath this point needs to be edited.
-        <pre> element was used to fix the text position ,but it didn't inherit the <p> element
-        size, font etc.-->
-
-        <pre>
-            redacteur:                      Jorik<br>
-            Aangemaakt:                     <time datetime="2024-11-15">15-11-2024</time><br>
-            Toetsvragen gecategoriseerd:    190<br>
-            Toetsvragen correct:            171<br>
-            Toetsvragen incorrect:          19<br>
-        </pre>
+        <div>
+            <p>
+                redacteur: Jorik<br>
+                Aangemaakt: <time datetime="2024-11-15">15-11-2024</time><br>
+                Toetsvragen gecategoriseerd: 190<br>
+                Toetsvragen correct: 171<br>
+                Toetsvragen incorrect: 19<br>
+            </p>
+        </div>
     </div>
 {% endblock %}
