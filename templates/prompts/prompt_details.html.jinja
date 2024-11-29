@@ -8,18 +8,23 @@
             <br>
             Kun je het antwoord geven in een RFC8259JSON met de volgende opmaak:
         </p>
-        <p>
+        <code>
             {<br>
             &emsp;"categorie":"Categorie",<br>
             &emsp;"uitleg":"Uitleg"<br>
             }
-        </p>
-        <p>
-            redacteur: &emsp; Jorik<br>
-            Aangemaakt: &emsp; 15-11-2024<br>
-            Toetsvragen gecategoriseerd: &emsp; 190<br>
-            Toetsvragen correct: &emsp; 171<br>
-            Toetsvragen incorrect: &emsp; 19<br>
-        </p>
+        </code>
+
+        <!--Code beneath this point needs to be edited.
+        <pre> element was used to fix the text position ,but it didn't inherit the <p> element
+        size, font etc.-->
+
+        <pre>
+            redacteur:                      Jorik<br>
+            Aangemaakt:                     <time datetime="2024-11-15">15-11-2024</time><br>
+            Toetsvragen gecategoriseerd:    190<br>
+            Toetsvragen correct:            171<br>
+            Toetsvragen incorrect:          19<br>
+        </pre>
     </div>
 {% endblock %}
