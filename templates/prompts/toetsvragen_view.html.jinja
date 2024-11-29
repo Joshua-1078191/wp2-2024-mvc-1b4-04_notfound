@@ -2,16 +2,34 @@
 {% block title %} toetsvragen view {% endblock %}
 {% block content %}
     <h1>Lijst vragen beantwoord door {{ prompt }}</h1>
-    <h2>Zoekwoord</h2>
-    <h2>Niveau + jaar</h2>
-    <h2>Vak</h2>
-    <table>
+    <div>
+        <div>
+            <h2>Zoekwoord</h2>
+            <label for="filter-zoekwoord"></label>
+            <input type="text" id="filter-zoekwoord" autocomplete="off">
+
+        </div>
+        <!-- <input> elements may need to be replaced by <option> elements because in the wireframes
+        the 'niveau + jaar' and the 'vak' filters aren't <input> elements but <option> elements -->
+        <div>
+            <h2>Niveau + jaar</h2>
+            <label for="filter-niveau-en-jaar"></label>
+            <input type="text" id="filter-niveau-en-jaar" autocomplete="off">
+        </div>
+        <div>
+            <h2>Vak</h2>
+            <label for="filter-vak"></label>
+            <input type="text" id="filter-vak" autocomplete="off">
+        </div>
+    </div>
+    <div>
+        <table>
             <tr>
-                <th>Vraag</th>
-                <th>Vak</th>
-                <th>Niveau</th>
-                <th>Invoerdatum</th>
-                <th>Goed beantwoord</th>
+                <th scope="col">Vraag</th>
+                <th scope="col">Vak</th>
+                <th scope="col">Niveau</th>
+                <th scope="col">Invoerdatum</th>
+                <th scope="col">Goed beantwoord</th>
             </tr>
             <tr>
                 <td>Vraag 1</td>
@@ -20,7 +38,12 @@
                 <td>
                     <time datetime="2020-07-14">14-7-2020</time>
                 </td>
-                <td>Ja</td>
+                <td>
+                    <label for="checkbox-question-1"></label>
+                    <!-- <input> element with the checkbox needs to be disabled to show accurate information. However, if it's disabled
+                    it will look grey and won't stand out. This needs to be fixed later.-->
+                    <input type="checkbox" id="checkbox-question-2" disabled checked>
+                </td>
             </tr>
             <tr>
                 <td>Vraag 2</td>
@@ -29,7 +52,12 @@
                 <td>
                     <time datetime="2021-08-15">15-8-2021</time>
                 </td>
-                <td>Ja</td>
+                <td>
+                    <label for="checkbox-question-2"></label>
+                    <!-- <input> element with the checkbox needs to be disabled to show accurate information. However, if it's disabled
+                    it will look grey and won't stand out. This needs to be fixed later.-->
+                    <input type="checkbox" id="checkbox-question-2" disabled checked>
+                </td>
             </tr>
             <tr>
                 <td>Vraag 3</td>
@@ -38,7 +66,12 @@
                 <td>
                     <time datetime="2019-08-15">17-2-2019</time>
                 </td>
-                <td>Ja</td>
+                <td>
+                    <label for="checkbox-question-3"></label>
+                    <!-- <input> element with the checkbox needs to be disabled to show accurate information. However, if it's disabled
+                    it will look grey and won't stand out. This needs to be fixed later.-->
+                    <input type="checkbox" id="checkbox-question-2" disabled checked>
+                </td>
             </tr>
             <tr>
                 <td>Vraag 4</td>
@@ -47,7 +80,13 @@
                 <td>
                     <time datetime="2023-06-26">26-6-2023</time>
                 </td>
-                <td>Nee</td>
+                <td>
+                    <label for="checkbox-question-4"></label>
+                    <!-- <input> element with the checkbox needs to be disabled to show accurate information. However, if it's disabled
+                    it will look grey and won't stand out. This needs to be fixed later.-->
+                    <input type="checkbox" id="checkbox-question-2" disabled>
+                </td>
             </tr>
         </table>
+    </div>
 {% endblock %}
