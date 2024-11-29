@@ -1,5 +1,25 @@
 {% extends "layout.html.jinja" %}
 {% block title %} prompt details {% endblock %}
 {% block content %}
-
+    <div>
+        <h1>Prompt details</h1>
+        <h2>Jorik prompt V1.0</h2>
+        <p>Wij zijn vragen aan het categoriseren. Kun je de volgende vraag indexeren naar de taxonomie van Bloom? We willen maar 1 categorie per vraag.<br>
+            <br>
+            Kun je het antwoord geven in een RFC8259JSON met de volgende opmaak:
+        </p>
+        <p>
+            {<br>
+            &emsp;"categorie":"Categorie",<br>
+            &emsp;"uitleg":"Uitleg"<br>
+            }
+        </p>
+        <p>
+            redacteur: &emsp; Jorik<br>
+            Aangemaakt: &emsp; 15-11-2024<br>
+            Toetsvragen gecategoriseerd: &emsp; 190<br>
+            Toetsvragen correct: &emsp; 171<br>
+            Toetsvragen incorrect: &emsp; 19<br>
+        </p>
+    </div>
 {% endblock %}
