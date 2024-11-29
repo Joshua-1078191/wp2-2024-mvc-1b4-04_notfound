@@ -3,10 +3,18 @@
 {% block content %}
     <div>
         <h1 >Nieuwe prompt</h1>
-        <p>Titel</p>
-        <input type="text" placeholder="Titel van de prompt">
-        <p>Prompt</p>
-        <input type="text" placeholder="Wat moet de prompt doen?">
-        <button name="Opslaan"></button>
+        <form action="">
+            <div>
+                <h2>Titel</h2>
+                <label for="prompt-title" >Titel van de prompt</label>
+                <input type="text" id="prompt-title" name="prompt-title" maxlength="1000" required autocomplete="off">
+            </div>
+            <div>
+                <h2>Prompt</h2>
+                <label for="prompt-text">Wat moet de prompt doen?</label>
+                <input type="text" id="prompt-text" name="prompt-text" maxlength="1000" required autocomplete="off">
+            </div>
+            <input type="submit" value="Submit" name="Opslaan" id="submit-button">
+        </form>
     </div>
 {% endblock %}
