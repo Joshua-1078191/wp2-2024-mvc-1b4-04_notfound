@@ -1,5 +1,45 @@
 {% extends "layout.html.jinja" %}
 {% block title %} toetsvragen view {% endblock %}
 {% block content %}
-
+    <h1>Lijst vragen beantwoord door {{ prompt }}</h1>
+    <h2>Zoekwoord</h2>
+    <h2>Niveau + jaar</h2>
+    <h2>Vak</h2>
+    <table>
+            <tr>
+                <th>Vraag</th>
+                <th>Vak</th>
+                <th>Niveau</th>
+                <th>Invoerdatum</th>
+                <th>Goed beantwoord</th>
+            </tr>
+            <tr>
+                <td>Vraag 1</td>
+                <td>Biologie</td>
+                <td>Havo 3</td>
+                <td>14-7-2020</td>
+                <td>Ja</td>
+            </tr>
+            <tr>
+                <td>Vraag 2</td>
+                <td>Biologie</td>
+                <td>Havo 3</td>
+                <td>15-8-2021</td>
+                <td>Ja</td>
+            </tr>
+            <tr>
+                <td>Vraag 3</td>
+                <td>Biologie</td>
+                <td>Havo 3</td>
+                <td>17-2-2019</td>
+                <td>Ja</td>
+            </tr>
+            <tr>
+                <td>Vraag 4</td>
+                <td>Biologie</td>
+                <td>Havo 3</td>
+                <td>26-6-2023</td>
+                <td>Nee</td>
+            </tr>
+        </table>
 {% endblock %}
