@@ -1,44 +1,60 @@
 {% extends "layout.html.jinja" %}
 {% block title %} prompts view {% endblock %}
 {% block content %}
-    <div>
-        <h1>AI prompts</h1>
-        <table>
-            <tr>
-                <th scope="col">Prompt</th>
-                <th scope="col">Redacteur</th>
-                <th scope="col">Toetsvragen</th>
-                <th scope="col">Correct</th>
-                <th scope="col">Acties</th>
-            </tr>
-            <tr>
-                <td>Jorik prompt V1.0</td>
-                <td>Jorik</td>
-                <td>190</td>
-                <td>90%</td>
-                <td>Details</td>
-            </tr>
-            <tr>
-                <td>Joshua prompt V1.0</td>
-                <td>Joshua</td>
-                <td>60</td>
-                <td>89%</td>
-                <td>Details</td>
-            </tr>
-            <tr>
-                <td>Roos prompt V1.0</td>
-                <td>Roos</td>
-                <td>12</td>
-                <td>94%</td>
-                <td>details</td>
-            </tr>
-            <tr>
-                <td>Tobias prompt V1.0</td>
-                <td>Tobias</td>
-                <td>87</td>
-                <td>73%</td>
-                <td>details</td>
-            </tr>
-        </table>
+    <div class="container">
+        <div class="row pb-2">
+            <h1>AI prompts</h1>
+        </div>
+        <div class="row">
+            <table class="table table-striped table-hover border border-black border-1">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-start border-black border-1">nr.</th>
+                        <th scope="col" class="border-start border-black border-1">Prompt</th>
+                        <th scope="col" class="border-start border-black border-1">Redacteur</th>
+                        <th scope="col" class="border-start border-black border-1">Toetsvragen</th>
+                        <th scope="col" class="border-start border-black border-1">Correct</th>
+                        <th scope="col" class="border-start border-black border-1">Acties</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" class="border-start border-black border-1">1</th>
+                        <td class="border-start border-black border-1">Jorik prompt V1.0</td>
+                        <td class="border-start border-black border-1">Jorik</td>
+                        <td class="border-start border-black border-1">190</td>
+                        <td class="border-start border-black border-1">90%</td>
+                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="border-start border-black border-1">2</th>
+                        <td class="border-start border-black border-1">Joshua prompt V1.0</td>
+                        <td class="border-start border-black border-1">Joshua</td>
+                        <td class="border-start border-black border-1">60</td>
+                        <td class="border-start border-black border-1">89%</td>
+                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="border-start border-black border-1">3</th>
+                        <td class="border-start border-black border-1">Roos prompt V1.0</td>
+                        <td class="border-start border-black border-1">Roos</td>
+                        <td class="border-start border-black border-1">12</td>
+                        <td class="border-start border-black border-1">94%</td>
+                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="border-start border-black border-1">4</th>
+                        <td class="border-start border-black border-1">Tobias prompt V1.0</td>
+                        <td class="border-start border-black border-1">Tobias</td>
+                        <td class="border-start border-black border-1">87</td>
+                        <td class="border-start border-black border-1">73%</td>
+                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <a href="http://127.0.0.1:5000/index/add_prompt"><button type="button" class="btn btn-light btn-outline-dark" >Nieuwe prompt toevoegen</button></a>
+            </div>
+        </div>
     </div>
 {% endblock %}
