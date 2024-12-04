@@ -31,3 +31,6 @@ def nieuwe_redacteuren():
 @app.route('/index/redacteur_wijzigen', methods=['GET', 'POST'])
 def redacteur_wijzigen():
     return render_template("redacteur_wijzigen.html.jinja")
+
+if __name__ == '__main__':
+    app.run(debug=True)
