@@ -29,81 +29,44 @@
                 <h2>Gegevens redacteur wijzigen</h2>
             </div>
         </div>
-    <div class="row g-3 align-items-center">
-        <div class="col-auto">
-          <label for="name" class="col-form-label">Naam</label>
-        </div>
-      <div class="col-auto">
-         <input type="text" id="name" class="form-control" aria-describedby="passwordHelpInline">
-      </div>
-    </div>
-  <div class="row g-3 align-items-center">
-        <div class="col-auto">
-          <label for="email" class="col-form-label">Email/login</label>
-        </div>
-      <div class="col-auto">
-         <input type="email" id="email" class="form-control" aria-describedby="passwordHelpInline">
-      </div>
-    </div>
-  <div class="row g-3 align-items-center">
-        <div class="col-auto">
-          <label for="password" class="col-form-label">Wachtwoord</label>
-        </div>
-      <div class="col-auto">
-         <input type="password" id="password" class="form-control" aria-describedby="passwordHelpInline">
-      </div>
-    </div>
-    <div class="form-check form-switch">
-      <label class="form-check-label" for="flexSwitchCheckDefault">Is admin?</label>
-      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-    </div>
+    <form>
+                                <div class="row mb-1">
+                                <label for="name" class="col-sm-2 col-form-label">Naam</label>
+                                    <div class="col-sm-10">
+                                <input type="text" id="name" name="name">
+                            </form>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="card-text text-start"></p>
+                            <form>
+                                <div class="row mb-1">
+                                <label for="email" class="col-sm-2 col-form-label">Email/login</label>
+                                    <div class="col-sm-10">
+                                <input type="email" id="email" name="email">
+                            </form>
+                        </div>
+                    </div>
+                         <div>
+                            <form>
+                                <div class="row mb-1">
+                                <label for="password" class="col-sm-2 col-form-label">Wachtwoord</label>
+                                    <div class="col-sm-10">
+                                <input type="password" id="password" name="password">
+                            </form>
+                </div>
+                             <div class="form-check form-switch">
+                                 <div class="row mb-1">
+                                 <label class="form-check-label col-sm-2 col-form-label" for="flexSwitchCheckDefault">Is admin?</label>
+                                     <div class="col-sm-10">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                            </div>
+            <div>
     <div>
-        <form>
-            <input type="submit" value="Verwijder">
-        </form>
-        <style>
-            body {
-            margin: 0;
-            padding: 0;
-            }
-
-            form {
-            margin: 20px;
-            padding: 20px;
-            }
-
-            input[type="submit"] {
-            position: absolute;
-            bottom: 20px; /* 20px from the bottom edge of the viewport */
-            left: 60%;
-            transform: translateX(-50%); /* Center the button horizontally */
-            padding: 10px 20px;
-            }
-        </style>
-    </div>
-    <div>
-        <form>
-            <input type="submit" value="Opslaan">
-        </form>
-        <style>
-            body {
-            margin: 0;
-            padding: 0;
-            }
-
-            form {
-            margin: 20px;
-            padding: 20px;
-            }
-
-            input[type="submit"] {
-            position: absolute;
-            bottom: 20px; /* 20px from the bottom edge of the viewport */
-            left: 75%;
-            transform: translateX(-50%); /* Center the button horizontally */
-            padding: 10px 20px;
-            }
-        </style>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary me-md-2" type="button">Opslaan</button>
+            <button class="btn btn-primary" type="button">Verwijder</button>
+        </div>
     </div>
     <section class="showcase"></section>
     <footer class="bg-light footer">
