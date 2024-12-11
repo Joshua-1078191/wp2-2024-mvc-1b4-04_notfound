@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from src.models.users import Users
 
 app = Flask(__name__)
-
+app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
 
 @app.route('/')
