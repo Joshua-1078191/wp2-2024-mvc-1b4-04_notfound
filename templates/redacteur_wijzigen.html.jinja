@@ -12,13 +12,13 @@
     <div class="row mb-3">
         <label for="name" class="col-sm-2 col-form-label">Naam</label>
         <div class="col-sm-10">
-            <input type="text" id="name" name="name">
+            <input type="text" id="name" value="{{ editor.name }}" name="name">
         </div>
     </div>
     <div class="row mb-1">
         <label for="email" class="col-sm-2 col-form-label">Email/login</label>
         <div class="col-sm-10">
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" value="{{ editor.email }}" name="email">
         </div>
     </div>
     <div class="row mb-1">
@@ -29,8 +29,8 @@
     </div>
     <div class="row mb-1">
         <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
             <label class="form-check-label" for="flexSwitchCheckDefault">Is admin?</label>
+            <input class="form-check-input" type="checkbox" role="switch"  {% if editor.isAdmin %} checked {% endif %}  id="flexSwitchCheckDefault">
         </div>
     </div>
     <div class="row mb-1">
