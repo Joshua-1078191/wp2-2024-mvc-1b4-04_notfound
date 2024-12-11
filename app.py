@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-    return render_template("index-1.html")
+    return ""#render_template("index-1.html")
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_questions():
@@ -35,6 +35,21 @@ def prompts_view():
 @app.route('/index/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     return render_template("prompts/toetsvragen_view.html.jinja")
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+@app.route('/lijst_redacteuren', methods=['GET', 'POST'])
+def lijst_redacteuren():
+    return render_template("lijst_redacteuren.html.jinja")
+
+@app.route('/nieuwe_redacteur', methods=['GET', 'POST'])
+def nieuwe_redacteuren():
+    return render_template("nieuwe_redacteur.html.jinja")
+
+@app.route('/redacteur_wijzigen', methods=['GET', 'POST'])
+def redacteur_wijzigen():
+    return render_template("redacteur_wijzigen.html.jinja")
 
 if __name__ == '__main__':
     app.run(debug=True)
