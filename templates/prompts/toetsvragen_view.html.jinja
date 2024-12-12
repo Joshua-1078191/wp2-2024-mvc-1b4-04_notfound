@@ -1,6 +1,7 @@
 {% extends "layout.html.jinja" %}
 {% block title %} toetsvragen view {% endblock %}
 {% block content %}
+    {% for question in questions %}
     <div class="container">
         <div class="row pb-3">
             <h1>Lijst vragen beantwoord door {{ question.prompt_id }}</h1>
@@ -39,7 +40,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for question in questions %}
                     <tr>
                         <th scope="row" class="border-start border-black border-1">{{ question.id }}</th>
                         <td class="border-start border-black border-1">{{ question.question_name }}</td>
@@ -66,9 +66,9 @@
                             {% endif %}
                         </td>
                     </tr>
-                {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    {% endfor %}
 {% endblock %}
