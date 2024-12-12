@@ -10,7 +10,7 @@
                         <h1>Prompt details</h1>
                     </div>
                     <div class="row">
-                        <h2>{{ prompts.prompt_naam }}</h2>
+                        <h2>{{ prompt.prompt_naam }}, {{ prompt.prompt_id }}</h2>
                     </div>
 
                     <!-- The div under this comment needs to be replaced with a jinja variable-->
@@ -34,23 +34,23 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" class="col-3">Redacteur:</th>
-                                    <td>{{ prompts.redacteur }}</td>
+                                    <td>{{ prompt.redacteur }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Aangemaakt:</th>
-                                    <td><time datetime="{{ prompts.creation_date }}">{{ prompts.creation_date }}</time></td>
+                                    <td><time datetime="{{ prompt.creation_date }}">{{ prompt.creation_date }}</time></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen gecategoriseerd:</th>
-                                    <td>{{ prompts.categorised_questions }}</td>
+                                    <td>{{ prompt.categorised_questions }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen correct:</th>
-                                    <td>{{ prompts.correct_questions }}</td>
+                                    <td>{{ prompt.correct_questions }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen incorrect</th>
-                                    <td>{{ prompts.incorrect_questions }}</td>
+                                    <td>{{ prompt.incorrect_questions }}</td>
                                 </tr>
                             </tbody>
                         </table>
