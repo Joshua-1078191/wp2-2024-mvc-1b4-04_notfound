@@ -64,6 +64,7 @@ def prompts_view():
 @app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
 def toetsvragen_view(prompt_id:int):
     questions = [{
+        prompt_id: 1,
         "prompt" : "prompt ....",
         "id" : 1,
         "question_name" : "vraag 1",
