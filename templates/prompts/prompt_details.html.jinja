@@ -1,6 +1,7 @@
 {% extends "layout.html.jinja" %}
 {% block title %} prompt details {% endblock %}
 {% block content %}
+    {% for prompt in prompts %}
     <div class="container">
         <div class="d-flex justify-content-start">
             <div class="row">
@@ -11,6 +12,9 @@
                     <div class="row">
                         <h2>{{ prompts.prompt_naam }}</h2>
                     </div>
+
+                    <!-- The div under this comment needs to be replaced with a jinja variable-->
+
                     <div class="row">
                         <p>Wij zijn vragen aan het categoriseren. Kun je de volgende vraag indexeren naar de taxonomie van Bloom? We willen maar 1 categorie per vraag.<br>
                             <br>
@@ -24,6 +28,7 @@
                             }
                         </code>
                     </div>
+
                     <div class="row">
                         <table class="table">
                             <tbody>
@@ -54,4 +59,5 @@
             </div>
         </div>
     </div>
+    {% endfor %}
 {% endblock %}
