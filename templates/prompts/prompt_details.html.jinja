@@ -9,7 +9,7 @@
                         <h1>Prompt details</h1>
                     </div>
                     <div class="row">
-                        <h2>Jorik prompt V1.0</h2>
+                        <h2>{{ prompts.prompt_naam }}</h2>
                     </div>
                     <div class="row">
                         <p>Wij zijn vragen aan het categoriseren. Kun je de volgende vraag indexeren naar de taxonomie van Bloom? We willen maar 1 categorie per vraag.<br>
@@ -29,23 +29,23 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" class="col-3">Redacteur:</th>
-                                    <td>Jorik</td>
+                                    <td>{{ prompts.redacteur }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Aangemaakt:</th>
-                                    <td><time datetime="2024-11-15">15-11-2024</time></td>
+                                    <td><time datetime="{{ prompts.creation_date }}">{{ prompts.creation_date }}</time></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen gecategoriseerd:</th>
-                                    <td>190</td>
+                                    <td>{{ prompts.categorised_questions }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen correct:</th>
-                                    <td>171</td>
+                                    <td>{{ prompts.correct_questions }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen incorrect</th>
-                                    <td>19</td>
+                                    <td>{{ prompts.incorrect_questions }}</td>
                                 </tr>
                             </tbody>
                         </table>
