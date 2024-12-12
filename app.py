@@ -20,19 +20,19 @@ def index_questions_prompt():
 def index_questions_taxonomy(prompt_id:int):
     return render_template("questions/index_questions_taxonomy.html.jinja")
 
-@app.route('/index/add_prompt', methods=['GET', 'POST'])
+@app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():
     return render_template("prompts/add_prompt.html.jinja")
 
-@app.route('/index/prompt_details', methods=['GET', 'POST'])
+@app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details():
     return render_template("prompts/prompt_details.html.jinja")
 
-@app.route('/index/prompts_view', methods=['GET', 'POST'])
+@app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
     return render_template("prompts/prompts_view.html.jinja")
 
-@app.route('/index/toetsvragen_view', methods=['GET', 'POST'])
+@app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
 def toetsvragen_view():
     return render_template("prompts/toetsvragen_view.html.jinja")
 
