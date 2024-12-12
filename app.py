@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+from src.models.users import Users
 
 app = Flask(__name__)
+app.secret_key = "adwdafawaf"
+database_path = 'databases/database.db'
 
 @app.route('/')
 def main():
@@ -50,15 +53,17 @@ def toetsvragen_view():
 
 @app.route('/lijst_redacteuren', methods=['GET', 'POST'])
 def lijst_redacteuren():
-    return render_template("lijst_redacteuren.html.jinja")
+    users = Users(database_path)
+    return render_template("lijst_redacteuren.html.jinja", editors=users.get_all())
 
 @app.route('/nieuwe_redacteur', methods=['GET', 'POST'])
 def nieuwe_redacteuren():
     return render_template("nieuwe_redacteur.html.jinja")
 
-@app.route('/redacteur_wijzigen', methods=['GET', 'POST'])
-def redacteur_wijzigen():
-    return render_template("redacteur_wijzigen.html.jinja")
+@app.route('/redacteur_wijzigen/<int:id>', methods=['GET', 'POST'])
+def redacteur_wijzigen(id):
+    users = Users(database_path)
+    return render_template("redacteur_wijzigen.html.jinja", editor=users.get(id-1))
 
 if __name__ == '__main__':
     app.run(debug=True)
