@@ -26,7 +26,16 @@ def add_prompt():
 
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
-    return render_template("prompts/prompt_details.html.jinja")
+    prompts = [{
+        prompt_id: 1,
+        "prompt_naam" : "Jorik's prompt",
+        "redacteur" : "Jorik",
+        "creation_date" : "02-02-2002",
+        "categorised_questions" : 200,
+        "correct_questions" : 180,
+        "incorrect_questions" : 20,
+    }]
+    return render_template("prompts/prompt_details.html.jinja", prompts = prompts)
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
@@ -55,7 +64,7 @@ def prompts_view():
 @app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
 def toetsvragen_view(prompt_id:int):
     questions = [{
-        "prompt_id" : 1,
+        "prompt" : "prompt ....",
         "id" : 1,
         "question_name" : "vraag 1",
         "subject" : "Biologie",
