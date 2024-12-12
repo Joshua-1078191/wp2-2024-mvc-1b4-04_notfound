@@ -54,7 +54,16 @@ def prompts_view():
 
 @app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
 def toetsvragen_view(prompt_id:int):
-    return render_template("prompts/toetsvragen_view.html.jinja")
+    questions = [{
+        "prompt_id" : 1,
+        "id" : 1,
+        "question_name" : "vraag 1",
+        "subject" : "Biologie",
+        "school_grade" : "Havo 3",
+        "creation_date" : "14-7-2020",
+        "answered_correctly" : True,
+    }]
+    return render_template("prompts/toetsvragen_view.html.jinja", questions = questions)
 
 # @app.route('/index/login', methods=['GET', 'POST'])
 # def toetsvragen_view():
