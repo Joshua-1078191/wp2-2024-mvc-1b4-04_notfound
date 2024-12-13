@@ -25,7 +25,7 @@ class WP2DatabaseGenerator:
         create_statement = """
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            login TEXT NOT NULL,
+            login TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             salt TEXT,
             display_name TEXT NOT NULL,
