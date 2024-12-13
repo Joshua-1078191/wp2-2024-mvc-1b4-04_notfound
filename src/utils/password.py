@@ -1,15 +1,35 @@
+# VRIED: The students used the scrypt library for hashing of passwords. For some reason this completely borked AES
+# because apple sucks.
+# I replaced this code to cryptography.
+
 import os
 import uuid
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
+from cryptography.exceptions import InvalidKey
 
-from scrypt import scrypt
+def hash_password(password: str, salt: bytes) -> bytes:
+    kdf = Scrypt(
+        salt=salt,
+        length=32,
+        n=2**14,
+        r=8,
+        p=1,
+    )
+    return kdf.derive(password.encode('utf-8'))
 
-def hash_password(password: str, salt: str) -> str:
-    return scrypt.hash(password, salt)
-    #return password + salt  # we don't currently have hashing implemented
+def generate_salt() -> bytes:
+    return os.urandom(16)
 
-def generate_salt() -> str:
-    return str(uuid.uuid4())
-
-def verify_password(password: str, hashed_password:str, salt: str) -> bool:
-    return hashed_password == scrypt.hash(password, salt)
-    #return hashed_password == hash_password(password, salt)
+def verify_password(password: str, hashed_password: bytes, salt: bytes) -> bool:
+    kdf = Scrypt(
+        salt=salt,
+        length=32,
+        n=2**14,
+        r=8,
+        p=1,
+    )
+    try:
+        kdf.verify(password.encode('utf-8'), hashed_password)
+        return True
+    except InvalidKey:
+        return False
