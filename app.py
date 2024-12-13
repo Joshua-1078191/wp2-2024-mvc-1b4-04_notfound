@@ -63,7 +63,7 @@ def nieuwe_redacteuren():
 @app.route('/redacteur_wijzigen/<int:id>', methods=['GET', 'POST'])
 def redacteur_wijzigen(id):
     users = Users(database_path)
-    return render_template("redacteur_wijzigen.html.jinja", editor=users.get(id-1))
+    return render_template("redacteur_wijzigen.html.jinja", editor=users.get(id))
 
 if __name__ == '__main__':
     app.run(debug=True)
