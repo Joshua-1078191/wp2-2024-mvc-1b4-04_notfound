@@ -1,4 +1,4 @@
-# WP2 Starter 
+# Automatic Taxonomy using LLMs
 
 Dit is de starter repository voor WP2 2024. Deze bevat: 
 - De [casus](CASUS.md)
