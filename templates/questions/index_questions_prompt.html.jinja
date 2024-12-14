@@ -6,8 +6,9 @@
         <div class="col-auto">
             <select required class="form-select" aria-label="Prompt selecteren">
                 <option value="" selected disabled class="text-secondary">Kies een prompt</option>
-                <option value="1">Prompt naam</option>
-                <option value="2">Andere prompt naam</option>
+                {% for prompt in prompts %}
+                    <option value="{{ prompt.id }}">{{ prompt.name }}</option>
+                {% endfor %}
             </select>
         </div>
         <!-- - Een genereer knop -->
