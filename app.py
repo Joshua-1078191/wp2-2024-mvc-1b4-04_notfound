@@ -39,7 +39,15 @@ def import_questions():
 @app.route('/index/<int:question_id>', methods=['GET', 'POST'])
 def index_questions_prompt(question_id:int):
     if request.method == 'POST':
-        return redirect(url_for('index') + '/1')
+        prompt_id = request.form.get('selectedPrompt')
+        if prompt_id:
+            try:
+                prompt_id = int(prompt_id)
+                return redirect(f'{request.url}/{prompt_id}')
+            except ValueError:
+                pass
+        flash("Invalid prompt")
+        return redirect(request.url)
 
     question = {
         'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
@@ -49,7 +57,18 @@ def index_questions_prompt(question_id:int):
         'grade': 3,
     }
 
-    return render_template("questions/index_questions_prompt.html.jinja", question=question)
+    prompts = [
+        {
+            'id': 0,
+            'name': "Één van de prompts"
+        },
+        {
+            'id': 1,
+            'name': "Een andere prompt die ook bestaat"
+        },
+    ]
+
+    return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
 
 @app.route('/index/<int:question_id>/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(question_id:int, prompt_id:int):

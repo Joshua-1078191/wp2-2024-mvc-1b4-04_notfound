@@ -1,15 +1,27 @@
 {% extends "questions/index_questions.html.jinja" %}
 {% block index_content %}
     <!-- Als prompt selecteren: -->
-    <form class="row">
+    <form class="row" method="post">
         <!-- - Een prompt selecteren -->
         <div class="col-auto">
-            <select required class="form-select" aria-label="Prompt selecteren">
+            <select required name="selectedPrompt" class="form-select" aria-label="Prompt selecteren">
                 <option value="" selected disabled class="text-secondary">Kies een prompt</option>
                 {% for prompt in prompts %}
                     <option value="{{ prompt.id }}">{{ prompt.name }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="col-auto">
+            {% with errors = get_flashed_messages() %}
+                {% if errors %}
+                    {% for error in errors %}
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="fa fa-exclamation-triangle fa-2x fa-fw"></i>
+                            <strong class="mx-1">Error:</strong> {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </div>
         <!-- - Een genereer knop -->
         <div class="col-auto">
