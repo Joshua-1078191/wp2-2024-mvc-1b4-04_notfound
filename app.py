@@ -36,17 +36,17 @@ def prompts_view():
 def toetsvragen_view():
     return render_template("prompts/toetsvragen_view.html.jinja")
 
-# @app.route('/index/login', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("login.html.jinja")
+@app.route('/index/login', methods=['GET', 'POST'])
+def login():
+    return render_template("login.html.jinja")
 
-# @app.route('/index/sign_up', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("sign_up.html.jinja")
+@app.route('/index/sign_up', methods=['GET', 'POST'])
+def sign_up():
+    return render_template("sign_up.html.jinja")
 
-# @app.route('/index/vragen', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("vragen.html.jinja")
+@app.route('/index/vragen', methods=['GET', 'POST'])
+def vragen():
+    return render_template("vragen.html.jinja")
 
 if __name__ == '__main__':
     app.run(debug=True)

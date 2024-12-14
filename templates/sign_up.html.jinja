@@ -27,7 +27,10 @@
                                     </svg></div>
                                 <form class="text-center" method="post">
                                     <div class="mb-3"><input class="form-control" type="email" name="email" placeholder="Email"></div>
-                                    <div class="mb-3"><input class="form-control" type="password" name="password" placeholder="Password"></div><input class="form-control" type="password" name="password" placeholder="Confirm password"><button class="btn btn-primary d-block w-100" type="submit" style="margin-left: 0px;">Sign up</button><a class="link-secondary" href="Login.html">Already have a account?&nbsp;</a>
+                                    <div class="mb-3"><input class="form-control" type="password" name="password" placeholder="Password"></div>
+                                    <input class="form-control" type="password" name="password" placeholder="Confirm password">
+                                    <button class="btn btn-primary d-block w-100" type="submit" style="margin-left: 0px;">Sign up</button>
+                                    <a class="link-secondary" href="{{ url_for('login') }}">Already have an account?</a>
                                     <div class="mb-3"></div>
                                 </form>
                             </div>
