@@ -42,6 +42,8 @@
         const selectedTaxonomy = document.querySelector('#taxonomy');
         const confirmText = document.querySelector('#confirmText');
 
+        confirmText.style.display = "none"
+
         selectedTaxonomy.addEventListener('change', event => {
             if (selectedTaxonomy.value === "{{ answer.selected_taxonomy }}")
             {
