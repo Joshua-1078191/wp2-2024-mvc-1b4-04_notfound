@@ -36,14 +36,31 @@ def import_questions():
 
     return render_template("questions/import_questions.html.jinja")
 
-@app.route('/index', methods=['GET', 'POST'])
-def index_questions_prompt():
+@app.route('/index/<int:question_id>', methods=['GET', 'POST'])
+def index_questions_prompt(question_id:int):
     if request.method == 'POST':
         return redirect(url_for('index') + '/1')
-    return render_template("questions/index_questions_prompt.html.jinja")
 
-@app.route('/index/<int:prompt_id>', methods=['GET', 'POST'])
-def index_questions_taxonomy(prompt_id:int):
+    question = {
+        'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
+        'answer': "Glucose en zuurstof, per onderdeel 1 punt",
+        'subject': "biologie",
+        'education': "havo",
+        'grade': 3,
+    }
+
+    return render_template("questions/index_questions_prompt.html.jinja", question=question)
+
+@app.route('/index/<int:question_id>/<int:prompt_id>', methods=['GET', 'POST'])
+def index_questions_taxonomy(question_id:int, prompt_id:int):
+    question = {
+        'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
+        'answer': "Glucose en zuurstof, per onderdeel 1 punt",
+        'subject': "biologie",
+        'education': "havo",
+        'grade': 3,
+    }
+
     taxonomies = [
         {
             'name': 'Kennis',
@@ -76,7 +93,7 @@ def index_questions_taxonomy(prompt_id:int):
         'explanation': "This is because of facts and logic that are very real and stuff."
     }
 
-    return render_template("questions/index_questions_taxonomy.html.jinja", taxonomies=taxonomies, answer=answer)
+    return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
 
 @app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():

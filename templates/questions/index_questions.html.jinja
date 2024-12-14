@@ -7,26 +7,26 @@
             <h1 class="fw-light">Vragen indexeren naar taxonomie</h1>
             <h2 class="h5">Vraag:</h2>
             <div class="overflow-auto">
-                <p>{{ question }}</p>
+                <p>{{ question.question }}</p>
             </div>
 
             <h2 class="h5">Antwoord:</h2>
             <div class="overflow-auto">
-                <p>{{ answer }}</p>
+                <p>{{ question.answer }}</p>
             </div>
 
             <table class="table table-bordered table-hover">
                 <tr>
                     <th scope="row" class="col-2">Vak</th>
-                    <td>{{ subject }}</td>
+                    <td>{{ question.subject }}</td>
                 </tr>
                 <tr>
                     <th scope="row" class="col-2">Onderwijsniveau</th>
-                    <td>{{ education }}</td>
+                    <td>{{ question.education }}</td>
                 </tr>
                 <tr>
                     <th scope="row" class="col-2">Leerjaar</th>
-                    <td>{{ grade }}</td>
+                    <td>{{ question.grade }}</td>
                 </tr>
             </table>
             {% block index_content %}{% endblock %}
