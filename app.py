@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+import json
+from json import JSONDecodeError
+
+from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.users import Users
 
 app = Flask(__name__)
@@ -11,6 +14,26 @@ def main():
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_questions():
+    if request.method == 'POST':
+        if 'jsonFile' not in request.files:
+            flash("No file part")
+            return redirect(request.url)
+        file = request.files['jsonFile']
+        if file.filename == '':
+            flash("No file selected")
+            return redirect(request.url)
+        try:
+            questions:list[dict[str, object]] = json.load(file.stream)
+        except (UnicodeDecodeError, JSONDecodeError):
+            flash("Invalid JSON")
+            return redirect(request.url)
+
+        if questions:
+            return Response(json.dumps(questions[0], indent = 4), mimetype='application/json')
+
+        flash("No data in JSON")
+        return redirect(request.url)
+
     return render_template("questions/import_questions.html.jinja")
 
 @app.route('/index', methods=['GET', 'POST'])
