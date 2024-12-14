@@ -5,6 +5,7 @@ from src.models.prompts import Prompts
 app = Flask(__name__)
 app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
+test_db = "databases/test_db.db"
 
 @app.route('/')
 def main():
@@ -26,7 +27,13 @@ def index_questions_taxonomy(prompt_id:int):
 
 @app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():
-    return render_template("prompts/add_prompt.html.jinja")
+    prompts = Prompts(test_db)
+    if request.method == 'POST':
+        prompt_titel = request.form['prompt-title']
+        prompt = request.form['prompt-text']
+        prompt_id = prompts.add_prompt(1, prompt, 100, 80)
+    else:
+        return render_template("prompts/add_prompt.html.jinja")
 
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
