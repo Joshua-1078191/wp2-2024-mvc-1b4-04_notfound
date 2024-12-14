@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from src.models.users import Users
+from src.models.prompts import Prompts
 
 app = Flask(__name__)
 app.secret_key = "adwdafawaf"
@@ -29,6 +30,7 @@ def add_prompt():
 
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
+    prompt_model = Prompts(database_path)
     prompts = [{
         prompt_id: 1,
         "prompt_naam" : "Jorik's prompt",
@@ -38,7 +40,7 @@ def prompt_details(prompt_id:int):
         "correct_questions" : 180,
         "incorrect_questions" : 20,
     }]
-    return render_template("prompts/prompt_details.html.jinja", prompts = prompts)
+    return render_template("prompts/prompt_details.html.jinja", prompts = prompt_model.get_one_prompt(prompt_id))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
