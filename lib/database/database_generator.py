@@ -40,6 +40,7 @@ class WP2DatabaseGenerator:
         CREATE TABLE IF NOT EXISTS prompts (
             prompts_id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
+            prompt_name TEXT NOT NULL,
             prompt TEXT NOT NULL,
             questions_count INTEGER NOT NULL,
             questions_correct INTEGER NOT NULL,
