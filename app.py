@@ -44,7 +44,39 @@ def index_questions_prompt():
 
 @app.route('/index/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(prompt_id:int):
-    return render_template("questions/index_questions_taxonomy.html.jinja")
+    taxonomies = [
+        {
+            'name': 'Kennis',
+            'id': 0,
+        },
+        {
+            'name': 'Begrijpen',
+            'id': 1,
+        },
+        {
+            'name': 'Toepassen',
+            'id': 2,
+        },
+        {
+            'name': 'Analyseren',
+            'id': 3,
+        },
+        {
+            'name': 'Evalueren',
+            'id': 4,
+        },
+        {
+            'name': 'Synthese',
+            'id': 5,
+        },
+    ]
+
+    answer = {
+        'selected_taxonomy': 2,
+        'explanation': "This is because of facts and logic that are very real and stuff."
+    }
+
+    return render_template("questions/index_questions_taxonomy.html.jinja", taxonomies=taxonomies, answer=answer)
 
 @app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():
