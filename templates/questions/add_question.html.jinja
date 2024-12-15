@@ -1,0 +1,54 @@
+{% extends "layout.html.jinja" %}
+{% block title %}Nieuwe vraag toevoegen{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row pb-3">
+        <div class="col">
+            <h1>Nieuwe vraag toevoegen</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="question" class="form-label">Vraag</label>
+                    <textarea class="form-control" id="question" name="question" rows="3" required></textarea>
+                    <div class="invalid-feedback">
+                        Vul een vraag in.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="prompt" class="form-label">Prompt</label>
+                    <textarea class="form-control" id="prompt" name="prompt" rows="2" required></textarea>
+                    <div class="invalid-feedback">
+                        Vul een prompt in.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="taxonomy_bloom" class="form-label">Taxonomie van Bloom</label>
+                    <input type="text" class="form-control" id="taxonomy_bloom" name="taxonomy_bloom" required>
+                    <div class="invalid-feedback">
+                        Vul een taxonomie niveau in.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="rtti" class="form-label">RTTI</label>
+                    <input type="text" class="form-control" id="rtti" name="rtti" required>
+                    <div class="invalid-feedback">
+                        Vul een RTTI niveau in.
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{{ url_for('toetsvragen_view') }}" class="btn btn-secondary me-md-2">Annuleren</a>
+                    <button type="submit" class="btn btn-primary">Vraag toevoegen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
