@@ -1,7 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 from src.models.user import User
-from src.models.question import Question
-from lib.database.db import get_db
 
 app = Flask(__name__)
 app.secret_key = 'random'
@@ -119,50 +117,12 @@ def prompts_view():
 @app.route('/index/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result
-    
-    # Get filter parameters
-    zoekwoord = request.args.get('zoekwoord')
-    niveau_jaar = request.args.get('niveau_jaar')
-    vak = request.args.get('vak')
-    
-    # Get questions with or without filters
-    if any([zoekwoord, niveau_jaar, vak]):
-        questions = Question.get_questions_filtered(zoekwoord, niveau_jaar, vak)
-    else:
-        questions = Question.get_all_questions()
-    
-    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions)
+    return render_template("prompts/toetsvragen_view.html.jinja")
 
 @app.route('/index/vragen', methods=['GET', 'POST'])
 def vragen():
     if result := check_login(): return result
     return render_template("vragen.html.jinja")
-
-@app.route('/add_question', methods=['GET', 'POST'])
-def add_question():
-    if result := check_login(): return result
-    
-    if request.method == 'POST':
-        # Get form data
-        question_text = request.form.get('question')
-        prompt_text = request.form.get('prompt')
-        taxonomy_bloom = request.form.get('taxonomy_bloom')
-        rtti = request.form.get('rtti')
-        
-        # Validate required fields
-        if not all([question_text, prompt_text, taxonomy_bloom, rtti]):
-            flash('Alle velden zijn verplicht.', 'error')
-            return render_template('questions/add_question.html.jinja')
-        
-        # Create the question
-        if Question.create_question(question_text, prompt_text, session['user_id'], taxonomy_bloom, rtti):
-            flash('Vraag succesvol toegevoegd.', 'success')
-            return redirect(url_for('toetsvragen_view'))
-        else:
-            flash('Er is een fout opgetreden bij het toevoegen van de vraag.', 'error')
-            return render_template('questions/add_question.html.jinja')
-    
-    return render_template('questions/add_question.html.jinja')
 
 if __name__ == '__main__':
     app.run(debug=True)
