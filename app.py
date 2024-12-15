@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+import json
+from json import JSONDecodeError
+
+from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.users import Users
 
 app = Flask(__name__)
@@ -11,17 +14,105 @@ def main():
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_questions():
+    if request.method == 'POST':
+        if 'jsonFile' not in request.files:
+            flash("No file part")
+            return redirect(request.url)
+        file = request.files['jsonFile']
+        if file.filename == '':
+            flash("No file selected")
+            return redirect(request.url)
+        try:
+            questions:list[dict[str, object]] = json.load(file.stream)
+        except (UnicodeDecodeError, JSONDecodeError):
+            flash("Invalid JSON")
+            return redirect(request.url)
+
+        if questions:
+            return Response(json.dumps(questions[0], indent = 4), mimetype='application/json')
+
+        flash("No data in JSON")
+        return redirect(request.url)
+
     return render_template("questions/import_questions.html.jinja")
 
-@app.route('/index', methods=['GET', 'POST'])
-def index_questions_prompt():
+@app.route('/index/<int:question_id>', methods=['GET', 'POST'])
+def index_questions_prompt(question_id:int):
     if request.method == 'POST':
-        return redirect(url_for('index') + '/1')
-    return render_template("questions/index_questions_prompt.html.jinja")
+        prompt_id = request.form.get('selectedPrompt')
+        if prompt_id:
+            try:
+                prompt_id = int(prompt_id)
+                return redirect(f'{request.url}/{prompt_id}')
+            except ValueError:
+                pass
+        flash("Invalid prompt")
+        return redirect(request.url)
 
-@app.route('/index/<int:prompt_id>', methods=['GET', 'POST'])
-def index_questions_taxonomy(prompt_id:int):
-    return render_template("questions/index_questions_taxonomy.html.jinja")
+    question = {
+        'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
+        'answer': "Glucose en zuurstof, per onderdeel 1 punt",
+        'subject': "biologie",
+        'education': "havo",
+        'grade': 3,
+    }
+
+    prompts = [
+        {
+            'id': 0,
+            'name': "Één van de prompts"
+        },
+        {
+            'id': 1,
+            'name': "Een andere prompt die ook bestaat"
+        },
+    ]
+
+    return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
+
+@app.route('/index/<int:question_id>/<int:prompt_id>', methods=['GET', 'POST'])
+def index_questions_taxonomy(question_id:int, prompt_id:int):
+    question = {
+        'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
+        'answer': "Glucose en zuurstof, per onderdeel 1 punt",
+        'subject': "biologie",
+        'education': "havo",
+        'grade': 3,
+    }
+
+    taxonomies = [
+        {
+            'name': 'Kennis',
+            'id': 0,
+        },
+        {
+            'name': 'Begrijpen',
+            'id': 1,
+        },
+        {
+            'name': 'Toepassen',
+            'id': 2,
+        },
+        {
+            'name': 'Analyseren',
+            'id': 3,
+        },
+        {
+            'name': 'Evalueren',
+            'id': 4,
+        },
+        {
+            'name': 'Synthese',
+            'id': 5,
+        },
+    ]
+
+    answer = {
+        'selected_taxonomy': 2,
+        'explanation': "This is because of facts and logic that are very real and stuff."
+    }
+
+    return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
 
 @app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():
