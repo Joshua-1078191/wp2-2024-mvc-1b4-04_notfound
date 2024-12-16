@@ -3,6 +3,7 @@ from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.users import Users
+from lib.gpt.bloom_taxonomy import get_bloom_category
 
 app = Flask(__name__)
 app.secret_key = "adwdafawaf"
@@ -72,13 +73,21 @@ def index_questions_prompt(question_id:int):
 
 @app.route('/index/<int:question_id>/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(question_id:int, prompt_id:int):
+
     question = {
         'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-        'answer': "Glucose en zuurstof, per onderdeel 1 punt",
+        'answer': "",
         'subject': "biologie",
         'education': "havo",
         'grade': 3,
     }
+
+    prompt = prompt_id # change
+    categorie = get_bloom_category(question['question'], prompt, "dry_run")
+
+    question['answer'] = categorie['categorie']
+
+    explanation = categorie['uitleg']
 
     taxonomies = [
         {
@@ -109,7 +118,7 @@ def index_questions_taxonomy(question_id:int, prompt_id:int):
 
     answer = {
         'selected_taxonomy': 2,
-        'explanation': "This is because of facts and logic that are very real and stuff."
+        'explanation': explanation
     }
 
     return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
