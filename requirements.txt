@@ -1,3 +1,4 @@
 flask==3.1.0
-#scrypt
-cryptography
+cryptography~=44.0.0
+openai~=1.57.4
+ollama~=0.4.4
