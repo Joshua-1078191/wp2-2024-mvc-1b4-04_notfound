@@ -50,6 +50,7 @@ def prompt_details(prompt_id:int):
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
+    prompt_models = Prompts(database_path)
     prompts = [{
         "id" : 1,
         "prompt" : "prompt ....",
@@ -70,7 +71,7 @@ def prompts_view():
         "correct_questions" : "70%",
     }
     ]
-    return render_template("prompts/prompts_view.html.jinja", prompts = prompts)
+    return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
 
 @app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
 def toetsvragen_view(prompt_id:int):
