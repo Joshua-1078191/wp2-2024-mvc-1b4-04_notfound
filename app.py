@@ -5,7 +5,6 @@ from src.models.prompts import Prompts
 app = Flask(__name__)
 app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
-test_db = "databases/test_db.db"
 
 @app.route('/')
 def main():
@@ -27,7 +26,7 @@ def index_questions_taxonomy(prompt_id:int):
 
 @app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():
-    prompts = Prompts(test_db)
+    prompts = Prompts(database_path)
     if request.method == 'POST':
         prompt_titel = request.form['prompt-title']
         prompt = request.form['prompt-text']
