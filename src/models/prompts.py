@@ -12,17 +12,17 @@ class Prompts:
 
         prompt_all_data = cursor.execute("""SELECT * FROM prompts""").fetchall()
 
-        #if not prompt_all_data:
-            #return None
+        if not prompt_all_data:
+            return None
 
-        result = {
-            "prompt_id": prompt_all_data["prompts_id"],
-            "redacteur": prompt_all_data["user_id"],
-            "prompt_naam": prompt_all_data["prompt"],
-            "categorised_questions": prompt_all_data["questions_count"],
-            "correct_questions": prompt_all_data["questions_correct"],
-            "creation_date": prompt_all_data["date_created"]
-        }
+        result = [{
+            "prompt_id": prompt_all["prompts_id"],
+            "redacteur": prompt_all["user_id"],
+            "prompt_naam": prompt_all["prompt"],
+            "categorised_questions": prompt_all["questions_count"],
+            "correct_questions": prompt_all["questions_correct"],
+            "creation_date": prompt_all["date_created"]
+        } for prompt_all in prompt_all_data]
 
         con.commit()
 
