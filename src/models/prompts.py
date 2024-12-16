@@ -8,11 +8,27 @@ class Prompts:
     def prompt_all_view(self):
         con = sqlite3.connect(self.db)
         cursor = con.cursor()
+        con.row_factory = sqlite3.Row
 
-        cursor.execute("""SELECT * FROM prompts""")
+        prompt_all_data = cursor.execute("""SELECT * FROM prompts""").fetchall()
+
+        #if not prompt_all_data:
+            #return None
+
+        result = {
+            "prompt_id": prompt_all_data["prompts_id"],
+            "redacteur": prompt_all_data["user_id"],
+            "prompt_naam": prompt_all_data["prompt"],
+            "categorised_questions": prompt_all_data["questions_count"],
+            "correct_questions": prompt_all_data["questions_correct"],
+            "creation_date": prompt_all_data["date_created"]
+        }
+
         con.commit()
 
-        return cursor.fetchall()
+        cursor.close()
+
+        return result
 
     def get_one_prompt(self, prompt_id: int):
         con = sqlite3.connect(self.db)
