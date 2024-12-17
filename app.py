@@ -2,7 +2,10 @@ import json
 from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
+from flask import Flask, render_template, session, redirect, url_for, request, flash
 from src.models.users import Users
+from src.models.user import User
+from src.models.question import Question
 from src.models.prompts import Prompts
 from lib.gpt.bloom_taxonomy import get_bloom_category
 
@@ -10,9 +13,81 @@ app = Flask(__name__)
 app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
 
+def check_login():
+    if 'user_id' not in session:
+        return redirect('/index/login')
+    return None
+
 @app.route('/')
 def main():
     return render_template("index-1.html.jinja")
+
+@app.route('/index/login', methods=['GET', 'POST'])
+def login_route():
+    if 'user_id' in session:
+        return redirect('/')
+
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        if not email or not password:
+            flash('Please enter both email and password', 'error')
+            return render_template("login.html.jinja")
+
+        # First check if email exists
+        user = User.get_by_email(email)
+        if not user:
+            flash('No account found with this email', 'error')
+            return render_template("login.html.jinja")
+
+        # Then check if password matches
+        user = User.get_by_credentials(email, password)
+        if not user:
+            flash('Incorrect password', 'error')
+            return render_template("login.html.jinja")
+
+        session['user_id'] = user.user_id
+        session['display_name'] = user.display_name
+        session['is_admin'] = user.is_admin
+        return redirect('/')
+
+    return render_template("login.html.jinja")
+
+@app.route('/index/sign_up', methods=['GET', 'POST'])
+def sign_up_route():
+    if 'user_id' in session:
+        return redirect('/')
+
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form.get('confirm_password')
+
+        # Validate passwords match
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return render_template("sign_up.html.jinja")
+
+        # Check if email already exists
+        if User.get_by_email(email):
+            flash('Email already registered', 'error')
+            return render_template("sign_up.html.jinja")
+
+        # Create new user
+        if User.create_user(email, password):
+            flash('Account created successfully! Please log in.', 'success')
+            return redirect('/index/login')
+        else:
+            flash('An error occurred while creating your account', 'error')
+            return render_template("sign_up.html.jinja")
+
+    return render_template("sign_up.html.jinja")
+
+@app.route('/index/logout')
+def logout_route():
+    session.clear()
+    return redirect('/index/login')
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_questions():
@@ -130,7 +205,8 @@ def add_prompt():
     if request.method == 'POST':
         prompt_titel = request.form['prompt-title']
         prompt = request.form['prompt-text']
-        prompt_id = prompts.add_prompt(1, prompt, 100, 80)
+        prompt_id = prompts.add_prompt(1, prompt_titel, prompt, 100, 80)
+        return redirect(url_for(f'prompt_details', prompt_id=prompt_id))
     else:
         return render_template("prompts/add_prompt.html.jinja")
 
@@ -173,36 +249,74 @@ def prompts_view():
     ]
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
 
-@app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
-def toetsvragen_view(prompt_id:int):
-    questions = [{
-        prompt_id: 1,
-        "prompt" : "prompt ....",
-        "id" : 1,
-        "question_name" : "vraag 1",
-        "subject" : "Biologie",
-        "school_grade" : "Havo 3",
-        "creation_date" : "14-7-2020",
-        "answered_correctly" : True,
-    }]
+@app.route('/index/toetsvragen_view')
+def toetsvragen_view():
+    if result := check_login(): return result
+    questions = Question.get_all_questions()
+    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions)
+
+@app.route('/toetsvragen/add', methods=['GET', 'POST'])
+def add_question():
+    if result := check_login(): return result
     if request.method == 'POST':
-        keyword = request.form['keyword']
-        school_level = request.form['school_level']
-        subject = request.form['subject']
+        question = Question(
+            question=request.form['question'],
+            subject=request.form['subject'],
+            grade=request.form['grade'],
+            education=request.form['education'],
+            prompts_id=request.form['prompts_id'],
+            answer=request.form['answer'],
+            taxonomy_id=request.form['taxonomy_id']
+        )
+        if question.save():
+            flash('Vraag succesvol toegevoegd!', 'success')
+            return redirect(url_for('toetsvragen_view'))
+        flash('Er is een fout opgetreden bij het toevoegen van de vraag.', 'error')
+
+    taxonomies = Question.get_all_taxonomies()
+    prompts = Question.get_all_prompts()
+    return render_template('prompts/add_question.html.jinja',
+                         question=None,
+                         taxonomies=taxonomies,
+                         prompts=prompts)
+
+@app.route('/toetsvragen/edit/<int:question_id>', methods=['GET', 'POST'])
+def edit_question(question_id):
+    if result := check_login(): return result
+    question = Question.get_by_id(question_id)
+    if not question:
+        flash('Vraag niet gevonden.', 'error')
+        return redirect(url_for('toetsvragen_view'))
+
+    if request.method == 'POST':
+        question.question = request.form['question']
+        question.subject = request.form['subject']
+        question.grade = request.form['grade']
+        question.education = request.form['education']
+        question.prompts_id = request.form['prompts_id']
+        question.answer = request.form['answer']
+        question.taxonomy_id = request.form['taxonomy_id']
+
+        if question.save():
+            flash('Vraag succesvol bijgewerkt!', 'success')
+            return redirect(url_for('toetsvragen_view'))
+        flash('Er is een fout opgetreden bij het bijwerken van de vraag.', 'error')
+
+    taxonomies = Question.get_all_taxonomies()
+    prompts = Question.get_all_prompts()
+    return render_template('prompts/edit_question.html.jinja',
+                         question=question,
+                         taxonomies=taxonomies,
+                         prompts=prompts)
+
+@app.route('/toetsvragen/delete/<int:question_id>', methods=['POST'])
+def delete_question(question_id):
+    if result := check_login(): return result
+    if Question.delete(question_id):
+        flash('Vraag succesvol verwijderd!', 'success')
     else:
-        return render_template("prompts/toetsvragen_view.html.jinja", questions=questions)
-
-# @app.route('/index/login', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("login.html.jinja")
-
-# @app.route('/index/sign_up', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("sign_up.html.jinja")
-
-# @app.route('/index/vragen', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("vragen.html.jinja")
+        flash('Er is een fout opgetreden bij het verwijderen van de vraag.', 'error')
+    return redirect(url_for('toetsvragen_view'))
 
 @app.route('/redacteurs/lijst_redacteuren', methods=['GET', 'POST'])
 def lijst_redacteuren():

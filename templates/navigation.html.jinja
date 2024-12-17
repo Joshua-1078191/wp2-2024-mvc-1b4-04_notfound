@@ -1,21 +1,37 @@
 <nav id="navbar" class="navbar navbar-expand bg-light shadow-sm">
     {% block navbar %}
         <div class="container">
-            <a class="navbar-brand" href="index-1.html">404 Not-Found</a>
+            <a class="navbar-brand" href="{{ url_for('main') }}">404 Not-Found</a>
             <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="Vragen.html">Vragen</a>
+                        <a class="nav-link active" href="{{ url_for('toetsvragen_view') }}">Vragen</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Prompt</a>
+                        <a class="nav-link" href="{{ url_for('prompts_view') }}">Prompt</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Redacteuren</a>
+                        <a class="nav-link" href="{{ url_for('lijst_redacteuren') }}">Redacteuren</a>
                     </li>
                 </ul>
-                <a class="btn btn-primary" role="button" href="Login.html" style="margin-left: 700px;margin-right: 5px;">Login</a>
+                <ul class="navbar-nav ms-auto">
+                    {% if 'user_id' not in session %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login_route') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('sign_up_route') }}">Sign Up</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, {{ session['display_name'] }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout_route') }}">Logout</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     {% endblock %}
