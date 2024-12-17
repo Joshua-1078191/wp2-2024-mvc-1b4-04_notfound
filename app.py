@@ -2,10 +2,11 @@ import json
 from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
-from src.models.users import Users
 from src.models.user import User
+from src.models.users import Users
 from src.models.question import Questions
 from src.models.prompts import Prompts
+from src.models.taxonomy import Taxonomy
 from lib.gpt.bloom_taxonomy import get_bloom_category
 
 app = Flask(__name__)
@@ -105,23 +106,29 @@ def import_questions():
             return redirect(request.url)
 
         if questions:
-            return Response(json.dumps(questions[0], indent = 4), mimetype='application/json')
+            Questions.save_many([
+                {
+                    "questions_id": question.get("question_id"),
+                    "question": question.get("question"),
+                    "subject": question.get("vak"),
+                    "grade": question.get("leerjaar"),
+                    "education": question.get("onderwijsniveau"),
+                    "answer": question.get("answer"),
+                } for question in questions
+            ])
+            return redirect(url_for('toetsvragen_view'))
 
         flash("No data in JSON")
         return redirect(request.url)
 
     return render_template("questions/import_questions.html.jinja")
 
-@app.route('/index/<int:question_id>', methods=['GET', 'POST'])
-def index_questions_prompt(question_id:int):
+@app.route('/index/<question_id>', methods=['GET', 'POST'])
+def index_questions_prompt(question_id:int|str):
     if request.method == 'POST':
         prompt_id = request.form.get('selectedPrompt')
         if prompt_id:
-            try:
-                prompt_id = int(prompt_id)
-                return redirect(f'{request.url}/{prompt_id}')
-            except ValueError:
-                pass
+            return redirect(url_for('index_questions_taxonomy', question_id=prompt_id, prompt_id=prompt_id))
         flash("Invalid prompt")
         return redirect(request.url)
 
@@ -146,8 +153,8 @@ def index_questions_prompt(question_id:int):
 
     return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
 
-@app.route('/index/<int:question_id>/<int:prompt_id>', methods=['GET', 'POST'])
-def index_questions_taxonomy(question_id:int, prompt_id:int):
+@app.route('/index/<question_id>/<int:prompt_id>', methods=['GET', 'POST'])
+def index_questions_taxonomy(question_id:int|str, prompt_id:int):
 
     question = {
         'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
@@ -201,9 +208,9 @@ def index_questions_taxonomy(question_id:int, prompt_id:int):
 @app.route('/prompts/add', methods=['GET', 'POST'])
 def add_prompt():
     if result := check_login(): return result
-    
+
     prompts_model = Prompts(database_path)
-    
+
     if request.method == 'POST':
         prompt_id = prompts_model.add_prompt(
             user_id=int(request.form['user_id']),
@@ -223,9 +230,9 @@ def add_prompt():
 @app.route('/prompts/edit/<int:prompt_id>', methods=['GET', 'POST'])
 def edit_prompt(prompt_id):
     if result := check_login(): return result
-    
+
     prompts_model = Prompts(database_path)
-    
+
     if request.method == 'POST':
         success = prompts_model.edit_prompt(
             prompts_id=prompt_id,
@@ -245,14 +252,14 @@ def edit_prompt(prompt_id):
     if not prompt:
         flash('Prompt niet gevonden.', 'error')
         return redirect(url_for('prompts_view'))
-    
+
     users = prompts_model.get_all_users()
     return render_template('prompts/edit_prompt.html.jinja', prompt=prompt, users=users)
 
 @app.route('/prompts/delete/<int:prompt_id>', methods=['POST'])
 def delete_prompt(prompt_id):
     if result := check_login(): return result
-    
+
     prompts_model = Prompts(database_path)
     if prompts_model.delete_prompt(prompt_id):
         flash('Prompt succesvol verwijderd!', 'success')
@@ -272,7 +279,10 @@ def toetsvragen_view():
     if result := check_login(): return result
     questions_model = Questions(database_path)
     questions = questions_model.questions_all_view()
-    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions)
+    
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
+    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
@@ -295,22 +305,17 @@ def add_question():
 
     prompts_model = Prompts(database_path)
     prompts = prompts_model.prompt_all_view()
-    taxonomies = [
-        {"id": 1, "name": "Kennis"},
-        {"id": 2, "name": "Begrijpen"},
-        {"id": 3, "name": "Toepassen"},
-        {"id": 4, "name": "Analyseren"},
-        {"id": 5, "name": "Evalueren"},
-        {"id": 6, "name": "Creëren"}
-    ]
+
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/add_question.html.jinja', prompts=prompts, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/edit/<int:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
     if result := check_login(): return result
-    
+
     questions_model = Questions(database_path)
-    
+
     if request.method == 'POST':
         success = questions_model.edit_question(
             questions_id=question_id,
@@ -335,18 +340,11 @@ def edit_question(question_id):
 
     prompts_model = Prompts(database_path)
     prompts = prompts_model.prompt_all_view()
-    taxonomies = [
-        {"id": 1, "name": "Kennis"},
-        {"id": 2, "name": "Begrijpen"},
-        {"id": 3, "name": "Toepassen"},
-        {"id": 4, "name": "Analyseren"},
-        {"id": 5, "name": "Evalueren"},
-        {"id": 6, "name": "Creëren"}
-    ]
-    
-    return render_template('prompts/edit_question.html.jinja', 
-                         question=question, 
-                         prompts=prompts, 
+    taxonomies = Questions.get_all_taxonomies()
+
+    return render_template('prompts/edit_question.html.jinja',
+                         question=question,
+                         prompts=prompts,
                          taxonomies=taxonomies)
 
 @app.route('/toetsvragen/delete/<int:question_id>', methods=['POST'])

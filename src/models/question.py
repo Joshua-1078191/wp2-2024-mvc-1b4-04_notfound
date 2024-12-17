@@ -40,7 +40,7 @@ class Questions:
         cursor.close()
         return result
 
-    def add_question(self, question: str, subject: str, grade: str, education: str, 
+    def add_question(self, question: str, subject: str, grade: str, education: str,
                     prompts_id: int, answer: str, taxonomy_id: int):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
@@ -61,7 +61,7 @@ class Questions:
 
         return last_id
 
-    def edit_question(self, questions_id: int, question: str, subject: str, grade: str, 
+    def edit_question(self, questions_id: int, question: str, subject: str, grade: str,
                      education: str, prompts_id: int, answer: str, taxonomy_id: int):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
@@ -130,7 +130,6 @@ class Questions:
             LEFT JOIN taxonomy t ON q.taxonomy_id = t.taxonomy_id
             WHERE q.questions_id = ?
         """, (questions_id,)).fetchone()
-
         if not question_data:
             return None
 
