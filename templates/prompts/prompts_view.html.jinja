@@ -25,13 +25,13 @@
                         <td class="border-start border-black border-1">{{ prompt.name }}</td>
                         <td class="border-start border-black border-1">{{ prompt.categorised_questions }}</td>
                         <td class="border-start border-black border-1">{{ prompt.correct_questions }}</td>
-                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details/{{ prompt.id }}">Details</a></td>
+                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/prompts/prompt_details/{{ prompt.id }}">Details</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <div class="row">
-                <a href="{{ url_for('add_prompt') }}"><button type="button" class="btn btn-light btn-outline-primary" >Nieuw prompt toevoegen</button></a>
+                <a href="{{ url_for('add_prompt') }}"><button type="button" class="btn btn-light btn-primary" >Nieuw prompt toevoegen</button></a>
             </div>
         </div>
     </div>
