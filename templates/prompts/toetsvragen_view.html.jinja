@@ -7,13 +7,13 @@
             <h1>Lijst vragen beantwoord door {{ question.prompt }}</h1>
         </div>
 
-        <form action="">
+        <form method="post" action="#">
             <div class="row pb-3">
                 <div class="col">
                     <div class="row">
                         <h2>Zoekwoord</h2>
                         <label for="filter-zoekwoord"></label>
-                        <input type="text" id="filter-zoekwoord" autocomplete="off">
+                        <input type="text" id="filter-zoekwoord" autocomplete="off" name="keyword">
                     </div>
                 </div>
             <!-- <input> elements may need to be replaced by <option> elements because in the wireframes
@@ -21,15 +21,15 @@
                 <div class="col">
                     <h2>Niveau + jaar</h2>
                     <label for="filter-niveau-en-jaar"></label>
-                    <input type="text" id="filter-niveau-en-jaar" autocomplete="off">
+                    <input type="text" id="filter-niveau-en-jaar" autocomplete="off" name="school_level">
                 </div>
                 <div class="col">
                     <h2>Vak</h2>
                     <label for="filter-vak"></label>
-                    <input type="text" id="filter-vak" autocomplete="off">
+                    <input type="text" id="filter-vak" autocomplete="off" name="subject">
                 </div>
                 <div>
-                    <button class="m-3 col-1 btn btn-outline-dark">Filter(s) toevoegen</button>
+                    <button class="m-3 col-1 btn btn-outline-primary">Filter(s) toevoegen</button>
                 </div>
             </div>
         </form>
