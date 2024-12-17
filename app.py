@@ -1,8 +1,7 @@
 import json
 from json import JSONDecodeError
 
-from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
-from flask import Flask, render_template, session, redirect, url_for, request, flash
+from flask import Flask, render_template, session, redirect, url_for, request, flash, Response
 from src.models.users import Users
 from src.models.user import User
 from src.models.question import Question
@@ -213,40 +212,11 @@ def add_prompt():
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
     prompt_model = Prompts(database_path)
-    prompts = [{
-        prompt_id: 1,
-        "prompt_naam" : "Jorik's prompt",
-        "redacteur" : "Jorik",
-        "creation_date" : "02-02-2002",
-        "categorised_questions" : 200,
-        "correct_questions" : 180,
-        "incorrect_questions" : 20,
-    }]
-    return render_template("prompts/prompt_details.html.jinja", prompts = prompt_model.get_one_prompt(prompt_id))
+    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_one_prompt(prompt_id))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
     prompt_models = Prompts(database_path)
-    prompts = [{
-        "id" : 1,
-        "prompt" : "prompt ....",
-        "name" : "testnaam",
-        "categorised_questions" : 100,
-        "correct_questions" : "90%",
-    },{
-        "id" : 2,
-        "prompt" : "prompt 2",
-        "name" : "testnaam 2",
-        "categorised_questions" : 200,
-        "correct_questions" : "80%",
-    },{
-        "id" : 3,
-        "prompt" : "prompt 3",
-        "name" : "testnaam 3",
-        "categorised_questions" : 300,
-        "correct_questions" : "70%",
-    }
-    ]
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
 
 @app.route('/index/toetsvragen_view')
