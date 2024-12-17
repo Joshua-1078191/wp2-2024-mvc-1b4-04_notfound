@@ -35,7 +35,7 @@ class Prompts:
         cursor.close()
         return result
 
-    def add_prompt(self, user_id: int, prompt_name: str, prompt: str, 
+    def add_prompt(self, user_id: int, prompt_name: str, prompt: str,
                   questions_count: int, questions_correct: int):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
@@ -56,7 +56,7 @@ class Prompts:
 
         return last_id
 
-    def edit_prompt(self, prompts_id: int, user_id: int, prompt_name: str, prompt: str, 
+    def edit_prompt(self, prompts_id: int, user_id: int, prompt_name: str, prompt: str,
                    questions_count: int, questions_correct: int):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row

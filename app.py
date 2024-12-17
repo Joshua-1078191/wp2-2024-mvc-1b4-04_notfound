@@ -1,6 +1,7 @@
 import json
 from json import JSONDecodeError
 
+
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.user import User
 from src.models.users import Users
@@ -267,8 +268,16 @@ def delete_prompt(prompt_id):
         flash('Er is een fout opgetreden bij het verwijderen van de prompt.', 'error')
     return redirect(url_for('prompts_view'))
 
+@app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
+def prompt_details(prompt_id:int):
+    prompt_model = Prompts(database_path)
+    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_one_prompt(prompt_id))
+
+@app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 @app.route('/prompts')
 def prompts_view():
+    prompt_models = Prompts(database_path)
+    return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
     if result := check_login(): return result
     prompts_model = Prompts(database_path)
     prompts = prompts_model.prompt_all_view()
@@ -279,7 +288,7 @@ def toetsvragen_view():
     if result := check_login(): return result
     questions_model = Questions(database_path)
     questions = questions_model.questions_all_view()
-    
+
     taxonomy_model = Taxonomy(database_path)
     taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
