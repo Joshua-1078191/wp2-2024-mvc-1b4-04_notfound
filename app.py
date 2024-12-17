@@ -106,18 +106,6 @@ def add_prompt():
     if result := check_login(): return result
     return render_template("prompts/add_prompt.html.jinja")
 
-@app.route('/index/prompt_details', methods=['GET', 'POST'])
-def prompt_details():
-    if result := check_login(): return result
-    return render_template("prompts/prompt_details.html.jinja")
-    prompts = Prompts(database_path)
-    if request.method == 'POST':
-        prompt_titel = request.form['prompt-title']
-        prompt = request.form['prompt-text']
-        prompt_id = prompts.add_prompt(1, prompt, 100, 80)
-    else:
-        return render_template("prompts/add_prompt.html.jinja")
-
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
     prompt_model = Prompts(database_path)
@@ -143,11 +131,6 @@ def toetsvragen_view():
     questions = Question.get_all_questions()
     return render_template('prompts/toetsvragen_view.html.jinja', questions=questions)
 
-@app.route('/index/vragen', methods=['GET', 'POST'])
-def vragen():
-    if result := check_login(): return result
-    return render_template("vragen.html.jinja")
-
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
     if result := check_login(): return result
@@ -168,15 +151,15 @@ def add_question():
     
     taxonomies = Question.get_all_taxonomies()
     prompts = Question.get_all_prompts()
-    return render_template('prompts/question_form.html.jinja', 
+    return render_template('prompts/add_question.html.jinja', 
                          question=None, 
                          taxonomies=taxonomies,
                          prompts=prompts)
 
-@app.route('/toetsvragen/edit/<id>', methods=['GET', 'POST'])
-def edit_question(id):
+@app.route('/toetsvragen/edit/<int:question_id>', methods=['GET', 'POST'])
+def edit_question(question_id):
     if result := check_login(): return result
-    question = Question.get_by_id(id)
+    question = Question.get_by_id(question_id)
     if not question:
         flash('Vraag niet gevonden.', 'error')
         return redirect(url_for('toetsvragen_view'))
@@ -197,15 +180,15 @@ def edit_question(id):
 
     taxonomies = Question.get_all_taxonomies()
     prompts = Question.get_all_prompts()
-    return render_template('prompts/question_form.html.jinja', 
+    return render_template('prompts/edit_question.html.jinja', 
                          question=question,
                          taxonomies=taxonomies,
                          prompts=prompts)
 
-@app.route('/toetsvragen/delete/<id>', methods=['POST'])
-def delete_question(id):
+@app.route('/toetsvragen/delete/<int:question_id>', methods=['POST'])
+def delete_question(question_id):
     if result := check_login(): return result
-    if Question.delete(id):
+    if Question.delete(question_id):
         flash('Vraag succesvol verwijderd!', 'success')
     else:
         flash('Er is een fout opgetreden bij het verwijderen van de vraag.', 'error')

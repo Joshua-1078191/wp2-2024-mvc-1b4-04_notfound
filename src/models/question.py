@@ -15,7 +15,6 @@ class Question:
     def get_all_questions():
         conn = get_db()
         try:
-            # Join with prompts and taxonomy tables to get the text values
             query = '''
                 SELECT 
                     q.questions_id,
@@ -25,13 +24,49 @@ class Question:
                     q.education,
                     p.prompt,
                     q.answer,
-                    t.name as taxonomy
+                    t.name as taxonomy,
+                    q.prompts_id,
+                    q.taxonomy_id
                 FROM questions q
                 LEFT JOIN prompts p ON q.prompts_id = p.prompts_id
                 LEFT JOIN taxonomy t ON q.taxonomy_id = t.taxonomy_id
                 ORDER BY q.questions_id
             '''
             return conn.execute(query).fetchall()
+        finally:
+            conn.close()
+
+    @staticmethod
+    def get_by_id(questions_id):
+        """Get a single question by ID"""
+        conn = get_db()
+        try:
+            query = '''
+                SELECT 
+                    q.questions_id,
+                    q.question,
+                    q.subject,
+                    q.grade,
+                    q.education,
+                    q.prompts_id,
+                    q.answer,
+                    q.taxonomy_id
+                FROM questions q
+                WHERE q.questions_id = ?
+            '''
+            row = conn.execute(query, (questions_id,)).fetchone()
+            if row:
+                return Question(
+                    questions_id=row[0],
+                    question=row[1],
+                    subject=row[2],
+                    grade=row[3],
+                    education=row[4],
+                    prompts_id=row[5],
+                    answer=row[6],
+                    taxonomy_id=row[7]
+                )
+            return None
         finally:
             conn.close()
 
@@ -83,34 +118,6 @@ class Question:
         except Exception as e:
             print(f"Error deleting question: {e}")
             return False
-        finally:
-            conn.close()
-
-    @staticmethod
-    def get_by_id(questions_id):
-        """Get a single question by ID"""
-        conn = get_db()
-        try:
-            query = '''
-                SELECT 
-                    q.questions_id, q.question, q.subject, q.grade,
-                    q.education, q.prompts_id, q.answer, q.taxonomy_id
-                FROM questions q
-                WHERE q.questions_id = ?
-            '''
-            row = conn.execute(query, (questions_id,)).fetchone()
-            if row:
-                return Question(
-                    questions_id=row[0],
-                    question=row[1],
-                    subject=row[2],
-                    grade=row[3],
-                    education=row[4],
-                    prompts_id=row[5],
-                    answer=row[6],
-                    taxonomy_id=row[7]
-                )
-            return None
         finally:
             conn.close()
 

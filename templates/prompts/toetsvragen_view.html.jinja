@@ -31,22 +31,22 @@
                 </thead>
                 <tbody>
                     {% if questions %}
-                        {% for q in questions %}
+                        {% for question in questions %}
                             <tr>
-                                <td class="border-start border-black border-1">{{ q[0] }}</td>
-                                <td class="border-start border-black border-1">{{ q[1] }}</td>
-                                <td class="border-start border-black border-1">{{ q[2] }}</td>
-                                <td class="border-start border-black border-1">{{ q[3] }}</td>
-                                <td class="border-start border-black border-1">{{ q[4] }}</td>
-                                <td class="border-start border-black border-1">{{ q[5] }}</td>
-                                <td class="border-start border-black border-1">{{ q[6] }}</td>
-                                <td class="border-start border-black border-1">{{ q[7] }}</td>
+                                <td class="border-start border-black border-1">{{ question[0] }}</td>
+                                <td class="border-start border-black border-1">{{ question[1] }}</td>
+                                <td class="border-start border-black border-1">{{ question[2] }}</td>
+                                <td class="border-start border-black border-1">{{ question[3] }}</td>
+                                <td class="border-start border-black border-1">{{ question[4] }}</td>
+                                <td class="border-start border-black border-1">{{ question[5] }}</td>
+                                <td class="border-start border-black border-1">{{ question[6] }}</td>
+                                <td class="border-start border-black border-1">{{ question[7] }}</td>
                                 <td class="border-start border-black border-1">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ url_for('edit_question', id=q[0]) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ url_for('edit_question', question_id= 0) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ url_for('delete_question', id=q[0]) }}" method="POST" class="d-inline">
+                                        <form action="{{ url_for('delete_question', question_id= 0) }}" method="POST" class="d-inline">
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
