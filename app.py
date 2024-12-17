@@ -1,6 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 from src.models.user import User
 from src.models.question import Question
+from src.models.prompts import Prompts
 
 app = Flask(__name__)
 app.secret_key = 'random'
@@ -109,6 +110,27 @@ def add_prompt():
 def prompt_details():
     if result := check_login(): return result
     return render_template("prompts/prompt_details.html.jinja")
+    prompts = Prompts(database_path)
+    if request.method == 'POST':
+        prompt_titel = request.form['prompt-title']
+        prompt = request.form['prompt-text']
+        prompt_id = prompts.add_prompt(1, prompt, 100, 80)
+    else:
+        return render_template("prompts/add_prompt.html.jinja")
+
+@app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
+def prompt_details(prompt_id:int):
+    prompt_model = Prompts(database_path)
+    prompts = [{
+        prompt_id: 1,
+        "prompt_naam" : "Jorik's prompt",
+        "redacteur" : "Jorik",
+        "creation_date" : "02-02-2002",
+        "categorised_questions" : 200,
+        "correct_questions" : 180,
+        "incorrect_questions" : 20,
+    }]
+    return render_template("prompts/prompt_details.html.jinja", prompts = prompt_model.get_one_prompt(prompt_id))
 
 @app.route('/index/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
