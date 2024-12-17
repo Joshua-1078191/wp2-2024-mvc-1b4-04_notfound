@@ -155,5 +155,3 @@ if __name__ == "__main__":
         database_path, overwrite=True, initial_data=True
     )
     database_generator.generate_database()
-    
-    database_generator.generate_database()
