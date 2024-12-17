@@ -13,7 +13,7 @@ class Prompts:
         prompt_all_data = cursor.execute("""SELECT * FROM prompts""").fetchall()
 
         if not prompt_all_data:
-            return None
+            return []
 
         result = [{
             "prompt_id": prompt_all["prompts_id"],
