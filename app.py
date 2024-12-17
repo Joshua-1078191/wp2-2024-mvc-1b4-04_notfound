@@ -361,15 +361,18 @@ def delete_question(question_id):
 
 @app.route('/redacteurs/lijst_redacteuren', methods=['GET', 'POST'])
 def lijst_redacteuren():
+    if result := check_login(): return result
     users = Users(database_path)
     return render_template("redacteurs/lijst_redacteuren.html.jinja", editors=users.get_all())
 
 @app.route('/redacteurs/nieuwe_redacteur', methods=['GET', 'POST'])
 def nieuwe_redacteuren():
+    if result := check_login(): return result
     return render_template("redacteurs/nieuwe_redacteur.html.jinja")
 
 @app.route('/redacteurs/redacteur_wijzigen/<int:id>', methods=['GET', 'POST'])
 def redacteur_wijzigen(id):
+    if result := check_login(): return result
     users = Users(database_path)
     return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=users.get(id))
 
