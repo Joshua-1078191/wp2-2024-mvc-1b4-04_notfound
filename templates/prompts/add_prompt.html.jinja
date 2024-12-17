@@ -9,33 +9,44 @@
     <link rel="stylesheet" href="../../static/css/prompt_screens_stylesheet.css">
 {% endblock %}
 {% block title %}
-    add prompt screen
+    Prompt Toevoegen
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h1>Nieuwe prompt</h1>
-        <div class="row align-items-start">
+        <div class="row">
             <div class="col">
-                <div class="row">
-                    <div class="d-flex justify-content-start">
-                        <form method="post" action="#">
-                            <label for="prompt-title" class="form-label"></label>
-                            <div class="col-5 input-group input-group-lg ">
-                                <span class="input-group-text border-0" id="prompt-title">Titel</span>
-                                <input type="text" id="prompt-title" class="form-control border border-2 border-black border-opacity-75 rounded ms-5" name="prompt-title" maxlength="1000" required autocomplete="off" placeholder="Titel van de prompt">
-                            </div>
-                            <label for="prompt-text" class="form-label"></label>
+                <h1>Nieuwe Prompt Toevoegen</h1>
+            </div>
+        </div>
 
-                            <!--input field position is not right. Needs to be fixed.-->
-
-                            <div class="col-5 input-group input-group-lg">
-                                <span class="input-group-text border-0" id="prompt-text">Prompt</span>
-                                <input type="text" id="prompt-text" class="form-control border border-2 border-black border-opacity-75 rounded ms-5" name="prompt-text" maxlength="1000" required autocomplete="off" placeholder="Wat moet de prompt doen?">
-                            </div>
-                            <input type="submit" class="m-3 col-1 btn btn-outline-primary" value="Opslaan" name="Opslaan" id="submit-button">
-                        </form>
+        <div class="row">
+            <div class="col">
+                <form method="POST" action="{{ url_for('add_prompt') }}">
+                    <div class="mb-3">
+                        <label for="user_id" class="form-label">Redacteur</label>
+                        <select class="form-select" id="user_id" name="user_id" required>
+                            <option value="">Selecteer een redacteur</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label for="prompt_name" class="form-label">Naam</label>
+                        <input type="text" class="form-control" id="prompt_name" name="prompt_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="prompt" class="form-label">Prompt</label>
+                        <textarea class="form-control" id="prompt" name="prompt" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <a href="{{ url_for('prompts_view') }}" class="btn btn-secondary">Annuleren</a>
+                        <button type="submit" class="btn btn-primary">Opslaan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
