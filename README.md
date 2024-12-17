@@ -1,4 +1,4 @@
-# WP2 Starter 
+# Automatic Taxonomy using LLMs
 
 Dit is de starter repository voor WP2 2024. Deze bevat: 
 - De [casus](CASUS.md)
@@ -10,7 +10,6 @@ Dit is de starter repository voor WP2 2024. Deze bevat:
 Afspraken jinja template inheritance:
 - Gebruik een block voor de navigation bar.
 - Gebruik een block voor de footer.
-- Gebruik een block voor de sidebar.
 
 Folder structuur
 ```python

@@ -1,6 +1,7 @@
 {% extends "layout.html.jinja" %}
 {% block title %} prompt details {% endblock %}
 {% block content %}
+    {% for prompt in prompts %}
     <div class="container">
         <div class="d-flex justify-content-start">
             <div class="row">
@@ -9,8 +10,11 @@
                         <h1>Prompt details</h1>
                     </div>
                     <div class="row">
-                        <h2>Jorik prompt V1.0</h2>
+                        <h2>{{ prompt.prompt_naam }}, {{ prompt.prompt_id }}</h2>
                     </div>
+
+                    <!-- The div under this comment needs to be replaced with a jinja variable-->
+
                     <div class="row">
                         <p>Wij zijn vragen aan het categoriseren. Kun je de volgende vraag indexeren naar de taxonomie van Bloom? We willen maar 1 categorie per vraag.<br>
                             <br>
@@ -24,24 +28,29 @@
                             }
                         </code>
                     </div>
+
                     <div class="row">
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th scope="col">data</th>
-                                    <td>Redacteur</td>
-                                    <td>Aangemaakt</td>
-                                    <td>Toetsvragen gecategoriseerd</td>
-                                    <td>toetsvragen correct</td>
-                                    <td>toetsvragen incorrect</td>
+                                    <th scope="row" class="col-3">Redacteur:</th>
+                                    <td>{{ prompt.redacteur }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="col">ingevulde data</th>
-                                    <td>Jorik</td>
-                                    <td><time datetime="2024-11-15">15-11-2024</time></td>
-                                    <td>190</td>
-                                    <td>171</td>
-                                    <td>19</td>
+                                    <th scope="row" class="col-3">Aangemaakt:</th>
+                                    <td><time datetime="{{ prompt.creation_date }}">{{ prompt.creation_date }}</time></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="col-3">Toetsvragen gecategoriseerd:</th>
+                                    <td>{{ prompt.categorised_questions }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="col-3">Toetsvragen correct:</th>
+                                    <td>{{ prompt.correct_questions }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="col-3">Toetsvragen incorrect</th>
+                                    <td>{{ prompt.incorrect_questions }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -50,4 +59,5 @@
             </div>
         </div>
     </div>
+    {% endfor %}
 {% endblock %}
