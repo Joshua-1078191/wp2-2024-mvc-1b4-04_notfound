@@ -3,6 +3,7 @@ from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.users import Users
+from src.models.prompts import Prompts
 from lib.gpt.bloom_taxonomy import get_bloom_category
 
 app = Flask(__name__)
@@ -125,10 +126,17 @@ def index_questions_taxonomy(question_id:int, prompt_id:int):
 
 @app.route('/prompts/add_prompt', methods=['GET', 'POST'])
 def add_prompt():
-    return render_template("prompts/add_prompt.html.jinja")
+    prompts = Prompts(database_path)
+    if request.method == 'POST':
+        prompt_titel = request.form['prompt-title']
+        prompt = request.form['prompt-text']
+        prompt_id = prompts.add_prompt(1, prompt, 100, 80)
+    else:
+        return render_template("prompts/add_prompt.html.jinja")
 
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
+    prompt_model = Prompts(database_path)
     prompts = [{
         prompt_id: 1,
         "prompt_naam" : "Jorik's prompt",
@@ -138,10 +146,11 @@ def prompt_details(prompt_id:int):
         "correct_questions" : 180,
         "incorrect_questions" : 20,
     }]
-    return render_template("prompts/prompt_details.html.jinja", prompts = prompts)
+    return render_template("prompts/prompt_details.html.jinja", prompts = prompt_model.get_one_prompt(prompt_id))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 def prompts_view():
+    prompt_models = Prompts(database_path)
     prompts = [{
         "id" : 1,
         "prompt" : "prompt ....",
@@ -162,7 +171,7 @@ def prompts_view():
         "correct_questions" : "70%",
     }
     ]
-    return render_template("prompts/prompts_view.html.jinja", prompts = prompts)
+    return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
 
 @app.route('/questions/toetsvragen_view/<int:prompt_id>', methods=['GET', 'POST'])
 def toetsvragen_view(prompt_id:int):
@@ -176,7 +185,12 @@ def toetsvragen_view(prompt_id:int):
         "creation_date" : "14-7-2020",
         "answered_correctly" : True,
     }]
-    return render_template("prompts/toetsvragen_view.html.jinja", questions = questions)
+    if request.method == 'POST':
+        keyword = request.form['keyword']
+        school_level = request.form['school_level']
+        subject = request.form['subject']
+    else:
+        return render_template("prompts/toetsvragen_view.html.jinja", questions=questions)
 
 # @app.route('/index/login', methods=['GET', 'POST'])
 # def toetsvragen_view():
