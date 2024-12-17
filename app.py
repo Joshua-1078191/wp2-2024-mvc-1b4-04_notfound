@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 from src.models.user import User
+from src.models.question import Question
 
 app = Flask(__name__)
 app.secret_key = 'random'
@@ -114,15 +115,79 @@ def prompts_view():
     if result := check_login(): return result
     return render_template("prompts/prompts_view.html.jinja")
 
-@app.route('/index/toetsvragen_view', methods=['GET', 'POST'])
+@app.route('/index/toetsvragen_view')
 def toetsvragen_view():
     if result := check_login(): return result
-    return render_template("prompts/toetsvragen_view.html.jinja")
+    questions = Question.get_all_questions()
+    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions)
 
 @app.route('/index/vragen', methods=['GET', 'POST'])
 def vragen():
     if result := check_login(): return result
     return render_template("vragen.html.jinja")
+
+@app.route('/toetsvragen/add', methods=['GET', 'POST'])
+def add_question():
+    if result := check_login(): return result
+    if request.method == 'POST':
+        question = Question(
+            question=request.form['question'],
+            subject=request.form['subject'],
+            grade=request.form['grade'],
+            education=request.form['education'],
+            prompts_id=request.form['prompts_id'],
+            answer=request.form['answer'],
+            taxonomy_id=request.form['taxonomy_id']
+        )
+        if question.save():
+            flash('Vraag succesvol toegevoegd!', 'success')
+            return redirect(url_for('toetsvragen_view'))
+        flash('Er is een fout opgetreden bij het toevoegen van de vraag.', 'error')
+    
+    taxonomies = Question.get_all_taxonomies()
+    prompts = Question.get_all_prompts()
+    return render_template('prompts/question_form.html.jinja', 
+                         question=None, 
+                         taxonomies=taxonomies,
+                         prompts=prompts)
+
+@app.route('/toetsvragen/edit/<id>', methods=['GET', 'POST'])
+def edit_question(id):
+    if result := check_login(): return result
+    question = Question.get_by_id(id)
+    if not question:
+        flash('Vraag niet gevonden.', 'error')
+        return redirect(url_for('toetsvragen_view'))
+
+    if request.method == 'POST':
+        question.question = request.form['question']
+        question.subject = request.form['subject']
+        question.grade = request.form['grade']
+        question.education = request.form['education']
+        question.prompts_id = request.form['prompts_id']
+        question.answer = request.form['answer']
+        question.taxonomy_id = request.form['taxonomy_id']
+
+        if question.save():
+            flash('Vraag succesvol bijgewerkt!', 'success')
+            return redirect(url_for('toetsvragen_view'))
+        flash('Er is een fout opgetreden bij het bijwerken van de vraag.', 'error')
+
+    taxonomies = Question.get_all_taxonomies()
+    prompts = Question.get_all_prompts()
+    return render_template('prompts/question_form.html.jinja', 
+                         question=question,
+                         taxonomies=taxonomies,
+                         prompts=prompts)
+
+@app.route('/toetsvragen/delete/<id>', methods=['POST'])
+def delete_question(id):
+    if result := check_login(): return result
+    if Question.delete(id):
+        flash('Vraag succesvol verwijderd!', 'success')
+    else:
+        flash('Er is een fout opgetreden bij het verwijderen van de vraag.', 'error')
+    return redirect(url_for('toetsvragen_view'))
 
 if __name__ == '__main__':
     app.run(debug=True)

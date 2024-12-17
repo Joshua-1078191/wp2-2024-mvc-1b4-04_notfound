@@ -1,0 +1,74 @@
+{% extends "layout.html.jinja" %}
+{% block title %}{{ 'Vraag Bewerken' if question else 'Nieuwe Vraag' }}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row pb-3">
+        <div class="col">
+            <h1>{{ 'Vraag Bewerken' if question else 'Nieuwe Vraag' }}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="question" class="form-label">Vraag</label>
+                    <textarea class="form-control" id="question" name="question" rows="3" required>{{ question.question if question else '' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Vak</label>
+                    <input type="text" class="form-control" id="subject" name="subject" value="{{ question.subject if question else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="grade" class="form-label">Klas</label>
+                    <input type="number" class="form-control" id="grade" name="grade" value="{{ question.grade if question else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="education" class="form-label">Niveau</label>
+                    <input type="text" class="form-control" id="education" name="education" value="{{ question.education if question else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="prompts_id" class="form-label">Prompt</label>
+                    <select class="form-select" id="prompts_id" name="prompts_id" required>
+                        <option value="">Selecteer een prompt</option>
+                        {% for prompt in prompts %}
+                            <option value="{{ prompt[0] }}" 
+                                    {% if question and question.prompts_id == prompt[0] %}selected{% endif %}
+                                    title="{{ prompt[2] }}">
+                                {{ prompt[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="answer" class="form-label">Antwoord</label>
+                    <textarea class="form-control" id="answer" name="answer" rows="3" required>{{ question.answer if question else '' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="taxonomy_id" class="form-label">Taxonomie</label>
+                    <select class="form-select" id="taxonomy_id" name="taxonomy_id" required>
+                        <option value="">Selecteer een taxonomie</option>
+                        {% for taxonomy in taxonomies %}
+                            <option value="{{ taxonomy[0] }}" 
+                                    {% if question and question.taxonomy_id == taxonomy[0] %}selected{% endif %}>
+                                {{ taxonomy[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <a href="{{ url_for('toetsvragen_view') }}" class="btn btn-secondary">Annuleren</a>
+                    <button type="submit" class="btn btn-primary">Opslaan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
