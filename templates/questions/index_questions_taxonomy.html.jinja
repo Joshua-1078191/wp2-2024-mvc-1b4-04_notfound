@@ -7,25 +7,43 @@
         <tr>
             <th>Voorstel</th>
             <td>
-                <p><i>{{ taxonomies[answer.selected_taxonomy].name }}</i></p>
+                <p><i>Begrijpen</i></p>
             </td>
         </tr>
         <tr>
             <th>Uitleg</th>
             <td>
-                {{ answer.explanation }}
+                <p>De leerling wordt gevraagd om het verschil tussen geslachtelijke en ongeslachtelijke voortplanting te begrijpen en uit te leggen, wat meer is dan alleen het onthouden van feiten. Het gaat om het duiden van de concepten en het kunnen uitleggen hoe deze vormen van voortplanting werken.</p>
+                <p>Dus de focus ligt hier vooral op het begrip van de twee voortplantingsvormen en het verschil tussen hen.</p>
+                <p>Analyse van de vraag volgens Bloom's taxonomie:</p>
+                <ul>
+                    <li>
+                        Herinneren: De leerling moet het verschil tussen geslachtelijke en ongeslachtelijke voortplanting kennen en kunnen opnoemen. Dit vereist het onthouden van de definities en concepten.
+                    </li>
+                    <li>
+                        Begrip: De leerling moet begrijpen wat geslachtelijke en ongeslachtelijke voortplanting inhoudt, en hoe deze vormen van voortplanting in de natuur functioneren. Het gaat niet alleen om het feitelijke verschil, maar ook om de achterliggende concepten.
+                    </li>
+                    <li>
+                        Toepassen: De leerling wordt gevraagd om voorbeelden te geven van organismen die zich op deze manieren voortplanten. Dit vereist dat de leerling de kennis over de twee voortplantingsvormen toepast op specifieke organismen.
+                    </li>
+                </ul>
+
+                <p>Kortom: De vraag combineert de niveaus herinneren en begrip (bij het uitleggen van de concepten) en toepassen (bij het geven van voorbeelden van organismen).</p>
             </td>
         </tr>
     </table>
-    <form method="post">
+    <form>
         <div class="row">
             <!-- - Een taxonomie selecteren voor de vraag (standaard gezet naar chatgpt's antwoord) -->
             <div class="col-auto">
-                <select required class="form-select" id="taxonomy" aria-label="Prompt selecteren">
+                <select required class="form-select" aria-label="Prompt selecteren">
                     <option value="" disabled class="text-secondary">Kies een taxonomie</option>
-                    {% for taxonomy in taxonomies %}
-                        <option value="{{ taxonomy.id }}" {% if answer.selected_taxonomy == taxonomy.id %} selected="selected" {% endif %}>{{ taxonomy.name }}</option>
-                    {% endfor %}
+                    <option value="1">Kennis</option>
+                    <option value="2" selected>Begrijpen</option>
+                    <option value="2">Toepassen</option>
+                    <option value="2">Analyseren</option>
+                    <option value="2">Evalueren</option>
+                    <option value="2">Synthese</option>
                 </select>
             </div>
             <!-- - Taxonomie opslaan knop -->
@@ -33,26 +51,8 @@
                 <input type="submit" class="btn btn-primary" value="Taxonomie opslaan">
             </div>
             <!-- - (optioneel) chatgpt's originele taxonomie categorie laten zien als redacteur een andere heeft gekozen    -->
-            <p class="text-danger" id="confirmText">Weet u zeker dat u deze keuze wilt wijzigen?</p>
+            <p class="text-danger">Weet u zeker dat u deze keuze wilt wijzigen?</p>
         </div>
         <!-- - (optioneel) confirmatie popup als je taxonomie wijzigt -->
     </form>
-    <script>
-        // Show message if choice changed
-        const selectedTaxonomy = document.querySelector('#taxonomy');
-        const confirmText = document.querySelector('#confirmText');
-
-        confirmText.style.display = "none"
-
-        selectedTaxonomy.addEventListener('change', event => {
-            if (selectedTaxonomy.value === "{{ answer.selected_taxonomy }}")
-            {
-                confirmText.style.display = "none"
-            }
-            else
-            {
-                confirmText.style.display = "block"
-            }
-        });
-    </script>
 {% endblock %}

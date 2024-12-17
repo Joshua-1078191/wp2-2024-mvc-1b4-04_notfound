@@ -1,6 +1,5 @@
 import sqlite3
 from pathlib import Path
-from venv import create
 
 
 class WP2DatabaseGenerator:
@@ -12,22 +11,19 @@ class WP2DatabaseGenerator:
         self.conn = sqlite3.connect(self.database_file)
 
     def generate_database(self):
-        self.create_table_taxonomy()
         self.create_table_questions()
         self.create_table_users()
         self.create_table_prompts()
         if self.create_initial_data:
             self.insert_admin_user()
-            self.insert_bloom_taxonomy()
 
 
     def create_table_users(self):
         create_statement = """
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            login TEXT NOT NULL UNIQUE,
+            login TEXT NOT NULL,
             password TEXT NOT NULL,
-            salt TEXT,
             display_name TEXT NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             is_admin INTEGER NOT NULL DEFAULT 1);
@@ -40,7 +36,6 @@ class WP2DatabaseGenerator:
         CREATE TABLE IF NOT EXISTS prompts (
             prompts_id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
-            prompt_name TEXT NOT NULL,
             prompt TEXT NOT NULL,
             questions_count INTEGER NOT NULL,
             questions_correct INTEGER NOT NULL,
@@ -50,39 +45,25 @@ class WP2DatabaseGenerator:
         """
         self.__execute_transaction_statement(create_statement)
         print("✅ Prompts table created")
-
-    def create_table_taxonomy(self):
-        create_statement = """
-        CREATE TABLE IF NOT EXISTS taxonomy (
-            taxonomy_id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL
-        );
-        """
-        self.__execute_transaction_statement(create_statement)
-        print("✅ Levels table created")
-
     def create_table_questions(self):
         create_statement = """
         CREATE TABLE IF NOT EXISTS questions (
             questions_id TEXT PRIMARY KEY,
-            prompts_id INTEGER,
+            prompts_id INTEGER NOT NULL,
             user_id TEXT INTEGER NULL,
-            education TEXT INTEGER NULL,
-            subject TEXT NULL,
-            grade INT NULL,
             question TEXT NOT NULL,
-            answer TEXT NULL,
-            taxonomy_id TEXT INTEGER NULL,
+            taxonomy_bloom TEXT,
             rtti TEXT,
             exported BOOLEAN DEFAULT FALSE,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(user_id),
             FOREIGN KEY (prompts_id) REFERENCES prompts(prompts_id)            
-            FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(taxonomy_id)            
             );
         """
         self.__execute_transaction_statement(create_statement)
         print("✅ Questions table created")
+
+
 
     def insert_admin_user(self):
         users = [
@@ -92,19 +73,6 @@ class WP2DatabaseGenerator:
         insert_statement = "INSERT INTO users (login, password, display_name, is_admin) VALUES (?, ?, ?, ?);"
         self.__execute_many_transaction_statement(insert_statement, users)
         print("✅ Default teachers / users created")
-
-    def insert_bloom_taxonomy(self):
-        taxonomies = [
-            ('Kennis',),
-            ('Begrijpen',),
-            ('Toepassen',),
-            ('Analyseren',),
-            ('Evalueren',),
-            ('Synthese',)
-        ]
-        insert_statement = "INSERT INTO taxonomy (name) VALUES (?);"
-        self.__execute_many_transaction_statement(insert_statement, taxonomies)
-        print("✅ Taxonomy populated")
 
     # Transacties zijn duur, dat wil zeggen, ze kosten veel tijd en CPU kracht. Als je veel insert doet
     # bundel je ze in één transactie, of je gebruikt de SQLite executemany methode.

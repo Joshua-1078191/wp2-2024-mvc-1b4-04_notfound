@@ -2,24 +2,13 @@
 {% block title %}Vragen Importeren{% endblock %}
 {% block content %}
     <div class="container d-flex justify-content-center align-items-center">
-        <form class="col-6 d-flex flex-column justify-content-center p-4 rounded-5 bg-white shadow-sm" method="post" enctype="multipart/form-data">
+        <form class="col-6 d-flex flex-column justify-content-center p-4 rounded-5 bg-white shadow-sm" method="post">
             <h2 class="fw-light mb-4">Vragen importeren</h2>
             <!-- Bestand selecteren (*.json) -->
             <div class="mb-3">
                 <label for="formFile" class="form-label">Importeer vragen vanaf je computer</label>
-                <input name="jsonFile" required type="file" class="form-control" accept="application/json" id="formFile">
+                <input required type="file" class="form-control" accept="application/json" id="formFile">
             </div>
-            {% with errors = get_flashed_messages() %}
-                {% if errors %}
-                    {% for error in errors %}
-                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                            <i class="fa fa-exclamation-triangle fa-2x fa-fw"></i>
-                            <strong class="mx-1">Error:</strong> {{ error }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
             <!-- Importeer knop -->
             <input type="submit" class="btn btn-primary" value="Importeer">
         </form>

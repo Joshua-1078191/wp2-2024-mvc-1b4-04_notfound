@@ -7,26 +7,33 @@
             <h1 class="fw-light">Vragen indexeren naar taxonomie</h1>
             <h2 class="h5">Vraag:</h2>
             <div class="overflow-auto">
-                <p>{{ question.question }}</p>
+                <p>Wat is het verschil tussen geslachtelijke en ongeslachtelijke voortplanting? Geef bij beide vormen een voorbeeld van een organisme dat zich op die manier voortplant.</p>
             </div>
 
             <h2 class="h5">Antwoord:</h2>
             <div class="overflow-auto">
-                <p>{{ question.answer }}</p>
+                <ul>
+                    <li>
+                        Geslachtelijke voortplanting is een voortplantingsmethode waarbij twee ouders (met verschillende geslachtscellen: zaad- en eicellen) betrokken zijn. De nakomelingen krijgen een combinatie van genetisch materiaal van beide ouders. Voorbeeld: mensen, bloemen, en dieren zoals vogels.
+                    </li>
+                    <li>
+                        Ongeslachtelijke voortplanting is een voortplantingsmethode waarbij een organisme zich zonder hulp van een andere ouder voortplant. De
+                    </li>
+                </ul>
             </div>
 
             <table class="table table-bordered table-hover">
                 <tr>
                     <th scope="row" class="col-2">Vak</th>
-                    <td>{{ question.subject }}</td>
+                    <td>Biologie</td>
                 </tr>
                 <tr>
                     <th scope="row" class="col-2">Onderwijsniveau</th>
-                    <td>{{ question.education }}</td>
+                    <td>HAVO</td>
                 </tr>
                 <tr>
                     <th scope="row" class="col-2">Leerjaar</th>
-                    <td>{{ question.grade }}</td>
+                    <td>3</td>
                 </tr>
             </table>
             {% block index_content %}{% endblock %}
