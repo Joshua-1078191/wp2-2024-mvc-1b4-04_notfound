@@ -3,6 +3,7 @@ from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from flask import Flask, render_template, session, redirect, url_for, request, flash
+from src.models.users import Users
 from src.models.user import User
 from src.models.question import Question
 from src.models.prompts import Prompts
