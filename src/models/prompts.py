@@ -46,7 +46,8 @@ class Prompts:
         result = {
             "prompt_id": prompt_data["prompts_id"],
             "redacteur": prompt_data["user_id"],
-            "prompt_naam": prompt_data["prompt"],
+            "prompt_naam": prompt_data["prompt_name"],
+            "prompt": prompt_data["prompt"],
             "categorised_questions": prompt_data["questions_count"],
             "correct_questions": prompt_data["questions_correct"],
             "creation_date": prompt_data["date_created"],
