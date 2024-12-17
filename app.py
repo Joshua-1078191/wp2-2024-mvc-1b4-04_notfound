@@ -204,7 +204,8 @@ def add_prompt():
     if request.method == 'POST':
         prompt_titel = request.form['prompt-title']
         prompt = request.form['prompt-text']
-        prompt_id = prompts.add_prompt(1, prompt, 100, 80)
+        prompt_id = prompts.add_prompt(1, prompt_titel, prompt, 100, 80)
+        return redirect(url_for(f'prompt_details', prompt_id=prompt_id))
     else:
         return render_template("prompts/add_prompt.html.jinja")
 
