@@ -2,7 +2,6 @@ import json
 from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
-from src.models.users import Users
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 from src.models.user import User
 from src.models.question import Question
@@ -316,18 +315,6 @@ def delete_question(question_id):
     else:
         flash('Er is een fout opgetreden bij het verwijderen van de vraag.', 'error')
     return redirect(url_for('toetsvragen_view'))
-
-# @app.route('/index/login', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("login.html.jinja")
-
-# @app.route('/index/sign_up', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("sign_up.html.jinja")
-
-# @app.route('/index/vragen', methods=['GET', 'POST'])
-# def toetsvragen_view():
-#     return render_template("vragen.html.jinja")
 
 @app.route('/redacteurs/lijst_redacteuren', methods=['GET', 'POST'])
 def lijst_redacteuren():
