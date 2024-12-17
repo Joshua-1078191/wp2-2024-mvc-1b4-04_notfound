@@ -2,8 +2,8 @@ import json
 from json import JSONDecodeError
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
-from flask import Flask, render_template, session, redirect, url_for, request, flash
 from src.models.user import User
+from src.models.users import Users
 from src.models.question import Question
 from src.models.prompts import Prompts
 from lib.gpt.bloom_taxonomy import get_bloom_category
@@ -105,23 +105,29 @@ def import_questions():
             return redirect(request.url)
 
         if questions:
-            return Response(json.dumps(questions[0], indent = 4), mimetype='application/json')
+            Question.save_many([
+                {
+                    "questions_id": question.get("question_id"),
+                    "question": question.get("question"),
+                    "subject": question.get("vak"),
+                    "grade": question.get("leerjaar"),
+                    "education": question.get("onderwijsniveau"),
+                    "answer": question.get("answer"),
+                } for question in questions
+            ])
+            return redirect(url_for('toetsvragen_view'))
 
         flash("No data in JSON")
         return redirect(request.url)
 
     return render_template("questions/import_questions.html.jinja")
 
-@app.route('/index/<int:question_id>', methods=['GET', 'POST'])
-def index_questions_prompt(question_id:int):
+@app.route('/index/<question_id>', methods=['GET', 'POST'])
+def index_questions_prompt(question_id:int|str):
     if request.method == 'POST':
         prompt_id = request.form.get('selectedPrompt')
         if prompt_id:
-            try:
-                prompt_id = int(prompt_id)
-                return redirect(f'{request.url}/{prompt_id}')
-            except ValueError:
-                pass
+            return redirect(url_for('index_questions_taxonomy', question_id=prompt_id, prompt_id=prompt_id))
         flash("Invalid prompt")
         return redirect(request.url)
 
@@ -146,8 +152,8 @@ def index_questions_prompt(question_id:int):
 
     return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
 
-@app.route('/index/<int:question_id>/<int:prompt_id>', methods=['GET', 'POST'])
-def index_questions_taxonomy(question_id:int, prompt_id:int):
+@app.route('/index/<question_id>/<int:prompt_id>', methods=['GET', 'POST'])
+def index_questions_taxonomy(question_id:int|str, prompt_id:int):
 
     question = {
         'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
@@ -252,7 +258,8 @@ def prompts_view():
 def toetsvragen_view():
     if result := check_login(): return result
     questions = Question.get_all_questions()
-    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions)
+    taxonomies = Question.get_all_taxonomies()
+    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():

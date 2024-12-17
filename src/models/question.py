@@ -1,7 +1,7 @@
 from lib.database.db import get_db
 
 class Question:
-    def __init__(self, question, subject, grade, education, prompts_id, answer, taxonomy_id, questions_id=None):
+    def __init__(self, question: str, subject: str, grade: int, education: str, prompts_id: int, answer: str, taxonomy_id: int, questions_id: int=None):
         self.questions_id = questions_id
         self.question = question
         self.subject = subject
@@ -17,20 +17,9 @@ class Question:
         try:
             query = '''
                 SELECT 
-                    q.questions_id,
-                    q.question,
-                    q.subject,
-                    q.grade,
-                    q.education,
-                    p.prompt,
-                    q.answer,
-                    t.name as taxonomy,
-                    q.prompts_id,
-                    q.taxonomy_id
-                FROM questions q
-                LEFT JOIN prompts p ON q.prompts_id = p.prompts_id
-                LEFT JOIN taxonomy t ON q.taxonomy_id = t.taxonomy_id
-                ORDER BY q.questions_id
+                    *
+                FROM questions
+                ORDER BY questions_id
             '''
             return conn.execute(query).fetchall()
         finally:
@@ -69,6 +58,21 @@ class Question:
             return None
         finally:
             conn.close()
+
+    @staticmethod
+    def save_many(questions:list[dict[str, object]]):
+        conn = get_db()
+
+        query = '''
+                INSERT INTO questions (questions_id, question, subject, grade, education, prompts_id, answer, taxonomy_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            '''
+
+        params = [(question.get("questions_id"), question.get("question"), question.get("subject"), question.get("grade"), question.get("education"),
+                  question.get("prompts_id"), question.get("answer"), question.get("taxonomy_id")) for question in questions]
+
+        conn.executemany(query, params)
+        conn.commit()
 
     def save(self):
         """Create or update a question"""
@@ -127,7 +131,9 @@ class Question:
         conn = get_db()
         try:
             query = 'SELECT taxonomy_id, name FROM taxonomy ORDER BY taxonomy_id'
-            return conn.execute(query).fetchall()
+            taxonomies = conn.execute(query).fetchall()
+            result = {(taxonomy["taxonomy_id"], taxonomy["name"]) for taxonomy in taxonomies}
+            return result
         finally:
             conn.close()
 
