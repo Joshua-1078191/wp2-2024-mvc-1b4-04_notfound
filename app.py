@@ -1,6 +1,7 @@
 import json
 from json import JSONDecodeError
 
+
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.user import User
 from src.models.users import Users
@@ -279,7 +280,7 @@ def toetsvragen_view():
     if result := check_login(): return result
     questions_model = Questions(database_path)
     questions = questions_model.questions_all_view()
-    
+
     taxonomy_model = Taxonomy(database_path)
     taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
