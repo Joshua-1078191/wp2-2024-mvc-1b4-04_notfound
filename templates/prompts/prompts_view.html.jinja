@@ -18,42 +18,20 @@
                     </tr>
                 </thead>
                 <tbody>
+                {% for prompt in prompts %}
                     <tr>
-                        <th scope="row" class="border-start border-black border-1">1</th>
-                        <td class="border-start border-black border-1">Jorik prompt V1.0</td>
-                        <td class="border-start border-black border-1">Jorik</td>
-                        <td class="border-start border-black border-1">190</td>
-                        <td class="border-start border-black border-1">90%</td>
-                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
+                        <th scope="row" class="border-start border-black border-1">{{ prompt.id }}</th>
+                        <td class="border-start border-black border-1">{{ prompt.prompt }}</td>
+                        <td class="border-start border-black border-1">{{ prompt.name }}</td>
+                        <td class="border-start border-black border-1">{{ prompt.categorised_questions }}</td>
+                        <td class="border-start border-black border-1">{{ prompt.correct_questions }}</td>
+                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details/{{ prompt.id }}">Details</a></td>
                     </tr>
-                    <tr>
-                        <th scope="row" class="border-start border-black border-1">2</th>
-                        <td class="border-start border-black border-1">Joshua prompt V1.0</td>
-                        <td class="border-start border-black border-1">Joshua</td>
-                        <td class="border-start border-black border-1">60</td>
-                        <td class="border-start border-black border-1">89%</td>
-                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="border-start border-black border-1">3</th>
-                        <td class="border-start border-black border-1">Roos prompt V1.0</td>
-                        <td class="border-start border-black border-1">Roos</td>
-                        <td class="border-start border-black border-1">12</td>
-                        <td class="border-start border-black border-1">94%</td>
-                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="border-start border-black border-1">4</th>
-                        <td class="border-start border-black border-1">Tobias prompt V1.0</td>
-                        <td class="border-start border-black border-1">Tobias</td>
-                        <td class="border-start border-black border-1">87</td>
-                        <td class="border-start border-black border-1">73%</td>
-                        <td class="border-start border-black border-1"><a target="_blank" href="http://127.0.0.1:5000/index/prompt_details">details</a></td>
-                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
             <div class="row">
-                <a href="http://127.0.0.1:5000/index/add_prompt"><button type="button" class="btn btn-light btn-outline-dark" >Nieuwe prompt toevoegen</button></a>
+                <a href="http://127.0.0.1:5000/index/add_prompt"><button type="button" class="btn btn-light btn-outline-primary" >Nieuw prompt toevoegen</button></a>
             </div>
         </div>
     </div>

@@ -1,31 +1,38 @@
 {% extends "layout.html.jinja" %}
 {% block title %} toetsvragen view {% endblock %}
 {% block content %}
+    {% for question in questions %}
     <div class="container">
         <div class="row pb-3">
-            <h1>Lijst vragen beantwoord door {{ prompt_id }}</h1>
+            <h1>Lijst vragen beantwoord door {{ question.prompt }}</h1>
         </div>
-        <div class="row pb-3">
-            <div class="col">
-                <div class="row">
-                    <h2>Zoekwoord</h2>
-                    <label for="filter-zoekwoord"></label>
-                    <input type="text" id="filter-zoekwoord" autocomplete="off">
+
+        <form method="post" action="#">
+            <div class="row pb-3">
+                <div class="col">
+                    <div class="row">
+                        <h2>Zoekwoord</h2>
+                        <label for="filter-zoekwoord"></label>
+                        <input type="text" id="filter-zoekwoord" autocomplete="off" name="keyword">
+                    </div>
+                </div>
+            <!-- <input> elements may need to be replaced by <option> elements because in the wireframes
+            the 'niveau + jaar' and the 'vak' filters aren't <input> elements but <option> elements -->
+                <div class="col">
+                    <h2>Niveau + jaar</h2>
+                    <label for="filter-niveau-en-jaar"></label>
+                    <input type="text" id="filter-niveau-en-jaar" autocomplete="off" name="school_level">
+                </div>
+                <div class="col">
+                    <h2>Vak</h2>
+                    <label for="filter-vak"></label>
+                    <input type="text" id="filter-vak" autocomplete="off" name="subject">
+                </div>
+                <div>
+                    <button class="m-3 col-1 btn btn-outline-primary">Filter(s) toevoegen</button>
                 </div>
             </div>
-        <!-- <input> elements may need to be replaced by <option> elements because in the wireframes
-        the 'niveau + jaar' and the 'vak' filters aren't <input> elements but <option> elements -->
-            <div class="col">
-                <h2>Niveau + jaar</h2>
-                <label for="filter-niveau-en-jaar"></label>
-                <input type="text" id="filter-niveau-en-jaar" autocomplete="off">
-            </div>
-            <div class="col">
-                <h2>Vak</h2>
-                <label for="filter-vak"></label>
-                <input type="text" id="filter-vak" autocomplete="off">
-            </div>
-        </div>
+        </form>
         <div class="row">
             <table class="table table-striped table-hover border border-black border-1">
                 <thead>
@@ -40,75 +47,34 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row" class="border-start border-black border-1">1</th>
-                        <td class="border-start border-black border-1">Vraag 1</td>
-                        <td class="border-start border-black border-1">Biologie</td>
-                        <td class="border-start border-black border-1">Havo 3</td>
+                        <th scope="row" class="border-start border-black border-1">{{ question.id }}</th>
+                        <td class="border-start border-black border-1">{{ question.question_name }}</td>
+                        <td class="border-start border-black border-1">{{ question.subject }}</td>
+                        <td class="border-start border-black border-1">{{ question.school_grade }}</td>
                         <td class="border-start border-black border-1">
-                            <time datetime="2020-07-14">14-7-2020</time>
+                            <time datetime="{{ question.creation_date }}">{{ question.creation_date }}</time>
                         </td>
                         <td class="border-start border-black border-1">
-                            <form>
-                                <div class="form-check">
-                                    <input type="checkbox" id="checkbox-question-1" class="form-check-label" checked onclick="return false">
-                                    <label for="checkbox-question-1" class="form-check-label"></label>
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="border-start border-black border-1">2</th>
-                        <td class="border-start border-black border-1">Vraag 2</td>
-                        <td class="border-start border-black border-1">Biologie</td>
-                        <td class="border-start border-black border-1">Havo 3</td>
-                        <td class="border-start border-black border-1">
-                            <time datetime="2021-08-15">15-8-2021</time>
-                        </td>
-                        <td class="border-start border-black border-1">
-                            <form>
-                                <div class="form-check">
-                                    <input type="checkbox" id="checkbox-question-2" class="form-check-label" checked onclick="return false">
-                                    <label for="checkbox-question-2" class="form-check-label"></label>
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="border-start border-black border-1">3</th>
-                        <td class="border-start border-black border-1">Vraag 3</td>
-                        <td class="border-start border-black border-1">Biologie</td>
-                        <td class="border-start border-black border-1">Havo 3</td>
-                        <td class="border-start border-black border-1">
-                            <time datetime="2019-08-15">17-2-2019</time>
-                        </td>
-                        <td class="border-start border-black border-1">
-                            <form>
-                                <div class="form-check">
-                                    <input type="checkbox" id="checkbox-question-3" class="form-check-label" checked onclick="return false">
-                                    <label for="checkbox-question-3" class="form-check-label"></label>
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="border-start border-black border-1">4</th>
-                        <td class="border-start border-black border-1">Vraag 4</td>
-                        <td class="border-start border-black border-1">Biologie</td>
-                        <td class="border-start border-black border-1">Havo 3</td>
-                        <td class="border-start border-black border-1">
-                            <time datetime="2023-06-26">26-6-2023</time>
-                        </td>
-                        <td class="border-start border-black border-1">
-                            <form>
-                                <div class="form-check">
-                                    <input type="checkbox" id="checkbox-question-4" class="form-check-label" onclick="return false">
-                                    <label for="checkbox-question-4" class="form-check-label"></label>
-                                </div>
-                            </form>
+                            {% if question.answered_correctly == True %}
+                                <form>
+                                    <div class="form-check">
+                                        <input type="checkbox" id="checkbox-question-1" class="form-check-label" checked onclick="return false">
+                                        <label for="checkbox-question-1" class="form-check-label"></label>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <form>
+                                    <div class="form-check">
+                                        <input type="checkbox" id="checkbox-question-1" class="form-check-label" onclick="return false">
+                                        <label for="checkbox-question-1" class="form-check-label"></label>
+                                    </div>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    {% endfor %}
 {% endblock %}
