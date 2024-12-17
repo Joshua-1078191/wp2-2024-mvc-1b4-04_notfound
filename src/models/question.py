@@ -148,14 +148,3 @@ class Questions:
 
         cursor.close()
         return result
-
-    def get_all_taxonomies():
-        """Get all taxonomies for the dropdown"""
-        conn = get_db()
-        try:
-            query = 'SELECT taxonomy_id, name FROM taxonomy ORDER BY taxonomy_id'
-            taxonomies = conn.execute(query).fetchall()
-            result = {(taxonomy["taxonomy_id"], taxonomy["name"]) for taxonomy in taxonomies}
-            return result
-        finally:
-            conn.close()

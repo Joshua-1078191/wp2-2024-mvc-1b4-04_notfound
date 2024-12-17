@@ -6,6 +6,7 @@ from src.models.user import User
 from src.models.users import Users
 from src.models.question import Questions
 from src.models.prompts import Prompts
+from src.models.taxonomy import Taxonomy
 from lib.gpt.bloom_taxonomy import get_bloom_category
 
 app = Flask(__name__)
@@ -278,7 +279,9 @@ def toetsvragen_view():
     if result := check_login(): return result
     questions_model = Questions(database_path)
     questions = questions_model.questions_all_view()
-    taxonomies = questions_model.get_all_taxonomies()
+    
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
@@ -302,7 +305,9 @@ def add_question():
 
     prompts_model = Prompts(database_path)
     prompts = prompts_model.prompt_all_view()
-    taxonomies = Questions.get_all_taxonomies()
+
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/add_question.html.jinja', prompts=prompts, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/edit/<int:question_id>', methods=['GET', 'POST'])
