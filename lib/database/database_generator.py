@@ -64,15 +64,15 @@ class WP2DatabaseGenerator:
     def create_table_questions(self):
         create_statement = """
         CREATE TABLE IF NOT EXISTS questions (
-            questions_id TEXT PRIMARY KEY,
+            questions_id INTEGER PRIMARY KEY AUTOINCREMENT,
             prompts_id INTEGER,
-            user_id TEXT INTEGER NULL,
-            education TEXT INTEGER NULL,
+            user_id INTEGER NULL,
+            education TEXT NULL,
             subject TEXT NULL,
             grade INT NULL,
             question TEXT NOT NULL,
             answer TEXT NULL,
-            taxonomy_id TEXT INTEGER NULL,
+            taxonomy_id INTEGER NULL,
             rtti TEXT,
             exported BOOLEAN DEFAULT FALSE,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,

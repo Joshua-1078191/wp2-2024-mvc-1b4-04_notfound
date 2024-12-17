@@ -24,7 +24,6 @@
                         <th scope="col" class="border-start border-black border-1">Klas</th>
                         <th scope="col" class="border-start border-black border-1">Niveau</th>
                         <th scope="col" class="border-start border-black border-1">Prompt</th>
-                        <th scope="col" class="border-start border-black border-1">Antwoord</th>
                         <th scope="col" class="border-start border-black border-1">Taxonomie</th>
                         <th scope="col" class="border-start border-black border-1">Acties</th>
                     </tr>
@@ -33,20 +32,19 @@
                     {% if questions %}
                         {% for question in questions %}
                             <tr>
-                                <td class="border-start border-black border-1">{{ question[0] }}</td>
-                                <td class="border-start border-black border-1">{{ question[1] }}</td>
-                                <td class="border-start border-black border-1">{{ question[2] }}</td>
-                                <td class="border-start border-black border-1">{{ question[3] }}</td>
-                                <td class="border-start border-black border-1">{{ question[4] }}</td>
-                                <td class="border-start border-black border-1">{{ question[5] }}</td>
-                                <td class="border-start border-black border-1">{{ question[6] }}</td>
-                                <td class="border-start border-black border-1">{{ question[7] }}</td>
+                                <td class="border-start border-black border-1">{{ question.id }}</td>
+                                <td class="border-start border-black border-1">{{ question.question }}</td>
+                                <td class="border-start border-black border-1">{{ question.subject }}</td>
+                                <td class="border-start border-black border-1">{{ question.grade }}</td>
+                                <td class="border-start border-black border-1">{{ question.education }}</td>
+                                <td class="border-start border-black border-1">{{ question.prompt_text }}</td>
+                                <td class="border-start border-black border-1">{{ question.taxonomy_name }}</td>
                                 <td class="border-start border-black border-1">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ url_for('edit_question', question_id= 0) }}" class="btn btn-sm btn-primary">
+                                        <a href="http://127.0.0.1:5000/toetsvragen/edit/{{ question.id }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ url_for('delete_question', question_id= 0) }}" method="POST" class="d-inline">
+                                        <form action="http://127.0.0.1:5000/toetsvragen/delete/{{ question.id }}" method="POST" class="d-inline">
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -57,7 +55,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="9" class="text-center">Geen vragen gevonden.</td>
+                            <td colspan="8" class="text-center">Geen vragen gevonden</td>
                         </tr>
                     {% endif %}
                 </tbody>

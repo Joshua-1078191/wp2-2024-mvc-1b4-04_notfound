@@ -1,0 +1,54 @@
+{% extends "layout.html.jinja" %}
+{% block title %}Prompt Bewerken{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Prompt Bewerken</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <form method="POST" action="{{ url_for('edit_prompt', prompt_id=prompt.id) }}">
+                <div class="mb-3">
+                    <label for="user_id" class="form-label">Redacteur</label>
+                    <select class="form-select" id="user_id" name="user_id" required>
+                        <option value="">Selecteer een redacteur</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if user.id == prompt.user_id %}selected{% endif %}>
+                                {{ user.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="prompt_name" class="form-label">Naam</label>
+                    <input type="text" class="form-control" id="prompt_name" name="prompt_name" value="{{ prompt.name }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="prompt" class="form-label">Prompt</label>
+                    <textarea class="form-control" id="prompt" name="prompt" rows="3" required>{{ prompt.prompt }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="questions_count" class="form-label">Aantal Vragen</label>
+                    <input type="number" class="form-control" id="questions_count" name="questions_count" value="{{ prompt.questions_count }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="questions_correct" class="form-label">Correct Beantwoord</label>
+                    <input type="number" class="form-control" id="questions_correct" name="questions_correct" value="{{ prompt.questions_correct }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <a href="{{ url_for('prompts_view') }}" class="btn btn-secondary">Annuleren</a>
+                    <button type="submit" class="btn btn-primary">Opslaan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
