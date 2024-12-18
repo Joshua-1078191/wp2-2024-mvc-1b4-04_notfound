@@ -83,6 +83,26 @@ class Prompts:
             print(f"Error editing prompt: {e}")
             return False
 
+    def add_prompt_question_result(self, prompts_id:int, is_correct:bool):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+
+        try:
+            cur.execute(
+                f"UPDATE prompts SET questions_count = prompts.questions_count + 1, questions_correct = prompts.questions_correct + ? WHERE prompts.prompts_id = ?",
+                [1 if is_correct else 0, prompts_id]
+            )
+
+            con.commit()
+            rows_affected = cur.rowcount
+            cur.close()
+
+            return rows_affected > 0
+        except Exception as e:
+            print(f"Error editing prompt: {e}")
+            return False
+
     def delete_prompt(self, prompts_id: int):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
