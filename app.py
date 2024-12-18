@@ -193,14 +193,14 @@ def index_questions_taxonomy(question_id:int|str, prompt_id:int):
         return redirect(url_for('toetsvragen_view'))
 
     prompt = prompt_model.get_prompt(prompt_id)
-    categorie = get_bloom_category(question['question'], prompt['prompt'], "dry_run")
+    categorie = get_bloom_category(question['question'], prompt['prompt'], "rac_test")
 
     explanation = categorie['uitleg']
 
     taxonomy_model = Taxonomy(database_path)
     taxonomies = taxonomy_model.get_all_taxonomies()
 
-    closest_value = difflib.get_close_matches(categorie['categorie'], list(taxonomies.values()))
+    closest_value = difflib.get_close_matches(categorie['niveau'], list(taxonomies.values()))
 
 
     closest_key = None
@@ -285,6 +285,7 @@ def prompt_details(prompt_id:int):
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 @app.route('/prompts')
 def prompts_view():
+    if result := check_login(): return result
     prompt_models = Prompts(database_path)
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
     if result := check_login(): return result
