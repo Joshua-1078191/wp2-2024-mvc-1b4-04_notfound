@@ -1,5 +1,9 @@
 import sqlite3
 
+from click import prompt
+
+from src.utils.database import generate_query_params
+
 
 class Prompts:
     def __init__(self, db_path):
@@ -56,24 +60,18 @@ class Prompts:
 
         return last_id
 
-    def edit_prompt(self, prompts_id: int, user_id: int, prompt_name: str, prompt: str,
-                   questions_count: int, questions_correct: int):
+    def edit_prompt(self, prompts_id: int, user_id: int, prompt_name: str, prompt: str, questions_count: int, questions_correct: int):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
         cur = con.cursor()
 
+        # get query string and parameters
+        query_params = generate_query_params(user_id=user_id, prompt_name=prompt_name, prompt=prompt, questions_count=questions_count, questions_correct=questions_correct)
+
         try:
             cur.execute(
-                """
-                UPDATE prompts 
-                SET user_id = ?,
-                    prompt_name = ?, 
-                    prompt = ?, 
-                    questions_count = ?, 
-                    questions_correct = ?
-                WHERE prompts_id = ?
-                """,
-                (user_id, prompt_name, prompt, questions_count, questions_correct, prompts_id)
+                f"UPDATE prompts SET {query_params.query} WHERE prompts.prompts_id = ?",
+                [*query_params.params, prompts_id]
             )
 
             con.commit()
