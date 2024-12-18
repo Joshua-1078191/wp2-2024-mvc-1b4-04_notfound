@@ -64,7 +64,7 @@ class WP2DatabaseGenerator:
     def create_table_questions(self):
         create_statement = """
         CREATE TABLE IF NOT EXISTS questions (
-            questions_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            questions_id TEXT PRIMARY KEY,
             prompts_id INTEGER,
             user_id INTEGER NULL,
             education TEXT NULL,
@@ -95,7 +95,7 @@ class WP2DatabaseGenerator:
 
     def insert_bloom_taxonomy(self):
         taxonomies = [
-            ('Kennis',),
+            ('Onthouden',),
             ('Begrijpen',),
             ('Toepassen',),
             ('Analyseren',),
