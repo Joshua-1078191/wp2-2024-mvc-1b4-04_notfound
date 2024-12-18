@@ -39,8 +39,8 @@
                                 <td>{{ question.subject }}</td>
                                 <td>{{ question.grade }}</td>
                                 <td>{{ question.education }}</td>
-                                <td>{{ question.prompt_text }}</td>
-                                <td>{{ question.taxonomy_name }}</td>
+                                <td>{{ question.prompt_name }}</td>
+                                <td>{{ question.answer }}</td>
                                 <td>{% if question["taxonomy_id"] %} {{ taxonomies[question.taxonomy_id] }} {% else %} <a href="{{ url_for('index_questions_prompt', question_id=question.id) }}" class="btn btn-primary">Index</a> {% endif %}</td>
                                 <td>
                                     <div class="btn-group" role="group">
