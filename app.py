@@ -192,27 +192,32 @@ def index_questions_taxonomy(question_id:int|str, prompt_id:int):
     if not question:
         return redirect(url_for('toetsvragen_view'))
 
-    prompt = prompt_model.get_prompt(prompt_id)
-    categorie = get_bloom_category(question['question'], prompt['prompt'], "rac_test")
+    try:
+        prompt = prompt_model.get_prompt(prompt_id)
+        categorie = get_bloom_category(question['question'], prompt['prompt'], "rac_test")
 
-    explanation = categorie['uitleg']
+        explanation = categorie['uitleg']
 
-    taxonomy_model = Taxonomy(database_path)
-    taxonomies = taxonomy_model.get_all_taxonomies()
+        taxonomy_model = Taxonomy(database_path)
+        taxonomies = taxonomy_model.get_all_taxonomies()
 
-    closest_value = difflib.get_close_matches(categorie['niveau'], list(taxonomies.values()))
+        closest_value = difflib.get_close_matches(categorie['niveau'], list(taxonomies.values()))
 
 
-    closest_key = None
-    if closest_value:
-        closest_key = next(key for key, value in taxonomies.items() if value == closest_value[0])
+        closest_key = None
+        if closest_value:
+            closest_key = next(key for key, value in taxonomies.items() if value == closest_value[0])
 
-    answer = {
-        'selected_taxonomy': closest_key,
-        'explanation': explanation
-    }
+        answer = {
+            'selected_taxonomy': closest_key,
+            'explanation': explanation
+        }
 
-    return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
+        return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
+
+    except Exception as e:
+        print(e)
+        return redirect(url_for('toetsvragen_view'))
 
 @app.route('/prompts/add', methods=['GET', 'POST'])
 def add_prompt():
