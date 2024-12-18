@@ -7,6 +7,9 @@
             <h1>Lijst van alle vragen</h1>
         </div>
         <div class="col text-end">
+            <a href="{{ url_for('import_questions') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Vragen Importeren
+            </a>
             <a href="{{ url_for('add_question') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nieuwe Vraag
             </a>
