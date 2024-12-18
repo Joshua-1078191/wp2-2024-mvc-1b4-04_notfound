@@ -82,7 +82,7 @@ class Questions:
         cur.executemany(query, params)
         con.commit()
 
-    def edit_question(self, questions_id: int, question: str = None, subject: str = None, grade: str = None,
+    def edit_question(self, questions_id: str, question: str = None, subject: str = None, grade: str = None,
                      education: str = None, prompts_id: int = None, answer: str = None, taxonomy_id: int = None):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
@@ -105,7 +105,7 @@ class Questions:
             print(f"Error editing question: {e}")
             return False
 
-    def delete_question(self, questions_id: int):
+    def delete_question(self, questions_id: str):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
         cur = con.cursor()

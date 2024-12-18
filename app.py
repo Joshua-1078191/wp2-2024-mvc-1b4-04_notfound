@@ -328,7 +328,7 @@ def add_question():
     taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/add_question.html.jinja', prompts=prompts, taxonomies=taxonomies)
 
-@app.route('/toetsvragen/edit/<int:question_id>', methods=['GET', 'POST'])
+@app.route('/toetsvragen/edit/<string:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
     if result := check_login(): return result
 
@@ -358,14 +358,15 @@ def edit_question(question_id):
 
     prompts_model = Prompts(database_path)
     prompts = prompts_model.prompt_all_view()
-    taxonomies = Questions.get_all_taxonomies()
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
 
     return render_template('prompts/edit_question.html.jinja',
                          question=question,
                          prompts=prompts,
                          taxonomies=taxonomies)
 
-@app.route('/toetsvragen/delete/<int:question_id>', methods=['POST'])
+@app.route('/toetsvragen/delete/<string:question_id>', methods=['POST'])
 def delete_question(question_id):
     if result := check_login(): return result
     questions_model = Questions(database_path)
