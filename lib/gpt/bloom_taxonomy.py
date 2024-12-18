@@ -49,6 +49,22 @@ def get_json_from_response(response):
 
 def get_openai_chat(question, prompt, settings):
     client = OpenAI(api_key=settings.get("api_key"))
+    schema = {
+        "type": "object",
+        "properties": {
+            "niveau": {
+                "type": "string"
+            },
+            "uitleg": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "niveau",
+            "uitleg"
+        ]
+    }
+
     completion = client.chat.completions.create(
         model=settings["model"],  # alternatieven zijn gpt-3.5-turbo en gpt-4.0-turbo
         messages=[
@@ -98,7 +114,7 @@ def get_bloom_category(question, prompt, gpt):
             case "dry_run":
                 print("No model given, we are returning a static answer for testing")
                 result = {
-                    "categorie": "Onthouden",
+                    "niveau": "Onthouden",
                     "uitleg": "De vraag vereist het onthouden van feitelijke informatie over de Grutto, zoals zijn classificatie als vogelsoort."
                 }
             case "rac_test":
