@@ -222,7 +222,8 @@ def add_prompt():
 
     if request.method == 'POST':
         prompt_id = prompts_model.add_prompt(
-            user_id=int(request.form['user_id']),
+            #user_id=int(request.form['user_id']),
+            user_id=session['user_id'],
             prompt_name=request.form['prompt_name'],
             prompt=request.form['prompt'],
             questions_count=0,
