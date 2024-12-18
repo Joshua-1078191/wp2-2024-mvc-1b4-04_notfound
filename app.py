@@ -1,6 +1,6 @@
+import difflib
 import json
 from json import JSONDecodeError
-
 
 from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
 from src.models.user import User
@@ -107,7 +107,8 @@ def import_questions():
             return redirect(request.url)
 
         if questions:
-            Questions.save_many([
+            question_model = Questions(database_path)
+            question_model.add_questions([
                 {
                     "questions_id": question.get("question_id"),
                     "question": question.get("question"),
@@ -129,78 +130,85 @@ def index_questions_prompt(question_id:int|str):
     if request.method == 'POST':
         prompt_id = request.form.get('selectedPrompt')
         if prompt_id:
-            return redirect(url_for('index_questions_taxonomy', question_id=prompt_id, prompt_id=prompt_id))
+            return redirect(url_for('index_questions_taxonomy', question_id=question_id, prompt_id=prompt_id))
         flash("Invalid prompt")
         return redirect(request.url)
 
-    question = {
-        'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-        'answer': "Glucose en zuurstof, per onderdeel 1 punt",
-        'subject': "biologie",
-        'education': "havo",
-        'grade': 3,
-    }
+    #question = {
+    #    'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
+    #    'answer': "Glucose en zuurstof, per onderdeel 1 punt",
+    #    'subject': "biologie",
+    #    'education': "havo",
+    #    'grade': 3,
+    #}
 
-    prompts = [
-        {
-            'id': 0,
-            'name': "Één van de prompts"
-        },
-        {
-            'id': 1,
-            'name': "Een andere prompt die ook bestaat"
-        },
-    ]
+    question_model = Questions(database_path)
+    question = question_model.get_question(question_id)
+
+    prompt_model = Prompts(database_path)
+    prompts = prompt_model.prompt_all_view()
+
+    #
+    #prompts = [
+    #    {
+    #        'id': 0,
+    #        'name': "Één van de prompts"
+    #    },
+    #    {
+    #        'id': 1,
+    #        'name': "Een andere prompt die ook bestaat"
+    #    },
+    #]
 
     return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
 
 @app.route('/index/<question_id>/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(question_id:int|str, prompt_id:int):
 
-    question = {
-        'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-        'answer': "",
-        'subject': "biologie",
-        'education': "havo",
-        'grade': 3,
-    }
+    question_model = Questions(database_path)
+    question = question_model.get_question(question_id)
 
-    prompt = prompt_id # change
-    categorie = get_bloom_category(question['question'], prompt, "dry_run")
+    if question['prompts_id']:
+        flash('Question already has selection', 'error')
+        return redirect(url_for('toetsvragen_view'))
 
-    question['answer'] = categorie['categorie']
+    prompt_model = Prompts(database_path)
+
+    if request.method == 'POST':
+        question_model.edit_question(question_id, taxonomy_id=request.form.get('taxonomy'))
+        unchanged = request.form.get('autoSuggestion') == request.form.get('taxonomy')
+        success = prompt_model.add_prompt_question_result(prompt_id, unchanged)
+        flash('', 'success' if success else 'error')
+        return redirect(url_for('toetsvragen_view'))
+
+    #question = {
+    #    'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
+    #    'answer': "",
+    #    'subject': "biologie",
+    #    'education': "havo",
+    #    'grade': 3,
+    #}
+
+    if not question:
+        return redirect(url_for('toetsvragen_view'))
+
+    prompt = prompt_model.get_prompt(prompt_id)
+    categorie = get_bloom_category(question['question'], prompt['prompt'], "dry_run")
 
     explanation = categorie['uitleg']
 
-    taxonomies = [
-        {
-            'name': 'Kennis',
-            'id': 0,
-        },
-        {
-            'name': 'Begrijpen',
-            'id': 1,
-        },
-        {
-            'name': 'Toepassen',
-            'id': 2,
-        },
-        {
-            'name': 'Analyseren',
-            'id': 3,
-        },
-        {
-            'name': 'Evalueren',
-            'id': 4,
-        },
-        {
-            'name': 'Synthese',
-            'id': 5,
-        },
-    ]
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
+
+    closest_value = difflib.get_close_matches(categorie['categorie'], list(taxonomies.values()))
+
+
+    closest_key = None
+    if closest_value:
+        closest_key = next(key for key, value in taxonomies.items() if value == closest_value[0])
 
     answer = {
-        'selected_taxonomy': 2,
+        'selected_taxonomy': closest_key,
         'explanation': explanation
     }
 
@@ -214,7 +222,8 @@ def add_prompt():
 
     if request.method == 'POST':
         prompt_id = prompts_model.add_prompt(
-            user_id=int(request.form['user_id']),
+            #user_id=int(request.form['user_id']),
+            user_id=session['user_id'],
             prompt_name=request.form['prompt_name'],
             prompt=request.form['prompt'],
             questions_count=0,

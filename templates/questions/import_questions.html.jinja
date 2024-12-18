@@ -9,16 +9,7 @@
                 <label for="formFile" class="form-label">Importeer vragen vanaf je computer</label>
                 <input name="jsonFile" required type="file" class="form-control" accept="application/json" id="formFile">
             </div>
-            {% with errors = get_flashed_messages() %}
-                {% if errors %}
-                    {% for error in errors %}
-                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                            <i class="fa fa-exclamation-triangle fa-2x fa-fw"></i>
-                            <strong class="mx-1">Error:</strong> {{ error }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% include 'handle_flashes.html.jinja' %}
 
             <!-- Importeer knop -->
             <input type="submit" class="btn btn-primary" value="Importeer">

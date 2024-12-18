@@ -7,7 +7,7 @@
         <tr>
             <th>Voorstel</th>
             <td>
-                <p><i>{{ taxonomies[answer.selected_taxonomy].name }}</i></p>
+                <p><i>{{ taxonomies[answer.selected_taxonomy] }}</i></p>
             </td>
         </tr>
         <tr>
@@ -18,13 +18,14 @@
         </tr>
     </table>
     <form method="post">
+        <input type="hidden" name="autoSuggestion" value="{{ answer.selected_taxonomy }}">
         <div class="row">
             <!-- - Een taxonomie selecteren voor de vraag (standaard gezet naar chatgpt's antwoord) -->
             <div class="col-auto">
-                <select required class="form-select" id="taxonomy" aria-label="Prompt selecteren">
+                <select name="taxonomy" required class="form-select" id="taxonomy" aria-label="Prompt selecteren">
                     <option value="" disabled class="text-secondary">Kies een taxonomie</option>
-                    {% for taxonomy in taxonomies %}
-                        <option value="{{ taxonomy.id }}" {% if answer.selected_taxonomy == taxonomy.id %} selected="selected" {% endif %}>{{ taxonomy.name }}</option>
+                    {% for taxonomy_id in taxonomies %}
+                        <option value="{{ taxonomy_id }}" {% if answer.selected_taxonomy == taxonomy_id %} selected="selected" {% endif %}>{{ taxonomies[taxonomy_id] }}</option>
                     {% endfor %}
                 </select>
             </div>

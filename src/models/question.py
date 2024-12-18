@@ -1,5 +1,7 @@
 import sqlite3
 
+from src.utils.database import generate_query_params
+
 
 class Questions:
     def __init__(self, db_path):
@@ -13,7 +15,7 @@ class Questions:
         questions_all_data = cursor.execute("""
             SELECT 
                 q.*,
-                p.prompt as prompt_text,
+                p.prompt_name as prompt_name,
                 t.name as taxonomy_name
             FROM questions q
             LEFT JOIN prompts p ON q.prompts_id = p.prompts_id
@@ -32,7 +34,7 @@ class Questions:
             "prompts_id": question["prompts_id"],
             "answer": question["answer"],
             "taxonomy_id": question["taxonomy_id"],
-            "prompt_text": question["prompt_text"],
+            "prompt_name": question["prompt_name"],
             "taxonomy_name": question["taxonomy_name"]
         } for question in questions_all_data]
 
@@ -61,28 +63,39 @@ class Questions:
 
         return last_id
 
-    def edit_question(self, questions_id: int, question: str, subject: str, grade: str,
-                     education: str, prompts_id: int, answer: str, taxonomy_id: int):
+    def add_questions(self, questions: list[dict[str, object]]):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
         cur = con.cursor()
 
+        query = '''
+                   INSERT INTO questions (questions_id, question, subject, grade, education, answer)
+                   VALUES (?, ?, ?, ?, ?, ?)
+               '''
+
+        params = [(question.get("questions_id"), question.get("question"), question.get("subject"),
+                   question.get("grade"), question.get("education"), question.get("answer")) for question in
+                  questions]
+
+        print(params)
+
+        cur.executemany(query, params)
+        con.commit()
+
+    def edit_question(self, questions_id: int, question: str = None, subject: str = None, grade: str = None,
+                     education: str = None, prompts_id: int = None, answer: str = None, taxonomy_id: int = None):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+
+        # get query string and parameters
+        query_params = generate_query_params(question=question, subject=subject, grade=grade, education=education, prompts_id=prompts_id, answer=answer, taxonomy_id=taxonomy_id)
+
         try:
             cur.execute(
-                """
-                UPDATE questions 
-                SET question = ?, 
-                    subject = ?, 
-                    grade = ?, 
-                    education = ?,
-                    prompts_id = ?, 
-                    answer = ?, 
-                    taxonomy_id = ?
-                WHERE questions_id = ?
-                """,
-                (question, subject, grade, education, prompts_id, answer, taxonomy_id, questions_id)
+                f"UPDATE questions SET {query_params.query} WHERE questions_id = ?",
+                [*query_params.params, questions_id]
             )
-
             con.commit()
             rows_affected = cur.rowcount
             cur.close()
