@@ -9,7 +9,7 @@
                         <h1>Prompt details</h1>
                     </div>
                     <div class="row">
-                        <h2>{{ prompt.prompt_naam }}</h2>
+                        <h2>{{ prompt.name }}</h2>
                     </div>
 
                     <!-- The div under this comment needs to be replaced with a jinja variable-->
@@ -33,27 +33,28 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" class="col-3">ID:</th>
-                                    <td>{{ prompt.prompts_id }}</td>
+                                    <td>{{ prompt.id }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Redacteur:</th>
-                                    <td>{{ prompt.redacteur }}</td>
+                                    <td>{{ prompt.user_name }}</td>
                                 </tr>
+                                <!-- Date_created moet worden gefixet. Geeft de verkeerde tijd weer (tijd - één uur) -->
                                 <tr>
                                     <th scope="row" class="col-3">Aangemaakt:</th>
-                                    <td><time datetime="{{ prompt.creation_date }}">{{ prompt.creation_date }}</time></td>
+                                    <td><time datetime="{{ prompt.date_created }}">{{ prompt.date_created }}</time></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen gecategoriseerd:</th>
-                                    <td>{{ prompt.categorised_questions }}</td>
+                                    <td>{{ prompt.questions_count }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen correct:</th>
-                                    <td>{{ prompt.correct_questions }}</td>
+                                    <td>{{ prompt.questions_correct }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="col-3">Toetsvragen incorrect</th>
-                                    <td>{{ prompt.incorrect_questions }}</td>
+                                    <td>{{ prompt.questions_count - prompt.questions_correct }}</td>
                                 </tr>
                             </tbody>
                         </table>

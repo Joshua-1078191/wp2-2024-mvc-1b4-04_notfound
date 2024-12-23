@@ -285,7 +285,7 @@ def delete_prompt(prompt_id):
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
     prompt_model = Prompts(database_path)
-    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_one_prompt(prompt_id))
+    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_prompt(prompt_id))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 @app.route('/prompts')
