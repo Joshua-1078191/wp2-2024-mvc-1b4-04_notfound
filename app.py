@@ -311,21 +311,26 @@ def copy_prompt(prompt_id):
 @app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result
-    if request.method == 'GET' or request.method == 'POST':
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 10, type=int)
 
-        questions_model = Questions(database_path)
-        questions = questions_model.get_paginated_questions(page, per_page)
+    questions_model = Questions(database_path)
 
-        taxonomy_model = Taxonomy(database_path)
+    taxonomy_model = Taxonomy(database_path)
+
+
+    if request.method == 'POST':
+
+        questions = questions_model.get_filtered_questions(
+            question = request.form['question_filter'],
+            subject = request.form['subject_filter'],
+            school_class = request.form['class_filter'],
+            school_grade = request.form['school_grade_filter'],
+        )
+        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=None)
+    else:
+
+        questions = questions_model.questions_all_view()
         taxonomies = taxonomy_model.get_all_taxonomies()
-
-        return render_template('prompts/toetsvragen_view.html.jinja',
-                               questions=questions,
-                               taxonomies=taxonomies,
-                               page=page,
-                               per_page=per_page)
+        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
@@ -471,7 +476,7 @@ def redacteur_wijzigen(id):
 @app.route('/style_guide')
 def style_guide():
     return render_template("example/style_guide.html.jinja")
-    
+
 
 if __name__ == '__main__':
     app.run(debug=True)

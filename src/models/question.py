@@ -205,6 +205,13 @@ class Questions:
         cursor.close()
         return result
 
+    def get_filtered_questions(self, question, subject, school_class, school_grade):
+        con = sqlite3.connect(self.db)
+
+        cursor = con.cursor()
+
+        question_data = cursor.execute("""
+        SELECT * FROM questions WHERE question like '%?%' """, (question, subject, school_class, school_grade)).fetchall()
     def get_paginated_questions(self, page: int = 1, per_page: int = 10):
         """
         Fetches a paginated list of questions.
