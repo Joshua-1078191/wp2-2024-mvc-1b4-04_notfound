@@ -44,10 +44,10 @@
                                 <td>{% if question["taxonomy_id"] %} {{ taxonomies[question.taxonomy_id] }} {% else %} <a href="{{ url_for('index_questions_prompt', question_id=question.id) }}" class="btn btn-primary">Index</a> {% endif %}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ url_for('edit_question', question_id= 0) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ url_for('delete_question', question_id= 0) }}" method="POST" class="d-inline">
+                                        <form action="{{ url_for('delete_question', question_id=question.id) }}" method="POST" class="d-inline">
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
                                                 <i class="fas fa-trash"></i>
                                             </button>

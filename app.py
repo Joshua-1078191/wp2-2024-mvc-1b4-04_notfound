@@ -192,27 +192,32 @@ def index_questions_taxonomy(question_id:int|str, prompt_id:int):
     if not question:
         return redirect(url_for('toetsvragen_view'))
 
-    prompt = prompt_model.get_prompt(prompt_id)
-    categorie = get_bloom_category(question['question'], prompt['prompt'], "dry_run")
+    try:
+        prompt = prompt_model.get_prompt(prompt_id)
+        categorie = get_bloom_category(question['question'], prompt['prompt'], "rac_test")
 
-    explanation = categorie['uitleg']
+        explanation = categorie['uitleg']
 
-    taxonomy_model = Taxonomy(database_path)
-    taxonomies = taxonomy_model.get_all_taxonomies()
+        taxonomy_model = Taxonomy(database_path)
+        taxonomies = taxonomy_model.get_all_taxonomies()
 
-    closest_value = difflib.get_close_matches(categorie['categorie'], list(taxonomies.values()))
+        closest_value = difflib.get_close_matches(categorie['niveau'], list(taxonomies.values()))
 
 
-    closest_key = None
-    if closest_value:
-        closest_key = next(key for key, value in taxonomies.items() if value == closest_value[0])
+        closest_key = None
+        if closest_value:
+            closest_key = next(key for key, value in taxonomies.items() if value == closest_value[0])
 
-    answer = {
-        'selected_taxonomy': closest_key,
-        'explanation': explanation
-    }
+        answer = {
+            'selected_taxonomy': closest_key,
+            'explanation': explanation
+        }
 
-    return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
+        return render_template("questions/index_questions_taxonomy.html.jinja", question=question, taxonomies=taxonomies, answer=answer)
+
+    except Exception as e:
+        print(e)
+        return redirect(url_for('toetsvragen_view'))
 
 @app.route('/prompts/add', methods=['GET', 'POST'])
 def add_prompt():
@@ -280,11 +285,12 @@ def delete_prompt(prompt_id):
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
     prompt_model = Prompts(database_path)
-    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_one_prompt(prompt_id))
+    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_prompt(prompt_id))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 @app.route('/prompts')
 def prompts_view():
+    if result := check_login(): return result
     prompt_models = Prompts(database_path)
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
     if result := check_login(): return result
@@ -328,7 +334,7 @@ def add_question():
     taxonomies = taxonomy_model.get_all_taxonomies()
     return render_template('prompts/add_question.html.jinja', prompts=prompts, taxonomies=taxonomies)
 
-@app.route('/toetsvragen/edit/<int:question_id>', methods=['GET', 'POST'])
+@app.route('/toetsvragen/edit/<string:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
     if result := check_login(): return result
 
@@ -358,14 +364,15 @@ def edit_question(question_id):
 
     prompts_model = Prompts(database_path)
     prompts = prompts_model.prompt_all_view()
-    taxonomies = Questions.get_all_taxonomies()
+    taxonomy_model = Taxonomy(database_path)
+    taxonomies = taxonomy_model.get_all_taxonomies()
 
     return render_template('prompts/edit_question.html.jinja',
                          question=question,
                          prompts=prompts,
                          taxonomies=taxonomies)
 
-@app.route('/toetsvragen/delete/<int:question_id>', methods=['POST'])
+@app.route('/toetsvragen/delete/<string:question_id>', methods=['POST'])
 def delete_question(question_id):
     if result := check_login(): return result
     questions_model = Questions(database_path)

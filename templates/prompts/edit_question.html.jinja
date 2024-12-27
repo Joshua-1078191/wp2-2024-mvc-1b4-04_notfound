@@ -52,9 +52,9 @@
                     <label for="taxonomy_id" class="form-label">Taxonomie</label>
                     <select class="form-control" id="taxonomy_id" name="taxonomy_id" required>
                         <option value="">Selecteer een taxonomie niveau</option>
-                        {% for taxonomy in taxonomies %}
-                            <option value="{{ taxonomy.id }}" {% if taxonomy.id == question.taxonomy_id %}selected{% endif %}>
-                                {{ taxonomy.name }}
+                        {% for taxonomy_id, taxonomy_name in taxonomies.items() %}
+                            <option value="{{ taxonomy_id }}" {% if taxonomy_id == question.taxonomy_id %}selected{% endif %}>
+                                {{ taxonomy_name }}
                             </option>
                         {% endfor %}
                     </select>
