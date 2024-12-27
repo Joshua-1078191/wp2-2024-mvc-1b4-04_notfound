@@ -392,5 +392,9 @@ def redacteur_wijzigen(id):
     users = Users(database_path)
     return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=users.get(id))
 
+@app.route('/style_guide')
+def style_guide():
+    return render_template("example/style_guide.html.jinja")
+
 if __name__ == '__main__':
     app.run(debug=True)
