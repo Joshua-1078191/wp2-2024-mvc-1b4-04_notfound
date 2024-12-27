@@ -1,8 +1,9 @@
 import difflib
 import json
+from io import BytesIO
 from json import JSONDecodeError
 
-from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
+from flask import Flask, render_template, request, redirect, url_for, session, Response, flash, send_file
 from src.models.user import User
 from src.models.users import Users
 from src.models.question import Questions
@@ -124,6 +125,28 @@ def import_questions():
         return redirect(request.url)
 
     return render_template("questions/import_questions.html.jinja")
+
+@app.route('/export', methods=['GET'])
+def export_questions():
+
+    questions_model = Questions(database_path)
+    questions = questions_model.questions_all_view()
+
+    if questions and len(questions) > 0:
+        converted = [
+            {
+                "question_id": question.get("questions_id"),
+                "question": question.get("question"),
+                "answer": question.get("answer"),
+                "vak": question.get("subject"),
+                "onderwijsniveau": question.get("education"),
+                "leerjaar": question.get("grade"),
+            } for question in questions]
+
+        return send_file(BytesIO(bytes(json.dumps(converted), 'utf-8')), as_attachment=True, download_name="questions.json")
+
+    flash("Failed to export database")
+    return redirect(url_for('toetsvragen_view'))
 
 @app.route('/index/<question_id>', methods=['GET', 'POST'])
 def index_questions_prompt(question_id:int|str):
