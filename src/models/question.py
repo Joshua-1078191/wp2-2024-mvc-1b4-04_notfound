@@ -205,7 +205,7 @@ class Questions:
         cursor.close()
         return result
 
-    def get_filtered_questions(self, question, subject, school_class, school_grade):
+    def get_filtered_questions(self, question, subject, school_grade):
         con = sqlite3.connect(self.db)
 
         cursor = con.cursor()
@@ -231,3 +231,27 @@ class Questions:
         conn.close()
 
         return self.__translate_questions(questions)
+
+        SELECT *, prompts.prompt_name
+        FROM questions
+        LEFT JOIN prompts ON questions.prompts_id = prompts.prompts_id
+        WHERE questions.question like '%?%' AND questions.subject like '%?%'
+        AND questions.grade LIKE '%?%';
+        """, (question, subject, school_grade)).fetchall()
+        if not question_data:
+            return None
+
+        result = {
+            "question": question_data["question"],
+            "subject": question_data["subject"],
+            "grade": question_data["grade"],
+            "education": question_data["education"],
+            "prompt_name": question_data["prompt_name"],
+            "answer": question_data["answer"],
+            "question_id": question_data["questions_id"]
+        }
+
+        cursor.close()
+        con.close()
+
+        return result
