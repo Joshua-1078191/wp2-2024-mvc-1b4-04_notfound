@@ -312,7 +312,6 @@ def toetsvragen_view():
         questions = questions_model.get_filtered_questions(
             question = request.form['question_filter'],
             subject = request.form['subject_filter'],
-            school_class = request.form['class_filter'],
             school_grade = request.form['school_grade_filter'],
         )
         return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=None)
