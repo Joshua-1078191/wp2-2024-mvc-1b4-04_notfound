@@ -128,9 +128,14 @@ def import_questions():
 
 @app.route('/export', methods=['GET'])
 def export_questions():
-
     questions_model = Questions(database_path)
-    questions = questions_model.questions_all_view()
+
+    questions = None
+    export_all = request.args.get('all', False)
+    if export_all:
+        questions = questions_model.export_all_questions()
+    else:
+        questions = questions_model.export_questions()
 
     if questions and len(questions) > 0:
         converted = [
