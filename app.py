@@ -277,17 +277,20 @@ def edit_prompt(prompt_id):
     prompts_model = Prompts(database_path)
 
     if request.method == 'POST':
-        success = prompts_model.edit_prompt(
-            prompts_id=prompt_id,
-            user_id=int(request.form['user_id']),
-            prompt_name=request.form['prompt_name'],
-            prompt=request.form['prompt'],
-            questions_count=int(request.form['questions_count']),
-            questions_correct=int(request.form['questions_correct'])
-        )
-        if success:
-            flash('Prompt succesvol bijgewerkt!', 'success')
-            return redirect(url_for('prompts_view'))
+
+        model = prompts_model.get_prompt(prompt_id)
+        if session['is_admin'] or session['user_id'] == model['user_id']:
+            success = prompts_model.edit_prompt(
+                prompts_id=prompt_id,
+                user_id=int(request.form.get('user_id')) if session['is_admin'] else None,
+                prompt_name=request.form.get('prompt_name'),
+                prompt=request.form.get('prompt') if model['questions_count'] == 0 else None,
+                questions_count=int(request.form.get('questions_count')),
+                questions_correct=int(request.form.get('questions_correct'))
+            )
+            if success:
+                flash('Prompt succesvol bijgewerkt!', 'success')
+                return redirect(url_for('prompts_view'))
         flash('Er is een fout opgetreden bij het bijwerken van de prompt.', 'error')
         return redirect(url_for('prompts_view'))
 
@@ -297,13 +300,14 @@ def edit_prompt(prompt_id):
         return redirect(url_for('prompts_view'))
 
     users = prompts_model.get_all_users()
-    return render_template('prompts/edit_prompt.html.jinja', prompt=prompt, users=users)
+    return render_template('prompts/edit_prompt.html.jinja', prompt=prompt, users=users, is_admin=session['is_admin'])
 
 @app.route('/prompts/delete/<int:prompt_id>', methods=['POST'])
 def delete_prompt(prompt_id):
     if result := check_login(): return result
 
     prompts_model = Prompts(database_path)
+
     if prompts_model.delete_prompt(prompt_id):
         flash('Prompt succesvol verwijderd!', 'success')
     else:
@@ -321,10 +325,6 @@ def prompts_view():
     if result := check_login(): return result
     prompt_models = Prompts(database_path)
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
-    if result := check_login(): return result
-    prompts_model = Prompts(database_path)
-    prompts = prompts_model.prompt_all_view()
-    return render_template('prompts/prompts_view.html.jinja', prompts=prompts)
 
 @app.route('/toetsvragen_view')
 def toetsvragen_view():

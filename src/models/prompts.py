@@ -32,6 +32,7 @@ class Prompts:
             "prompt": prompt["prompt"],
             "questions_count": prompt["questions_count"],
             "questions_correct": prompt["questions_correct"],
+            "questions_incorrect": prompt["questions_count"] - prompt["questions_correct"],
             "date_created": prompt["date_created"],
             "user_name": prompt["user_name"]
         } for prompt in prompts_all_data]
@@ -60,7 +61,7 @@ class Prompts:
 
         return last_id
 
-    def edit_prompt(self, prompts_id: int, user_id: int, prompt_name: str, prompt: str, questions_count: int, questions_correct: int):
+    def edit_prompt(self, prompts_id: int = None, user_id: int = None, prompt_name: str = None, prompt: str = None, questions_count: int = None, questions_correct: int = None):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
         cur = con.cursor()
@@ -113,6 +114,7 @@ class Prompts:
                 """
                 DELETE FROM prompts 
                 WHERE prompts_id = ?
+                AND prompts.questions_count == 0
                 """,
                 (prompts_id,)
             )
