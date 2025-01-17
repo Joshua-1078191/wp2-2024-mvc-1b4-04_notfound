@@ -24,8 +24,9 @@ class Taxonomy:
         cursor = con.cursor()
 
         taxonomies = cursor.execute("""
-        SELECT * FROM taxonomy WHERE taxonomy_id = ?""", (taxonomy_id)).fetchall()
+        SELECT * FROM taxonomy WHERE taxonomy_id = ?""", taxonomy_id).fetchall()
 
         cursor.close()
+        con.close()
 
         return taxonomies

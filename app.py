@@ -339,12 +339,17 @@ def toetsvragen_view():
         return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
     if request.method == 'POST':
-        question_filter = request.form["question_filter"]
-        subject_filter = request.form["subject_filter"]
-        school_grade_filter = request.form["school_grade_filter"]
+        question_filter = f"'%{request.form["question_filter"]}%'"
+        subject_filter = f"'%{request.form["subject_filter"]}%'"
+        school_grade_filter = f"'%{request.form["school_grade_filter"]}%'"
 
         questions = questions_model.get_filtered_questions(question_filter, subject_filter, school_grade_filter)
-        taxonomies = taxonomy_model.get_filtered_taxonomies(questions_model.get_filtered_questions(question_filter, subject_filter, school_grade_filter))
+        taxonomy_id = None
+
+        for question in questions:
+            taxonomy_id =+ question['taxonomy_id']
+
+        taxonomies = taxonomy_model.get_filtered_taxonomies(taxonomy_id=taxonomy_id)
         return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
