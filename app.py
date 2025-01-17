@@ -3,7 +3,7 @@ import json
 from io import BytesIO
 from json import JSONDecodeError
 
-from flask import Flask, render_template, request, redirect, url_for, session, Response, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, session, Response, flash, send_file, abort
 from src.models.user import User
 from src.models.users import Users
 from src.models.question import Questions
@@ -15,9 +15,11 @@ app = Flask(__name__)
 app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
 
-def check_login():
+def check_login(require_admin = False):
     if 'user_id' not in session:
         return redirect('/index/login')
+    if require_admin and session.get('is_admin'):
+        abort(401)
     return None
 
 @app.route('/')
@@ -346,9 +348,9 @@ def add_question():
             subject=request.form['subject'],
             grade=request.form['grade'],
             education=request.form['education'],
-            prompts_id=request.form['prompts_id'],
+            prompts_id=int(request.form['prompts_id']),
             answer=request.form['answer'],
-            taxonomy_id=request.form['taxonomy_id']
+            taxonomy_id=int(request.form['taxonomy_id'])
         )
         if question_id:
             flash('Vraag succesvol toegevoegd!', 'success')
@@ -375,9 +377,9 @@ def edit_question(question_id):
             subject=request.form['subject'],
             grade=request.form['grade'],
             education=request.form['education'],
-            prompts_id=request.form['prompts_id'],
+            prompts_id=int(request.form['prompts_id']),
             answer=request.form['answer'],
-            taxonomy_id=request.form['taxonomy_id']
+            taxonomy_id=int(request.form['taxonomy_id'])
         )
         if success:
             flash('Vraag succesvol bijgewerkt!', 'success')
