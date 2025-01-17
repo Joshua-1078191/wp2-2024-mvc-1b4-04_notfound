@@ -223,7 +223,8 @@ class Questions:
         cursor.close()
         return result
 
-    def get_filtered_questions(self, question, subject, school_grade):
+    def get_filtered_and_paginated_questions(self, page: int = 1, per_page: int = 10, question: str = None,
+                                             subject: str = None, school_grade: str = None):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
         cursor = con.cursor()
@@ -233,16 +234,25 @@ class Questions:
         subject = f'%{subject}%' if subject else '%'
         school_grade = f'%{school_grade}%' if school_grade else '%'
 
-        # Execute the query with the filtered parameters
-        question_data = cursor.execute("""
+        # Calculate offset for pagination
+        offset = (page - 1) * per_page
+
+        # Execute the query with the optional filters and pagination
+        query = """
         SELECT q.*, p.prompt_name 
         FROM questions q
         LEFT JOIN prompts p ON q.prompts_id = p.prompts_id 
-        WHERE q.question LIKE ? AND q.subject LIKE ? 
-        AND q.grade LIKE ?;
-        """, (question, subject, school_grade)).fetchall()
+        WHERE q.question LIKE ? AND q.subject LIKE ? AND q.grade LIKE ? 
+        LIMIT ? OFFSET ?;
+        """
+        params = (question, subject, school_grade, per_page, offset)
+
+        cursor.execute(query, params)
+        question_data = cursor.fetchall()
 
         if not question_data:
+            cursor.close()
+            con.close()
             return []
 
         result = self.__translate_questions(question_data)
@@ -251,23 +261,3 @@ class Questions:
         con.close()
 
         return result
-
-    def get_paginated_questions(self, page: int = 1, per_page: int = 10):
-        """
-        Fetches a paginated list of questions.
-
-        :param page: The current page number.
-        :param per_page: The number of questions per page.
-        :return: A list of questions for the specified page.
-        """
-        offset = (page - 1) * per_page
-        query = "SELECT * FROM questions LIMIT ? OFFSET ?"
-        params = (per_page, offset)
-
-        conn, cursor = connect_database(self.db)
-        cursor.execute(query, params)
-        questions = cursor.fetchall()
-        cursor.close()
-        conn.close()
-
-        return self.__translate_questions(questions)

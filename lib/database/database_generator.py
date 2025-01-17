@@ -1,6 +1,5 @@
 import sqlite3
 from pathlib import Path
-from venv import create
 
 from src.utils.password import generate_salt, hash_password
 

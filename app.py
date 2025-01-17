@@ -331,35 +331,69 @@ def copy_prompt(prompt_id):
 
 @app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
-    if result := check_login(): return result
+    if result := check_login():
+        return result
 
     questions_model = Questions(database_path)
-
     taxonomy_model = Taxonomy(database_path)
+
     if request.method == 'GET':
-        questions = questions_model.questions_all_view()
+        # Default page and per_page values
+        page = int(request.args.get('page', 1))
+        per_page = request.args.get('per_page', 10)
+        per_page = int(per_page if per_page else 10)
+
+        # Fetch the filtered and paginated questions
+        questions = questions_model.get_filtered_and_paginated_questions(page=page, per_page=per_page)
+
+        # Fetch all taxonomies for the page
         taxonomies = taxonomy_model.get_all_taxonomies()
-        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
+
+        return render_template(
+            'prompts/toetsvragen_view.html.jinja',
+            page=page,
+            questions=questions,
+            taxonomies=taxonomies
+        )
 
     if request.method == 'POST':
+        # Get filters from the form
         question_filter = request.form.get('question_filter', '')
         subject_filter = request.form.get('subject_filter', '')
         school_grade_filter = request.form.get('school_grade_filter', '')
 
-        questions = questions_model.get_filtered_questions(question_filter, subject_filter, school_grade_filter)
+        # Default page and per_page values
+        page = int(request.args.get('page', 1))
+        per_page = 10  # You can adjust this as needed
 
+        # Get filtered and paginated questions
+        questions = questions_model.get_filtered_and_paginated_questions(
+            page=page,
+            per_page=per_page,
+            question=question_filter,
+            subject=subject_filter,
+            school_grade=school_grade_filter
+        )
+
+        # Determine the taxonomy_id based on the filtered questions
         taxonomy_id = None
-
         for question in questions:
             if 'taxonomy_id' in question and question['taxonomy_id'] is not None:
                 taxonomy_id = question['taxonomy_id']
 
+        # Fetch taxonomies based on the taxonomy_id
         if taxonomy_id is not None:
             taxonomies = taxonomy_model.get_filtered_taxonomies(taxonomy_id=taxonomy_id)
         else:
-            taxonomies = []  # or handle this case as needed
+            taxonomies = []
 
-        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
+        return render_template(
+            'prompts/toetsvragen_view.html.jinja',
+            questions=questions,
+            taxonomies=taxonomies,
+            page=page,
+            per_page=int(per_page)
+        )
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
@@ -508,4 +542,4 @@ def style_guide():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
