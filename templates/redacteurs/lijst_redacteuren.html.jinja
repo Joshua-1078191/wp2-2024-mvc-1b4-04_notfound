@@ -30,21 +30,20 @@
                     </td>
                     <td><a href="redacteur_wijzigen/{{editor.id}}" class="btn btn-primary">wijzig</a></td>
                 </tr>
-
-
+            {% endfor %}
+            {% if 'user_id' in session %}
             </table>
             <div class="button-container">
-                <a href="{{ url_for('redacteur_wijzigen', id=editor.id) }}">
+                <a href="{{ url_for('redacteur_wijzigen', id=session['user_id']) }}">
                     <!--hier moet nog komen de inloggegevens van de gebruiker-->
                     <button class="btn btn-primary me-md-2" type="button">Wijzig eigen gegevens</button>
                 </a>
-                <a href="nieuwe_redacteur">
+                <a href="{{ url_for('nieuwe_redacteur') }}">
                     <button class="btn btn-primary" type="button">Nieuwe redacteur</button>
                 </a>
-                {% endfor %}
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
-
-        {% endblock %}
+{% endblock %}
