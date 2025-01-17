@@ -74,19 +74,21 @@
             </table>
         </div>
     </div>
-</div>
-{% endblock %}
-{% block footer %}
-    <div class="container">
-        <div class="row-cols-6">
-            <form method="POST">
-                <div class="mb-3">
-                    <label for="max_results" class="form-label">Max. resultaten per pagina</label>
-                    <input type="text" class="form-control" id="max_results" aria-describedby="Maximum results" name="max_results">
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="row">
+        <div class="col d-flex justify-content-between">
+            <form method="get" action="">
+                <label for="per_page">Questions per page:</label>
+                <select name="per_page" id="per_page" onchange="this.form.submit()">
+                    <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if per_page == 25 %}selected{% endif %}>25</option>
+                    <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+                </select>
             </form>
-
+            <div>
+                <a href="?page={{ page - 1 }}&per_page={{ per_page }}" class="btn btn-secondary {% if page <= 1 %}disabled{% endif %}">Back</a>
+                <a href="?page={{ page + 1 }}&per_page={{ per_page }}" class="btn btn-secondary">Next</a>
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}

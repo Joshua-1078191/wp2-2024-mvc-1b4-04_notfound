@@ -205,30 +205,22 @@ class Questions:
         cursor.close()
         return result
 
-    def questions_all_view_with_limit(self, limit: int, offset: int):
-        con = sqlite3.connect(self.db)
-        con.row_factory = sqlite3.Row
-        cursor = con.cursor()
+    def get_paginated_questions(self, page: int = 1, per_page: int = 10):
+        """
+        Fetches a paginated list of questions.
 
-        limit = int(limit)
-        offset = int(offset)
+        :param page: The current page number.
+        :param per_page: The number of questions per page.
+        :return: A list of questions for the specified page.
+        """
+        offset = (page - 1) * per_page
+        query = "SELECT * FROM questions LIMIT ? OFFSET ?"
+        params = (per_page, offset)
 
-        questions_with_limit_data_ = cursor.execute("""
-            SELECT 
-                q.*,
-                p.prompt_name as prompt_name,
-                t.name as taxonomy_name
-            FROM questions q
-            LEFT JOIN prompts p ON q.prompts_id = p.prompts_id
-            LEFT JOIN taxonomy t ON q.taxonomy_id = t.taxonomy_id
-            LIMIT ? OFFSET ?
-        """, (limit, offset)).fetchall()
-
-        if not questions_with_limit_data_:
-            return []
-
-        result = self.__translate_questions(questions_with_limit_data_)
-
-        con.commit()
+        conn, cursor = connect_database(self.db)
+        cursor.execute(query, params)
+        questions = cursor.fetchall()
         cursor.close()
-        return result
+        conn.close()
+
+        return self.__translate_questions(questions)

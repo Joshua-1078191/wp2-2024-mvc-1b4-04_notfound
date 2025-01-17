@@ -329,25 +329,21 @@ def prompts_view():
 @app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'POST':
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+
         questions_model = Questions(database_path)
-        questions = questions_model.questions_all_view()
+        questions = questions_model.get_paginated_questions(page, per_page)
 
         taxonomy_model = Taxonomy(database_path)
         taxonomies = taxonomy_model.get_all_taxonomies()
-        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
-    if request.method == 'POST':
-        limit = request.form['max_results']
-        limit = int(limit)
-        current_page = -1
-        offset = (current_page + 1) * limit
 
-        questions_model = Questions(database_path)
-        questions = questions_model.questions_all_view_with_limit(limit, offset)
-
-        taxonomy_model = Taxonomy(database_path)
-        taxonomies = taxonomy_model.get_all_taxonomies_with_limit(limit, offset)
-        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
+        return render_template('prompts/toetsvragen_view.html.jinja',
+                               questions=questions,
+                               taxonomies=taxonomies,
+                               page=page,
+                               per_page=per_page)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
@@ -443,6 +439,7 @@ def redacteur_wijzigen(id):
 @app.route('/style_guide')
 def style_guide():
     return render_template("example/style_guide.html.jinja")
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
