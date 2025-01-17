@@ -38,7 +38,7 @@ class User:
         conn = get_db()
         try:
             conn.execute('INSERT INTO users (login, password, display_name, is_admin) VALUES (?, ?, ?, ?)',
-                        (email, password, display_name, 1))
+                        (email, password, display_name, 0))
             conn.commit()
             return True
         except Exception:

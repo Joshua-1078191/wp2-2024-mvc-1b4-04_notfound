@@ -45,6 +45,7 @@ class WP2DatabaseGenerator:
             questions_count INTEGER NOT NULL,
             questions_correct INTEGER NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+            archived BOOLEAN DEFAULT FALSE,
             FOREIGN KEY (user_id) REFERENCES users(user_id)            
             );
         """
