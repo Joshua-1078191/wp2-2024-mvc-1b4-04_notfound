@@ -315,20 +315,21 @@ def toetsvragen_view():
     questions_model = Questions(database_path)
 
     taxonomy_model = Taxonomy(database_path)
-
+    if request.method == 'GET':
+        questions = questions_model.questions_all_view()
+        taxonomies = taxonomy_model.get_all_taxonomies()
+        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
     if request.method == 'POST':
-
+        taxonomies = taxonomy_model.get_filtered_taxonomies(taxonomy_id=questions_model.get_filtered_questions(
+            question = request.form['question_filter'],
+            subject = request.form['subject_filter'],
+            school_grade = request.form['school_grade_filter'],))
         questions = questions_model.get_filtered_questions(
             question = request.form['question_filter'],
             subject = request.form['subject_filter'],
             school_grade = request.form['school_grade_filter'],
         )
-        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=None)
-    else:
-
-        questions = questions_model.questions_all_view()
-        taxonomies = taxonomy_model.get_all_taxonomies()
         return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
