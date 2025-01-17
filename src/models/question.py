@@ -269,6 +269,11 @@ class Questions:
         LEFT JOIN prompts ON questions.prompts_id = prompts.prompts_id
         WHERE questions.question like '%?%' AND questions.subject like '%?%'
         AND questions.grade LIKE '%?%';
+        SELECT q.*, p.prompt_name
+        FROM questions q
+        LEFT JOIN prompts p ON q.prompts_id = p.prompts_id
+        WHERE q.question LIKE ? AND q.subject LIKE ?
+        AND q.grade LIKE ?;
         """, (question, subject, school_grade)).fetchall()
 
         if not question_data:
