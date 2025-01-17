@@ -51,6 +51,22 @@ Afspraken jinja template inheritance/bootstrap/css:
 ├── static/    # Statische bestanden (PNG, JPG, JS, CSS, Ect.)
 └── templates/  # Jinja/HTML bestanden
 ```
+
+# Navigatie:
+De gebruiker begint altijd op de homepagina. Van hieruit kan de gebruiker naar drie verschillende pagina's navigeren:
+- Het vragenoverzicht. Hier kan je alle vragen zien en filters toepassen. Van hieruit kan de gebruiker:
+     - Vragen importeren
+     - Nieuwe vraag toevoegen
+     - Vragen exporteren
+     - Een vraag aanpassen
+- Het promptsoverzicht. Hier kan je een lijst van alle prompts zien. Van hieruit kan de gebruiker:
+     - Een nieuw prompt toevoegen
+     - Een prompt verwijderen
+     - De details van een prompt bekijken
+- Het redacteurenoverzicht. Hier ziet de gebruiker een overzicht van alle redacteuren. Van hieruit kan de gebruiker:
+     - (eigen) Gegevens aanpassen
+     - Een nieuwe redacteur aanmaken 
+
 # Bronnenlijst:
 - (Bootstrap, Background, 2025)
 - (Bootstrap, Flex, 2025)
