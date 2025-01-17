@@ -7,9 +7,13 @@ Dit is de starter repository voor WP2 2024. Deze bevat:
 - Een SQLite [database](databases%2Fdatabase.db) met tabellen voor gebruikers, vragen en AI prompts.
 - De [database tool](lib%2Fdatabase%2Fdatabase_generator.py) om een nieuwe database mee te genereren. Deze is vrij aan te passen.
 
-Afspraken jinja template inheritance:
-- Gebruik een block voor de navigation bar.
-- Gebruik een block voor de footer.
+Afspraken jinja template inheritance/bootstrap/css:
+- Gebruik op elke pagina de layout.html.jinja file uit de templates folder. Voeg deze toe met de {% extends .... %}-functie
+- Houd je op elke pagina aan de HTML code standards/conventions:
+     - Schrijf je CSS in aparte bestanden (niet in het HTML element zelf)
+     - Gebruik geen/zo min mogelijk JS
+     - Schrijf alle HTML binnen de {% block content %}-functie van Jinja
+ 
 
 Folder structuur
 ```python
