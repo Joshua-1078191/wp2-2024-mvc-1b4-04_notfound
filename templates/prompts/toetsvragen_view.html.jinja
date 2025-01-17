@@ -79,10 +79,14 @@
 {% block footer %}
     <div class="container">
         <div class="row-cols-6">
-            <div class="mb-3">
-                <label for="max_results" class="form-label">Max. resultaten per pagina</label>
-                <input type="text" class="form-control" id="max_results" aria-describedby="Maximum results">
-            </div>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="max_results" class="form-label">Max. resultaten per pagina</label>
+                    <input type="text" class="form-control" id="max_results" aria-describedby="Maximum results" name="max_results">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
         </div>
     </div>
 {% endblock %}
