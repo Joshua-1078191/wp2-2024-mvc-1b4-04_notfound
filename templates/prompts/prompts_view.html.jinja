@@ -33,21 +33,26 @@
                     {% if prompts %}
                         {% for prompt in prompts %}
                             <tr>
-                                <td>{{ prompt.id }}</td>
-                                <td>{{ prompt.name }}</td>
-                                <td>{{ prompt.prompt }}</td>
-                                <td>{{ prompt.user_name }}</td>
-                                <td>{{ prompt.questions_count }}</td>
-                                <td>{{ prompt.questions_correct }}</td>
-                                <td>{{ prompt.date_created }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.id }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.name }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.prompt }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.user_name }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.questions_count }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.questions_correct }}</td>
+                                <td {% if prompt.archived %} class="opacity-25" {% endif %}>{{ prompt.date_created }}</td>
                                 <td class="d-flex justify-content-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{ url_for('edit_prompt', prompt_id=prompt.id) }}" class="btn btn-sm btn-primary">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        <form action="{{ url_for('delete_prompt', prompt_id=prompt.id) }}" method="POST" class="d-inline">
+                                        <form action="{{ url_for('delete_prompt', prompt_id=prompt.id) }}" method="POST" class="d-inline mx-2">
                                             <button {% if prompt.questions_count > 0 %} disabled {% endif %} type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze prompt wilt verwijderen?')">
                                                 <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                        <form action="{{ url_for('archive_prompt', prompt_id=prompt.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm {% if prompt.archived %} btn-primary {% else %} btn-success {% endif %}">
+                                                <i class="fa {% if prompt.archived %} fa-eye-slash {% else %} fa-eye {% endif %}"></i>
                                             </button>
                                         </form>
                                     </div>

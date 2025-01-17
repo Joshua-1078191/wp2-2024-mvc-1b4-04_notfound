@@ -34,7 +34,37 @@ class Prompts:
             "questions_correct": prompt["questions_correct"],
             "questions_incorrect": prompt["questions_count"] - prompt["questions_correct"],
             "date_created": prompt["date_created"],
+            "archived": prompt["archived"],
             "user_name": prompt["user_name"]
+        } for prompt in prompts_all_data]
+
+        cursor.close()
+        return result
+
+    def get_available_prompts(self):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        prompts_all_data = cursor.execute("""
+            SELECT *
+            FROM prompts
+            WHERE prompts.archived == FALSE
+        """).fetchall()
+
+        if not prompts_all_data:
+            return []
+
+        result = [{
+            "id": prompt["prompts_id"],
+            "user_id": prompt["user_id"],
+            "name": prompt["prompt_name"],
+            "prompt": prompt["prompt"],
+            "questions_count": prompt["questions_count"],
+            "questions_correct": prompt["questions_correct"],
+            "questions_incorrect": prompt["questions_count"] - prompt["questions_correct"],
+            "date_created": prompt["date_created"],
+            "archived": prompt["archived"]
         } for prompt in prompts_all_data]
 
         cursor.close()
@@ -61,15 +91,21 @@ class Prompts:
 
         return last_id
 
-    def edit_prompt(self, prompts_id: int = None, user_id: int = None, prompt_name: str = None, prompt: str = None, questions_count: int = None, questions_correct: int = None):
+    def edit_prompt(self, prompts_id: int, user_id: int = None, prompt_name: str = None, prompt: str = None, questions_count: int = None, questions_correct: int = None, archived: bool = None):
         con = sqlite3.connect(self.db)
         con.row_factory = sqlite3.Row
         cur = con.cursor()
 
         # get query string and parameters
-        query_params = generate_query_params(user_id=user_id, prompt_name=prompt_name, prompt=prompt, questions_count=questions_count, questions_correct=questions_correct)
+        query_params = generate_query_params(user_id=user_id, prompt_name=prompt_name, prompt=prompt, questions_count=questions_count, questions_correct=questions_correct, archived=archived)
+
+        if not query_params:
+            print(f"Error editing prompt: no new values provided")
+            return False
 
         try:
+            print(f"UPDATE prompts SET {query_params.query} WHERE prompts.prompts_id = ?")
+
             cur.execute(
                 f"UPDATE prompts SET {query_params.query} WHERE prompts.prompts_id = ?",
                 [*query_params.params, prompts_id]
@@ -153,6 +189,7 @@ class Prompts:
             "questions_count": prompt_data["questions_count"],
             "questions_correct": prompt_data["questions_correct"],
             "date_created": prompt_data["date_created"],
+            "archived": prompt_data["archived"],
             "user_name": prompt_data["user_name"]
         }
 

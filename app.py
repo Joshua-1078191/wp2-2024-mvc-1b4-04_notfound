@@ -157,6 +157,7 @@ def export_questions():
 
 @app.route('/index/<question_id>', methods=['GET', 'POST'])
 def index_questions_prompt(question_id:int|str):
+
     if request.method == 'POST':
         prompt_id = request.form.get('selectedPrompt')
         if prompt_id:
@@ -164,45 +165,37 @@ def index_questions_prompt(question_id:int|str):
         flash("Invalid prompt")
         return redirect(request.url)
 
-    #question = {
-    #    'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-    #    'answer': "Glucose en zuurstof, per onderdeel 1 punt",
-    #    'subject': "biologie",
-    #    'education': "havo",
-    #    'grade': 3,
-    #}
-
     question_model = Questions(database_path)
     question = question_model.get_question(question_id)
 
     prompt_model = Prompts(database_path)
-    prompts = prompt_model.prompt_all_view()
-
-    #
-    #prompts = [
-    #    {
-    #        'id': 0,
-    #        'name': "Één van de prompts"
-    #    },
-    #    {
-    #        'id': 1,
-    #        'name': "Een andere prompt die ook bestaat"
-    #    },
-    #]
+    prompts = prompt_model.get_available_prompts()
 
     return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
 
 @app.route('/index/<question_id>/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(question_id:int|str, prompt_id:int):
-
     question_model = Questions(database_path)
     question = question_model.get_question(question_id)
+
+    if not question:
+        flash('Question does not exist', 'error')
+        return redirect(url_for('toetsvragen_view'))
 
     if question['prompts_id']:
         flash('Question already has selection', 'error')
         return redirect(url_for('toetsvragen_view'))
 
     prompt_model = Prompts(database_path)
+
+    prompt = prompt_model.get_prompt(prompt_id)
+    if not prompt:
+        flash('Prompt does not exist', 'error')
+        return redirect(url_for('toetsvragen_view'))
+
+    if prompt['archived']:
+        flash('Prompt is archived', 'error')
+        return redirect(url_for('toetsvragen_view'))
 
     if request.method == 'POST':
         question_model.edit_question(question_id, taxonomy_id=request.form.get('taxonomy'))
@@ -320,6 +313,20 @@ def delete_prompt(prompt_id):
 def prompt_details(prompt_id:int):
     prompt_model = Prompts(database_path)
     return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_prompt(prompt_id))
+
+@app.route('/prompts/archive/<int:prompt_id>', methods=['POST'])
+def archive_prompt(prompt_id):
+    if result := check_login(): return result
+
+    prompts_model = Prompts(database_path)
+
+    prompt = prompts_model.get_prompt(prompt_id)
+    set_archived = not bool(prompt['archived'])
+    if prompt is not None and prompts_model.edit_prompt(prompt_id, archived=set_archived):
+        flash('Prompt succesvol gearchiveerd!' if set_archived else 'Prompt succesvol hersteld!', 'success')
+    else:
+        flash('Er is een fout opgetreden bij het archiveren van de prompt.', 'error')
+    return redirect(url_for('prompts_view'))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 @app.route('/prompts')
