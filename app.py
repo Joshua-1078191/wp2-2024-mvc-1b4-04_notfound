@@ -468,10 +468,8 @@ def redacteur_wijzigen(id):
             user_deleted = users.delete(id)
             if user_deleted:
                 flash('Redacteur succesvol verwijderd. Vragen beoordeeld door deze redacteur blijven bestaan.', 'success')
-                return redirect(url_for('lijst_redacteuren'))  # Hier gaan we terug naar de lijst
             else:
                 flash('Redacteur kon niet worden verwijderd.', 'danger')
-
         else:
             gegevens_wijzigen = users.update(
                 target_id=id,
@@ -482,7 +480,8 @@ def redacteur_wijzigen(id):
             )
             if gegevens_wijzigen:
                 flash('Redacteurs gegevens succesvol gewijzigd!', 'success')
-                return redirect(url_for('lijst_redacteuren'))  # Terug naar de lijst van redacteurs
+
+        return redirect(url_for('lijst_redacteuren'))  # Terug naar de lijst van redacteurs
 
     return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=editor)
 
