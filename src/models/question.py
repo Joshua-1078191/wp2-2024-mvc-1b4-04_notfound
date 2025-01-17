@@ -204,3 +204,23 @@ class Questions:
 
         cursor.close()
         return result
+
+    def get_paginated_questions(self, page: int = 1, per_page: int = 10):
+        """
+        Fetches a paginated list of questions.
+
+        :param page: The current page number.
+        :param per_page: The number of questions per page.
+        :return: A list of questions for the specified page.
+        """
+        offset = (page - 1) * per_page
+        query = "SELECT * FROM questions LIMIT ? OFFSET ?"
+        params = (per_page, offset)
+
+        conn, cursor = connect_database(self.db)
+        cursor.execute(query, params)
+        questions = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        return self.__translate_questions(questions)
