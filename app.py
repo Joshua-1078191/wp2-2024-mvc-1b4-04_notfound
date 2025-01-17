@@ -306,8 +306,6 @@ def copy_prompt(prompt_id):
     else:
         flash('Failed to copy prompt.', 'error')
 
-    return redirect(url_for('prompts_view'))
-
 @app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result
@@ -321,15 +319,12 @@ def toetsvragen_view():
         return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
     if request.method == 'POST':
-        taxonomies = taxonomy_model.get_filtered_taxonomies(taxonomy_id=questions_model.get_filtered_questions(
-            question = request.form['question_filter'],
-            subject = request.form['subject_filter'],
-            school_grade = request.form['school_grade_filter'],))
-        questions = questions_model.get_filtered_questions(
-            question = request.form['question_filter'],
-            subject = request.form['subject_filter'],
-            school_grade = request.form['school_grade_filter'],
-        )
+        question_filter = request.form["question_filter"]
+        subject_filter = request.form["subject_filter"]
+        school_grade_filter = request.form["school_grade_filter"]
+
+        questions = questions_model.get_filtered_questions(question_filter, subject_filter, school_grade_filter)
+        taxonomies = taxonomy_model.get_filtered_taxonomies(questions_model.get_filtered_questions(question_filter, subject_filter, school_grade_filter))
         return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])

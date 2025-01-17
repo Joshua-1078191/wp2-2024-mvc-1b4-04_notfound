@@ -238,21 +238,14 @@ class Questions:
         WHERE questions.question like '%?%' AND questions.subject like '%?%'
         AND questions.grade LIKE '%?%';
         """, (question, subject, school_grade)).fetchall()
-        if not question_data:
-            return None
 
-        result = {
-            "question": question_data["question"],
-            "subject": question_data["subject"],
-            "grade": question_data["grade"],
-            "education": question_data["education"],
-            "prompt_name": question_data["prompt_name"],
-            "answer": question_data["answer"],
-            "question_id": question_data["questions_id"],
-            "taxonomy_id": question_data["taxonomy_id"]
-        }
+        if not question_data:
+            return []
+
+        result = self.__translate_questions(question_data)
 
         cursor.close()
         con.close()
+        con.commit()
 
         return result
