@@ -18,6 +18,19 @@ class Taxonomy:
         finally:
             con.close()
 
+    def get_filtered_taxonomies(self, taxonomy_id):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        taxonomies = cursor.execute("""
+        SELECT * FROM taxonomy WHERE taxonomy_id = ?""", taxonomy_id).fetchall()
+
+        cursor.close()
+        con.close()
+
+        return taxonomies
+
     def get_all_taxonomies_with_limit(self, limit: int, offset: int):
         """Get all taxonomies for the dropdown"""
         con = sqlite3.connect(self.db)
@@ -40,3 +53,17 @@ class Taxonomy:
 
         return result
 
+
+
+    def get_filtered_taxonomies(self, taxonomy_id):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        taxonomies = cursor.execute("""
+        SELECT * FROM taxonomy WHERE taxonomy_id = ?""", taxonomy_id).fetchall()
+
+        cursor.close()
+        con.close()
+
+        return taxonomies
