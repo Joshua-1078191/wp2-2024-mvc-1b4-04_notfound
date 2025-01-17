@@ -65,7 +65,10 @@ De gebruiker begint altijd op de homepagina. Van hieruit kan de gebruiker naar d
      - De details van een prompt bekijken
 - Het redacteurenoverzicht. Hier ziet de gebruiker een overzicht van alle redacteuren. Van hieruit kan de gebruiker:
      - (eigen) Gegevens aanpassen
-     - Een nieuwe redacteur aanmaken 
+     - Een nieuwe redacteur aanmaken
+
+# Extra functionaliteiten:
+Op de vragenoverzicht pagina hebben we in de tabel met alle vragen een filter-functie verwerkt. Je kan hier verschillende filters toevoegen zoals klas, leerjaar en vak.
 
 # Bronnenlijst:
 - (Bootstrap, Background, 2025)
