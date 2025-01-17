@@ -418,13 +418,63 @@ def lijst_redacteuren():
 @app.route('/redacteurs/nieuwe_redacteur', methods=['GET', 'POST'])
 def nieuwe_redacteuren():
     if result := check_login(): return result
+
+    users_model = Users(database_path)
+
+    if request.method == 'POST':
+        nieuwe_redacteur_id = users_model.register(
+            email=request.form.get('email'),
+            password=request.form.get('password'),
+            username=request.form.get('name'),
+            is_admin=bool(request.form.get('is_admin', False))
+        )
+        if nieuwe_redacteur_id:
+            flash('Redacteur succesvol toegevoegd!', 'success')
+            return redirect(url_for('lijst_redacteuren'))
+
     return render_template("redacteurs/nieuwe_redacteur.html.jinja")
 
 @app.route('/redacteurs/redacteur_wijzigen/<int:id>', methods=['GET', 'POST'])
 def redacteur_wijzigen(id):
     if result := check_login(): return result
+
     users = Users(database_path)
-    return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=users.get(id))
+    editor = users.get(id)
+
+    if not editor:
+        flash('De opgegeven redacteur bestaat niet.', 'danger')
+        return redirect(url_for('lijst_redacteuren'))
+
+    editor_id = editor['id']
+    is_admin = session.get('is_admin', False)
+    current_user_id = session.get('user_id')
+
+    if editor_id != current_user_id and not is_admin:
+        flash('Je kunt alleen je eigen gegevens wijzigen.', 'danger')
+        return redirect(url_for('lijst_redacteuren'))
+
+    if request.method == 'POST':
+        if 'delete' in request.form and is_admin:
+            user_deleted = users.delete(id)
+            if user_deleted:
+                flash('Redacteur succesvol verwijderd. Vragen beoordeeld door deze redacteur blijven bestaan.', 'success')
+            else:
+                flash('Redacteur kon niet worden verwijderd.', 'danger')
+        else:
+            gegevens_wijzigen = users.update(
+                target_id=id,
+                email=request.form.get('email'),
+                password=request.form.get('password'),
+                username=request.form.get('name'),
+                is_admin=bool(request.form.get('is_admin', False)) if is_admin else editor['isAdmin']
+            )
+            if gegevens_wijzigen:
+                flash('Redacteurs gegevens succesvol gewijzigd!', 'success')
+
+        return redirect(url_for('lijst_redacteuren'))  # Terug naar de lijst van redacteurs
+
+    return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=editor)
+
 
 @app.route('/style_guide')
 def style_guide():
