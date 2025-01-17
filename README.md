@@ -79,7 +79,7 @@ P.S. Voor uitgebreide bronnenlijst/APA 7-vermelding zie bibliografie.
 - GeeksforGeeks. (2023, Februari 2). Flask HTTP methods, handle GET & POST requests. Retrieved from GeeksforGeeks.org: https://www.geeksforgeeks.org/flask-http-methods-handle-get-post-requests/
 - GeeksforGeeks. (2024, Juli 31). How to Center a Flex Container but Left-Align Flex Items? Retrieved from GeeksforGeeks.org: https://www.geeksforgeeks.org/how-to-center-a-flex-container-but-left-align-flex-items/#using-margin-auto-on-the-flex-container
 - GeeksForGeeks. (2024, januari 5). How to Set Checkboxes Readonly in HTML ? Retrieved from www.geeksforgeeks.org: https://www.geeksforgeeks.org/how-to-set-checkboxes-readonly-in-html/
-- Jibin. (2017, Juni 2). <select> required not working. Retrieved from Stackoverflow: https://stackoverflow.com/questions/44322824/select-required-not-working
+- Jibin. (2017, Juni 2). select required not working. Retrieved from Stackoverflow: https://stackoverflow.com/questions/44322824/select-required-not-working
 - kasperhj. (2013, Januari 19). Common folder/file structure in Flask app [closed]. Retrieved from Stackoverflow: https://stackoverflow.com/questions/14415500/common-folder-file-structure-in-flask-app
 - Kimmy. (2013, Juni 26). How to debug a Flask app. Retrieved from Stackoverflow: https://stackoverflow.com/questions/17309889/how-to-debug-a-flask-app
 - Sheldon. (2021, November 9). How do I determine if the row has been inserted? Retrieved from Stackoverflow: https://stackoverflow.com/questions/13313694/how-do-i-determine-if-the-row-has-been-inserted
