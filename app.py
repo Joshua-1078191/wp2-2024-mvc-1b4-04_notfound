@@ -74,7 +74,7 @@ def login_route():
         session['user_id'] = user['id']
         session['display_name'] = user['name']
         session['is_admin'] = user['isAdmin']
-        return redirect('/')
+        return redirect('/toetsvragen_view')
 
     return render_template("login.html.jinja")
 
