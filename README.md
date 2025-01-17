@@ -7,27 +7,11 @@ Dit is de starter repository voor WP2 2024. Deze bevat:
 - Een SQLite [database](databases%2Fdatabase.db) met tabellen voor gebruikers, vragen en AI prompts.
 - De [database tool](lib%2Fdatabase%2Fdatabase_generator.py) om een nieuwe database mee te genereren. Deze is vrij aan te passen.
 
-# Installatie requirements
-Installeer python (3.12), flask (3.1.0), cryptography (44.0.0), openai (1.57.4) en ollama (0.4.4)
-```shell
-pip install -r requirements.txt
-```
+Afspraken jinja template inheritance:
+- Gebruik een block voor de navigation bar.
+- Gebruik een block voor de footer.
 
-# applicatie opstarten
-De applicatie start op met het volgende commando:
-```shell
-flask run
-```
-# coding standerds/conventions:
-Afspraken jinja template inheritance/bootstrap/css:
-- Gebruik op elke pagina de layout.html.jinja file uit de templates folder. Voeg deze toe met de {% extends .... %}-functie
-- Houd je op elke pagina aan de HTML code standards/conventions:
-     - Schrijf je CSS in aparte bestanden (niet in het HTML element zelf)
-     - Gebruik geen/zo min mogelijk JS
-     - Schrijf alle HTML binnen de {% block content %}-functie van Jinja
- 
-
-# Folder structuur
+Folder structuur
 ```python
 .
 ├── database/  # sqlite database bestand(en)
@@ -37,20 +21,3 @@ Afspraken jinja template inheritance/bootstrap/css:
 ├── static/    # Statische bestanden (PNG, JPG, JS, CSS, Ect.)
 └── templates/  # Jinja/HTML bestanden
 ```
-# Bronnenlijst:
-## Joshua
-- 
-## Roos
-- 
-## Jorik
-- 
-## Tobias
-- Readonly checkboxes: ​(GeeksForGeeks, 2024)​
-- Input types: ​(developer.mozilla, 2024)​
-
-P.S. Voor uitgebreide bronnenlijst/APA 7-vermelding zie bibliografie.
-
-# Bibliografie
-- developer.mozilla. (2024, november 1). <input>: The HTML Input element. Opgehaald van www.developer.mozilla.org: https://developer.mozilla.org/en-     US/docs/Web/HTML/Element/input
-
-- GeeksForGeeks. (2024, januari 5). How to Set Checkboxes Readonly in HTML ? Opgehaald van www.geeksforgeeks.org: https://www.geeksforgeeks.org/how-to-set-checkboxes-readonly-in-html/
