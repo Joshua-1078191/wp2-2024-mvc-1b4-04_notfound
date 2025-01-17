@@ -1,9 +1,13 @@
 import difflib
 import json
+import os
 from io import BytesIO
 from json import JSONDecodeError
+from platform import libc_ver
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, abort
+
+import lib.database.database_generator
 from src.models.users import Users
 from src.models.question import Questions
 from src.models.prompts import Prompts
@@ -13,6 +17,25 @@ from lib.gpt.bloom_taxonomy import get_bloom_category
 app = Flask(__name__)
 app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
+
+def init_db():
+
+    # Create the directory if it doesn't exist
+    database_dir = os.path.dirname(database_path)
+    if not os.path.exists(database_dir):
+        os.makedirs(database_dir)
+        print(f"Created directory: {database_dir}")
+
+    # Generate the database if it doesn't exist
+    if not os.path.isfile(database_path):
+        print("Initializing database...")
+        database_generator = lib.database.database_generator.WP2DatabaseGenerator(
+            database_path, overwrite=False, initial_data=True
+        )
+        database_generator.generate_database()
+
+with app.app_context():
+    init_db()
 
 def check_login(require_admin = False):
     if 'user_id' not in session:
