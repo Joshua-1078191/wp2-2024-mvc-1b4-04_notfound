@@ -3,8 +3,7 @@ import json
 from io import BytesIO
 from json import JSONDecodeError
 
-from flask import Flask, render_template, request, redirect, url_for, session, Response, flash, send_file, abort
-from src.models.user import User
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, abort
 from src.models.users import Users
 from src.models.question import Questions
 from src.models.prompts import Prompts
@@ -39,21 +38,19 @@ def login_route():
             flash('Please enter both email and password', 'error')
             return render_template("login.html.jinja")
 
-        # First check if email exists
-        user = User.get_by_email(email)
+        users_model = Users(database_path)
+
+        # Try to log in
+        user = users_model.login(email, password) #Users.get_by_email(email)
+
+        # If login failed
         if not user:
-            flash('No account found with this email', 'error')
+            flash('Email of wachtwoord is incorrect', 'error')
             return render_template("login.html.jinja")
 
-        # Then check if password matches
-        user = User.get_by_credentials(email, password)
-        if not user:
-            flash('Incorrect password', 'error')
-            return render_template("login.html.jinja")
-
-        session['user_id'] = user.user_id
-        session['display_name'] = user.display_name
-        session['is_admin'] = user.is_admin
+        session['user_id'] = user['id']
+        session['display_name'] = user['name']
+        session['is_admin'] = user['isAdmin']
         return redirect('/')
 
     return render_template("login.html.jinja")
@@ -103,7 +100,6 @@ def import_questions():
 def export_questions():
     questions_model = Questions(database_path)
 
-    questions = None
     export_all = request.args.get('all', False)
     if export_all:
         questions = questions_model.export_all_questions()

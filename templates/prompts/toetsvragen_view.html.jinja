@@ -3,19 +3,19 @@
 {% block content %}
 <div class="container">
     <div class="row pb-3">
-        <div class="col">
+        <div class="col-auto">
             <h1>Lijst van alle vragen</h1>
         </div>
-        <div class="col text-end flex-row">
-            <a href="{{ url_for('import_questions') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Vragen Importeren
+        <div class="col d-flex flex-row justify-content-end gap-2">
+            <a href="{{ url_for('import_questions') }}" class="btn btn-primary d-flex align-items-center">
+                <i class="fa fa-plus"></i> Vragen Importeren
             </a>
-            <a href="{{ url_for('add_question') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Nieuwe Vraag
+            <a href="{{ url_for('add_question') }}" class="btn btn-primary d-flex align-items-center">
+                <i class="fa fa-plus"></i> Nieuwe Vraag
             </a>
             <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-plus"></i> Vragen Exporteren
+                <button class="btn btn-primary dropdown-toggle h-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-plus"></i> Vragen Exporteren
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{{ url_for('export_questions')}}">Exporteer Vragen</a></li>
@@ -54,11 +54,11 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="fa fa-edit"></i>
                                         </a>
                                         <form action="{{ url_for('delete_question', question_id=question.id) }}" method="POST" class="d-inline">
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
                                     </div>
