@@ -24,7 +24,7 @@ def check_login(require_admin = False):
 
 @app.route('/')
 def main():
-    return render_template("index-1.html.jinja")
+    return render_template("homepage.jinja")
 
 @app.route('/index/login', methods=['GET', 'POST'])
 def login_route():
@@ -58,35 +58,6 @@ def login_route():
 
     return render_template("login.html.jinja")
 
-@app.route('/index/sign_up', methods=['GET', 'POST'])
-def sign_up_route():
-    if 'user_id' in session:
-        return redirect('/')
-
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form.get('confirm_password')
-
-        # Validate passwords match
-        if password != confirm_password:
-            flash('Passwords do not match', 'error')
-            return render_template("sign_up.html.jinja")
-
-        # Check if email already exists
-        if User.get_by_email(email):
-            flash('Email already registered', 'error')
-            return render_template("sign_up.html.jinja")
-
-        # Create new user
-        if User.create_user(email, password):
-            flash('Account created successfully! Please log in.', 'success')
-            return redirect('/index/login')
-        else:
-            flash('An error occurred while creating your account', 'error')
-            return render_template("sign_up.html.jinja")
-
-    return render_template("sign_up.html.jinja")
 
 @app.route('/index/logout')
 def logout_route():
@@ -335,15 +306,38 @@ def prompts_view():
     prompt_models = Prompts(database_path)
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
 
-@app.route('/toetsvragen_view')
+@app.route('/prompts/copy/<int:prompt_id>', methods=['POST'])
+def copy_prompt(prompt_id):
+    if result := check_login(): return result
+
+    prompts_model = Prompts(database_path)
+    new_prompt_id = prompts_model.copy_prompt(prompt_id)
+
+    if new_prompt_id:
+        flash('Prompt successfully copied!', 'success')
+    else:
+        flash('Failed to copy prompt.', 'error')
+
+    return redirect(url_for('prompts_view'))
+
+@app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result
-    questions_model = Questions(database_path)
-    questions = questions_model.questions_all_view()
+    if request.method == 'GET' or request.method == 'POST':
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
 
-    taxonomy_model = Taxonomy(database_path)
-    taxonomies = taxonomy_model.get_all_taxonomies()
-    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
+        questions_model = Questions(database_path)
+        questions = questions_model.get_paginated_questions(page, per_page)
+
+        taxonomy_model = Taxonomy(database_path)
+        taxonomies = taxonomy_model.get_all_taxonomies()
+
+        return render_template('prompts/toetsvragen_view.html.jinja',
+                               questions=questions,
+                               taxonomies=taxonomies,
+                               page=page,
+                               per_page=per_page)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
@@ -489,6 +483,7 @@ def redacteur_wijzigen(id):
 @app.route('/style_guide')
 def style_guide():
     return render_template("example/style_guide.html.jinja")
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
