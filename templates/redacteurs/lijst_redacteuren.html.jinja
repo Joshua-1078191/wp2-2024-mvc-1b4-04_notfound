@@ -33,7 +33,7 @@
         </tbody>
     </table>
     <div class="button-container">
-        <a href="redacteur_wijzigen"> <!--hier moet nog komen de inloggegevens van de gebruiker-->
+        <a href="{{ url_for('redacteur_wijzigen', editor_id=editor.id) }}"> <!--hier moet nog komen de inloggegevens van de gebruiker-->
             <button class="btn btn-primary me-md-2" type="button">Wijzig eigen gegevens</button>
         </a>
         <a href="nieuwe_redacteur">
