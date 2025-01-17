@@ -448,7 +448,6 @@ def nieuwe_redacteuren():
 def redacteur_wijzigen(id):
     if result := check_login(): return result
 
-
     users = Users(database_path)
     editor = users.get(id)
 
@@ -456,12 +455,20 @@ def redacteur_wijzigen(id):
         flash('De opgegeven redacteur bestaat niet.', 'danger')
         return redirect(url_for('lijst_redacteuren'))
 
+    editor_id = editor['id']
+    is_admin = session.get('is_admin', False)
+    current_user_id = session.get('user_id')
+
+    if editor_id != current_user_id and not is_admin:
+        flash('Je kunt alleen je eigen gegevens wijzigen.', 'danger')
+        return redirect(url_for('lijst_redacteuren'))
+
     if request.method == 'POST':
-        if 'delete' in request.form:
+        if 'delete' in request.form and is_admin:
             user_deleted = users.delete(id)
             if user_deleted:
                 flash('Redacteur succesvol verwijderd. Vragen beoordeeld door deze redacteur blijven bestaan.', 'success')
-                return redirect(url_for('lijst_redacteuren'))
+                return redirect(url_for('lijst_redacteuren'))  # Hier gaan we terug naar de lijst
             else:
                 flash('Redacteur kon niet worden verwijderd.', 'danger')
 
@@ -471,11 +478,11 @@ def redacteur_wijzigen(id):
                 email=request.form.get('email'),
                 password=request.form.get('password'),
                 username=request.form.get('name'),
-                is_admin=bool(request.form.get('is_admin', False))
+                is_admin=bool(request.form.get('is_admin', False)) if is_admin else editor['isAdmin']
             )
             if gegevens_wijzigen:
                 flash('Redacteurs gegevens succesvol gewijzigd!', 'success')
-                return redirect(url_for('lijst_redacteuren'))
+                return redirect(url_for('lijst_redacteuren'))  # Terug naar de lijst van redacteurs
 
     return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=editor)
 

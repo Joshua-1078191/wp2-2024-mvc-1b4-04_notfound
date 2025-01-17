@@ -10,11 +10,13 @@
             <form method="POST" action="{{ url_for('redacteur_wijzigen', id=editor.id) }}">
                 <div class="mb-3">
                     <label for="name" class="form-label">Naam</label>
-                    <input required="text" type="text" class="form-control" id="name" value="{{ editor.name }}" name="name">
+                    <input required="text" type="text" class="form-control" id="name" value="{{ editor.name }}"
+                           name="name">
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="col-sm-2 col-form-label">Email/login</label>
-                    <input required="email" type="email" class="form-control" id="email" value="{{ editor.email }}" name="email">
+                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                    <input required="email" type="email" class="form-control" id="email" value="{{ editor.email }}"
+                           name="email">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="col-sm-2 col-form-label">Wachtwoord</label>
@@ -31,12 +33,14 @@
                 </div>
                 <button class="btn btn-primary" type="submit">Opslaan</button>
             </form>
-
+            {% if session.get('is_admin') and editor.id != session.get('user_id') %}
             <form method="POST" action="{{ url_for('redacteur_wijzigen', id=editor.id) }}"
                   onsubmit="return confirm('Weet je zeker dat je deze redacteur wilt verwijderen? Vragen beoordeeld door deze redacteur blijven bestaan.')">
                 <input type="hidden" name="delete" value="true">
                 <button class="btn btn-primary" type="submit">Verwijder</button>
             </form>
+            {% endif %}
+
         </div>
     </div>
 </div>
