@@ -227,7 +227,8 @@ class Questions:
             "education": question_data["education"],
             "prompt_name": question_data["prompt_name"],
             "answer": question_data["answer"],
-            "question_id": question_data["questions_id"]
+            "question_id": question_data["questions_id"],
+            "taxonomy_id": question_data["taxonomy_id"]
         }
 
         cursor.close()
