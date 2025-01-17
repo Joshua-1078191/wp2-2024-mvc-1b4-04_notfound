@@ -1,4 +1,9 @@
-flask==3.1.0
-cryptography~=44.0.0
-openai~=1.57.4
-ollama~=0.4.4
+#flask==3.1.0
+#cryptography~=44.0.0
+#openai~=1.57.4
+#ollama~=0.4.4
+
+flask
+cryptography
+openai
+ollama
