@@ -204,3 +204,31 @@ class Questions:
 
         cursor.close()
         return result
+
+    def questions_all_view_with_limit(self, limit: int, offset: int):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        limit = int(limit)
+        offset = int(offset)
+
+        questions_with_limit_data_ = cursor.execute("""
+            SELECT 
+                q.*,
+                p.prompt_name as prompt_name,
+                t.name as taxonomy_name
+            FROM questions q
+            LEFT JOIN prompts p ON q.prompts_id = p.prompts_id
+            LEFT JOIN taxonomy t ON q.taxonomy_id = t.taxonomy_id
+            LIMIT ? OFFSET ?
+        """, (limit, offset)).fetchall()
+
+        if not questions_with_limit_data_:
+            return []
+
+        result = self.__translate_questions(questions_with_limit_data_)
+
+        con.commit()
+        cursor.close()
+        return result
