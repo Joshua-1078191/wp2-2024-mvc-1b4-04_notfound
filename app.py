@@ -171,14 +171,6 @@ def index_questions_taxonomy(question_id:int|str, prompt_id:int):
         flash('', 'success' if success else 'error')
         return redirect(url_for('toetsvragen_view'))
 
-    #question = {
-    #    'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-    #    'answer': "",
-    #    'subject': "biologie",
-    #    'education': "havo",
-    #    'grade': 3,
-    #}
-
     if not question:
         return redirect(url_for('toetsvragen_view'))
 

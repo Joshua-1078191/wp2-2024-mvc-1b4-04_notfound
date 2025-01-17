@@ -1,7 +1,5 @@
 import sqlite3
 
-from click import prompt
-
 from src.utils.database import generate_query_params
 
 

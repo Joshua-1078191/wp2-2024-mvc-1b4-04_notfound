@@ -98,8 +98,6 @@ class WP2DatabaseGenerator:
             self.generate_user_data("krugw@hr.nl","geheim", "Gerard van Kruining", True),
             self.generate_user_data("vried@hr.nl", "geheimer", "Diederik de Vries", False),
             self.generate_user_data("admin@mail.com", "admin", "admin", True),
-            #( "krugw@hr.nl", "geheim", "Gerard van Kruining", 1),
-            #( "vried@hr.nl", "geheimer", "Diederik de Vries", 0),
         ]
         insert_statement = "INSERT INTO users (login, password, salt, display_name, is_admin) VALUES (?, ?, ?, ?, ?);"
         self.__execute_many_transaction_statement(insert_statement, users)
