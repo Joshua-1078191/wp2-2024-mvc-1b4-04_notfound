@@ -419,6 +419,20 @@ def lijst_redacteuren():
 @app.route('/redacteurs/nieuwe_redacteur', methods=['GET', 'POST'])
 def nieuwe_redacteuren():
     if result := check_login(): return result
+
+    users_model = Users(database_path)
+
+    if request.method == 'POST':
+        nieuwe_redacteur_id = users_model.register(
+            email=request.form.get('email'),
+            password=request.form.get('password'),
+            username=request.form.get('name'),
+            is_admin=bool(request.form.get('is_admin', False))
+        )
+        if nieuwe_redacteur_id:
+            flash('Redacteur succesvol toegevoegd!', 'success')
+            return redirect(url_for('lijst_redacteuren'))
+
     return render_template("redacteurs/nieuwe_redacteur.html.jinja")
 
 @app.route('/redacteurs/redacteur_wijzigen/<int:id>', methods=['GET', 'POST'])
