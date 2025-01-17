@@ -1,0 +1,137 @@
+{% extends "layout.html.jinja" %}
+{% block title %}
+    Style Guide
+{% endblock %}
+{% block content %}
+    <div class="pt-3 container d-flex flex-column">
+        <h1 class="fw-light pb-3">Style Guide</h1>
+
+        <!-- Tables -->
+        <div class="mb-4 px-4 pt-3 border border-light-subtle bg-light-subtle rounded-3">
+            <h4>Tables</h4>
+            <div class="d-flex flex-row gap-4">
+
+                <!-- Horizontal Table -->
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="row">Student</th>
+                        <th scope="row">Math</th>
+                        <th scope="row">Science</th>
+                        <th scope="row">History</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <td>Alice</td>
+                        <td>85</td>
+                        <td>90</td>
+                        <td>88</td>
+                    </tr>
+                    <tr>
+                        <td>Bob</td>
+                        <td>85</td>
+                        <td>90</td>
+                        <td>88</td>
+                    </tr>
+                    <tr>
+                        <td>Charlie</td>
+                        <td>85</td>
+                        <td>90</td>
+                        <td>88</td>
+                    </tr>
+                    <tr>
+                        <td>Diana</td>
+                        <td>85</td>
+                        <td>90</td>
+                        <td>88</td>
+                    </tr>
+                </table>
+
+                <!-- Vertical Table -->
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th scope="row" class="col-2">Student</th>
+                        <td>Alice</td>
+                        <td>Bob</td>
+                        <td>Charlie</td>
+                        <td>Diana</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="col-2">Math</th>
+                        <td>85</td>
+                        <td>85</td>
+                        <td>85</td>
+                        <td>85</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="col-2">Science</th>
+                        <td>90</td>
+                        <td>90</td>
+                        <td>90</td>
+                        <td>90</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="col-2">History</th>
+                        <td>88</td>
+                        <td>88</td>
+                        <td>88</td>
+                        <td>88</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div class="d-flex gap-3">
+            <div class="mb-4 px-4 py-3 col-4 border border-light-subtle bg-light-subtle rounded-3">
+                <h4>Form Elements</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="mb-4 px-4 py-3 container border border-light-subtle bg-light-subtle rounded-3">
+                <fieldset class="row mb-3">
+                    <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1"
+                                   value="option1" checked>
+                            <label class="form-check-label" for="gridRadios1">
+                                First radio
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2"
+                                   value="option2">
+                            <label class="form-check-label" for="gridRadios2">
+                                Second radio
+                            </label>
+                        </div>
+                        <div class="form-check disabled">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3"
+                                   value="option3" disabled>
+                            <label class="form-check-label" for="gridRadios3">
+                                Third disabled radio
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <form class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                              style="height: 100px"></textarea>
+                    <label for="floatingTextarea2">Comments</label>
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

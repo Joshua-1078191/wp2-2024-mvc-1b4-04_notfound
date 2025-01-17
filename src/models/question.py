@@ -1,6 +1,6 @@
 import sqlite3
 
-from src.utils.database import generate_query_params
+from src.utils.database import connect_database, generate_query_params
 
 
 class Questions:
@@ -25,6 +25,53 @@ class Questions:
         if not questions_all_data:
             return []
 
+        result = self.__translate_questions(questions_all_data)
+
+        con.commit()
+        cursor.close()
+        return result
+
+    def export_questions(self):
+        conn, cursor = connect_database(self.db)
+
+        # Fetch users
+        questions = cursor.execute("""
+            SELECT * FROM questions WHERE questions.exported = FALSE;
+            """).fetchall()
+
+        if questions:
+            # Mark questions as exported
+            cursor.executemany("""
+            UPDATE questions SET exported = TRUE WHERE questions.questions_id = ?
+            """, [(question["questions_id"],) for question in questions])
+
+            conn.commit()
+
+        conn.close()
+
+        return self.__translate_questions(questions)
+
+    def export_all_questions(self):
+        conn, cursor = connect_database(self.db)
+
+        # Fetch users
+        questions = cursor.execute("""
+            SELECT * FROM questions;
+            """).fetchall()
+
+        if questions:
+            # Mark questions as exported
+            cursor.executemany("""
+            UPDATE questions SET exported = TRUE WHERE questions.questions_id = ?
+            """, [(question["questions_id"],) for question in questions])
+
+            conn.commit()
+
+        conn.close()
+
+        return self.__translate_questions(questions)
+
+    def __translate_questions(self, questions):
         result = [{
             "id": question["questions_id"],
             "question": question["question"],
@@ -34,12 +81,8 @@ class Questions:
             "prompts_id": question["prompts_id"],
             "answer": question["answer"],
             "taxonomy_id": question["taxonomy_id"],
-            "prompt_name": question["prompt_name"],
-            "taxonomy_name": question["taxonomy_name"]
-        } for question in questions_all_data]
+        } for question in questions]
 
-        con.commit()
-        cursor.close()
         return result
 
     def add_question(self, question: str, subject: str, grade: str, education: str,
