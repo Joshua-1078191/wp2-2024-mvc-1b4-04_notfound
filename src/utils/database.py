@@ -13,12 +13,15 @@ def connect_database(database_path: str) -> (Connection, Cursor):
 
     return conn, cursor
 
-def generate_query_params(**kwargs) -> QueryParams:
+def generate_query_params(**kwargs) -> QueryParams | None:
     query_arguments = []
     params = []
 
+    if not kwargs:
+        return None
+
     for arg in kwargs:
-        if kwargs[arg]:
+        if kwargs[arg] is not None:
             query_arguments.append(f"`{arg}`=?")
             params.append(kwargs[arg])
 
