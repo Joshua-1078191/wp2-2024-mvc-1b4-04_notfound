@@ -56,35 +56,6 @@ def login_route():
 
     return render_template("login.html.jinja")
 
-@app.route('/index/sign_up', methods=['GET', 'POST'])
-def sign_up_route():
-    if 'user_id' in session:
-        return redirect('/')
-
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form.get('confirm_password')
-
-        # Validate passwords match
-        if password != confirm_password:
-            flash('Passwords do not match', 'error')
-            return render_template("sign_up.html.jinja")
-
-        # Check if email already exists
-        if User.get_by_email(email):
-            flash('Email already registered', 'error')
-            return render_template("sign_up.html.jinja")
-
-        # Create new user
-        if User.create_user(email, password):
-            flash('Account created successfully! Please log in.', 'success')
-            return redirect('/index/login')
-        else:
-            flash('An error occurred while creating your account', 'error')
-            return render_template("sign_up.html.jinja")
-
-    return render_template("sign_up.html.jinja")
 
 @app.route('/index/logout')
 def logout_route():
