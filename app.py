@@ -24,7 +24,7 @@ def check_login(require_admin = False):
 
 @app.route('/')
 def main():
-    return render_template("index-1.html.jinja")
+    return render_template("homepage.jinja")
 
 @app.route('/index/login', methods=['GET', 'POST'])
 def login_route():
