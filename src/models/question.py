@@ -240,6 +240,34 @@ class Questions:
         LEFT JOIN prompts p ON q.prompts_id = p.prompts_id 
         WHERE q.question LIKE ? AND q.subject LIKE ? 
         AND q.grade LIKE ?;
+        """, (question, subject, school_grade)).fetchall()
+
+        if not question_data:
+            return []
+
+        result = self.__translate_questions(question_data)
+
+        cursor.close()
+        con.close()
+
+        return result
+    def get_filtered_questions(self, question, subject, school_grade):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        # Convert parameters to strings and handle None values
+        question = f'%{question}%' if question else '%'
+        subject = f'%{subject}%' if subject else '%'
+        school_grade = f'%{school_grade}%' if school_grade else '%'
+
+        # Execute the query with the filtered parameters
+        question_data = cursor.execute("""
+        SELECT q.*, p.prompt_name 
+        FROM questions q
+        LEFT JOIN prompts p ON q.prompts_id = p.prompts_id 
+        WHERE q.question LIKE ? AND q.subject LIKE ? 
+        AND q.grade LIKE ?;
         SELECT * FROM questions WHERE question like '%?%' """, (question, subject, school_class, school_grade)).fetchall()
     def get_paginated_questions(self, page: int = 1, per_page: int = 10):
         """

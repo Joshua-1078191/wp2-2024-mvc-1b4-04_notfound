@@ -53,3 +53,17 @@ class Taxonomy:
 
         return result
 
+
+
+    def get_filtered_taxonomies(self, taxonomy_id):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        taxonomies = cursor.execute("""
+        SELECT * FROM taxonomy WHERE taxonomy_id = ?""", taxonomy_id).fetchall()
+
+        cursor.close()
+        con.close()
+
+        return taxonomies
