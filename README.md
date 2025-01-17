@@ -72,13 +72,21 @@ Afspraken jinja template inheritance/bootstrap/css:
 - (Flask, 2010)
 - Readonly checkboxes: ​(GeeksForGeeks, 2024)​
 - Input types: ​(developer.mozilla, 2024)​
+- (Balsamiq, 2025) 
+- (Haim, 2024)
+- (Bootstrap, Tables, 2025)
+- (w3schools, 2025)
+- (Bootstrap, Tooltips - Overflow auto and scroll, 2025)
+- (w3schools.com, 2025)
+- (Bootstrap, Checks and radios, 2025)
 
 P.S. Voor uitgebreide bronnenlijst/APA 7-vermelding zie bibliografie.
 
 # Bibliografie
+- Balsamiq. (2025). Editing controls - The data grid (table) control. Retrieved from Balsamiq.com: https://balsamiq.com/wireframes/desktop/docs/datagrids/
 - Barclay, G. (2024, Maart 1). Argon2 vs bcrypt vs. scrypt: which hashing algorithm is right for you? Retrieved from Stytch: https://stytch.com/blog/argon2-vs-bcrypt-vs-scrypt/
-
 - Bootstrap. (2025). Background. Retrieved from getbootstrap.com: https://getbootstrap.com/docs/5.0/utilities/background/
+- Bootstrap. (2025). Checks and radios. Retrieved from getbootstrap.com: https://getbootstrap.com/docs/5.1/forms/checks-radios/
 - Bootstrap. (2025). Flex. Retrieved from getbootstrap.com: https://getbootstrap.com/docs/4.0/utilities/flex/
 - Bootstrap. (2025). Floating labels. Retrieved from getbootstrap: https://getbootstrap.com/docs/5.0/forms/floating-labels/
 - Bootstrap. (2025). Form controls - file input. Retrieved from Bootstrap: https://getbootstrap.com/docs/5.0/forms/form-control/#file-input
@@ -92,8 +100,11 @@ P.S. Voor uitgebreide bronnenlijst/APA 7-vermelding zie bibliografie.
 - GeeksforGeeks. (2023, Februari 2). Flask HTTP methods, handle GET & POST requests. Retrieved from GeeksforGeeks.org: https://www.geeksforgeeks.org/flask-http-methods-handle-get-post-requests/
 - GeeksforGeeks. (2024, Juli 31). How to Center a Flex Container but Left-Align Flex Items? Retrieved from GeeksforGeeks.org: https://www.geeksforgeeks.org/how-to-center-a-flex-container-but-left-align-flex-items/#using-margin-auto-on-the-flex-container
 - GeeksForGeeks. (2024, januari 5). How to Set Checkboxes Readonly in HTML ? Retrieved from www.geeksforgeeks.org: https://www.geeksforgeeks.org/how-to-set-checkboxes-readonly-in-html/
+- Haim, I. (2024, mei 14). How To Center A Table In CSS / HTML. Retrieved from elementor.com: https://elementor.com/blog/how-to-center-a-table-in-css/#:~:text=Method%201%3A%20margin%3A%200%20auto%3B,-This%20is%20the&text=Set%20Margins%20to%20Auto%3A%20By,the%20table%20into%20the%20center. 
 - Jibin. (2017, Juni 2). select required not working. Retrieved from Stackoverflow: https://stackoverflow.com/questions/44322824/select-required-not-working
 - kasperhj. (2013, Januari 19). Common folder/file structure in Flask app [closed]. Retrieved from Stackoverflow: https://stackoverflow.com/questions/14415500/common-folder-file-structure-in-flask-app
 - Kimmy. (2013, Juni 26). How to debug a Flask app. Retrieved from Stackoverflow: https://stackoverflow.com/questions/17309889/how-to-debug-a-flask-app
 - Sheldon. (2021, November 9). How do I determine if the row has been inserted? Retrieved from Stackoverflow: https://stackoverflow.com/questions/13313694/how-do-i-determine-if-the-row-has-been-inserted
 - Tagliaferri, L. (2021, Augustus 20). How To Use *args and **kwargs in Python 3. Retrieved from digitalocean.com: https://www.digitalocean.com/community/tutorials/how-to-use-args-and-kwargs-in-python-3
+- w3schools. (2025). CSS Layout - The position Property. Retrieved from w3schools.com: https://www.w3schools.com/css/css_positioning.asp
+- w3schools.com. (2025). How TO - Custom Scrollbar. Retrieved from w3schools.com: https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp
