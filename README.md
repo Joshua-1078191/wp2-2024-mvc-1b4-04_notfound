@@ -8,13 +8,40 @@ Dit is de starter repository voor WP2 2024. Deze bevat:
 - De [database tool](lib%2Fdatabase%2Fdatabase_generator.py) om een nieuwe database mee te genereren. Deze is vrij aan te passen.
 
 # Installatie requirements
-Installeer python (3.12), flask (3.1.0), cryptography (44.0.0), openai (1.57.4) en ollama (0.4.4)
+
+#### Stap 1: Installeer Python 3.12 (indien nog niet geïnstalleerd).
+Ga naar de officiële Python-website en download de installer voor Python 3.12:
+https://www.python.org/downloads/release/python-3120/
+
+Zorg ervoor dat je de optie 'Add Python to PATH' aanvinkt tijdens de installatie, zodat je Python vanuit de commandoregel kunt gebruiken.
+
+#### Stap 2: Maak een locale kloon van de repository aan.
+```shell
+git clone https://github.com/Rac-Software-Development/wp2-2024-mvc-1b4-04_notfound.git
+```
+
+#### Stap 3: Navigeer naar de map van de gekloonde repository.
+```shell
+cd wp2-2024-mvc-1b4-04_notfound
+```
+
+#### Stap 4: Maak een virtuele omgeving aan om de benodigde Python-pakketten geïsoleerd te installeren.
+```shell
+python -m venv .venv
+```
+
+#### Stap 5: Activeer de virtuele omgeving.
+```shell
+.\.venv\Scripts\activate
+```
+
+#### Stap 6: Installeer flask (3.1.0), cryptography (44.0.0), openai (1.57.4) en ollama (0.4.4)
 ```shell
 pip install -r requirements.txt
 ```
 
 # Applicatie opstarten
-De applicatie start op met het volgende commando:
+Als je in de virtual environment zit kan je applicatie start op met het volgende commando:
 ```shell
 flask run
 ```
