@@ -326,6 +326,20 @@ def prompts_view():
     prompts = prompts_model.prompt_all_view()
     return render_template('prompts/prompts_view.html.jinja', prompts=prompts)
 
+@app.route('/prompts/copy/<int:prompt_id>', methods=['POST'])
+def copy_prompt(prompt_id):
+    if result := check_login(): return result
+
+    prompts_model = Prompts(database_path)
+    new_prompt_id = prompts_model.copy_prompt(prompt_id)
+
+    if new_prompt_id:
+        flash('Prompt successfully copied!', 'success')
+    else:
+        flash('Failed to copy prompt.', 'error')
+
+    return redirect(url_for('prompts_view'))
+
 @app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result

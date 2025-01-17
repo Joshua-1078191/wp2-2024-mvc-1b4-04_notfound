@@ -41,16 +41,13 @@
                                 <td>{{ prompt.questions_correct }}</td>
                                 <td>{{ prompt.date_created }}</td>
                                 <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ url_for('edit_prompt', prompt_id=prompt.id) }}" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ url_for('delete_prompt', prompt_id=prompt.id) }}" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze prompt wilt verwijderen?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <a href="{{ url_for('edit_prompt', prompt_id=prompt.id) }}" class="btn btn-warning">Edit</a>
+                                    <form action="{{ url_for('copy_prompt', prompt_id=prompt.id) }}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-secondary">Copy</button>
+                                    </form>
+                                    <form action="{{ url_for('delete_prompt', prompt_id=prompt.id) }}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         {% endfor %}

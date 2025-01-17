@@ -171,3 +171,31 @@ class Prompts:
         cursor.close()
 
         return [{"id": user["user_id"], "name": user["display_name"]} for user in users]
+
+    def copy_prompt(self, prompt_id: int):
+        con = sqlite3.connect(self.db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+
+        # Fetch the existing prompt
+        cursor.execute("""
+            SELECT user_id, prompt_name, prompt, questions_count, questions_correct
+            FROM prompts WHERE prompts_id = ?
+        """, (prompt_id,))
+        prompt_data = cursor.fetchone()
+
+        if not prompt_data:
+            cursor.close()
+            return None
+
+        # Insert a new prompt with the same data
+        cursor.execute("""
+            INSERT INTO prompts (user_id, prompt_name, prompt, questions_count, questions_correct)
+            VALUES (?, ?, ?, ?, ?)
+        """, (prompt_data['user_id'], prompt_data['prompt_name'], prompt_data['prompt'],
+              prompt_data['questions_count'], prompt_data['questions_correct']))
+
+        con.commit()
+        new_prompt_id = cursor.lastrowid
+        cursor.close()
+        return new_prompt_id
