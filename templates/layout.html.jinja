@@ -9,14 +9,18 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/font-awesome.min.css') }}">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic&amp;display=swap">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     {% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
     {% include "navigation.html.jinja" %}
-    <main id="content" class="flex-grow-1 d-flex bg-light">
+    <main id="content" class="flex-grow-1 d-flex">
         {% block content %}
         {% endblock %}
     </main>
+    {% block footer %}
     {% include "footer.html.jinja" %}
+    {% endblock %}
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 </html>

@@ -85,6 +85,27 @@ class Users:
             return False
         return True
 
+    def delete(self, target_id:int):
+        conn, cursor = connect_database(self.database_path)
+
+        try:
+            cursor.execute(
+                """
+                DELETE FROM users 
+                WHERE users.user_id = ?
+                """,
+                (target_id,)
+            )
+
+            conn.commit()
+            rows_affected = conn.rowcount
+            conn.close()
+
+            return rows_affected > 0
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+            return False
+
     def login(self, email: str, password: str) -> dict | None:
         conn, cursor = connect_database(self.database_path)
 

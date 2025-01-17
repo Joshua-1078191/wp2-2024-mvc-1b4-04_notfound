@@ -1,9 +1,13 @@
 import difflib
 import json
+import os
+from io import BytesIO
 from json import JSONDecodeError
+from platform import libc_ver
 
-from flask import Flask, render_template, request, redirect, url_for, session, Response, flash
-from src.models.user import User
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, abort
+
+import lib.database.database_generator
 from src.models.users import Users
 from src.models.question import Questions
 from src.models.prompts import Prompts
@@ -14,14 +18,35 @@ app = Flask(__name__)
 app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
 
-def check_login():
+def init_db():
+
+    # Create the directory if it doesn't exist
+    database_dir = os.path.dirname(database_path)
+    if not os.path.exists(database_dir):
+        os.makedirs(database_dir)
+        print(f"Created directory: {database_dir}")
+
+    # Generate the database if it doesn't exist
+    if not os.path.isfile(database_path):
+        print("Initializing database...")
+        database_generator = lib.database.database_generator.WP2DatabaseGenerator(
+            database_path, overwrite=False, initial_data=True
+        )
+        database_generator.generate_database()
+
+with app.app_context():
+    init_db()
+
+def check_login(require_admin = False):
     if 'user_id' not in session:
         return redirect('/index/login')
+    if require_admin and session.get('is_admin'):
+        abort(401)
     return None
 
 @app.route('/')
 def main():
-    return render_template("index-1.html.jinja")
+    return render_template("homepage.jinja")
 
 @app.route('/index/login', methods=['GET', 'POST'])
 def login_route():
@@ -36,54 +61,23 @@ def login_route():
             flash('Please enter both email and password', 'error')
             return render_template("login.html.jinja")
 
-        # First check if email exists
-        user = User.get_by_email(email)
+        users_model = Users(database_path)
+
+        # Try to log in
+        user = users_model.login(email, password) #Users.get_by_email(email)
+
+        # If login failed
         if not user:
-            flash('No account found with this email', 'error')
+            flash('Email of wachtwoord is incorrect', 'error')
             return render_template("login.html.jinja")
 
-        # Then check if password matches
-        user = User.get_by_credentials(email, password)
-        if not user:
-            flash('Incorrect password', 'error')
-            return render_template("login.html.jinja")
-
-        session['user_id'] = user.user_id
-        session['display_name'] = user.display_name
-        session['is_admin'] = user.is_admin
+        session['user_id'] = user['id']
+        session['display_name'] = user['name']
+        session['is_admin'] = user['isAdmin']
         return redirect('/')
 
     return render_template("login.html.jinja")
 
-@app.route('/index/sign_up', methods=['GET', 'POST'])
-def sign_up_route():
-    if 'user_id' in session:
-        return redirect('/')
-
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form.get('confirm_password')
-
-        # Validate passwords match
-        if password != confirm_password:
-            flash('Passwords do not match', 'error')
-            return render_template("sign_up.html.jinja")
-
-        # Check if email already exists
-        if User.get_by_email(email):
-            flash('Email already registered', 'error')
-            return render_template("sign_up.html.jinja")
-
-        # Create new user
-        if User.create_user(email, password):
-            flash('Account created successfully! Please log in.', 'success')
-            return redirect('/index/login')
-        else:
-            flash('An error occurred while creating your account', 'error')
-            return render_template("sign_up.html.jinja")
-
-    return render_template("sign_up.html.jinja")
 
 @app.route('/index/logout')
 def logout_route():
@@ -125,8 +119,35 @@ def import_questions():
 
     return render_template("questions/import_questions.html.jinja")
 
+@app.route('/export', methods=['GET'])
+def export_questions():
+    questions_model = Questions(database_path)
+
+    export_all = request.args.get('all', False)
+    if export_all:
+        questions = questions_model.export_all_questions()
+    else:
+        questions = questions_model.export_questions()
+
+    if questions and len(questions) > 0:
+        converted = [
+            {
+                "question_id": question.get("questions_id"),
+                "question": question.get("question"),
+                "answer": question.get("answer"),
+                "vak": question.get("subject"),
+                "onderwijsniveau": question.get("education"),
+                "leerjaar": question.get("grade"),
+            } for question in questions]
+
+        return send_file(BytesIO(bytes(json.dumps(converted), 'utf-8')), as_attachment=True, download_name="questions.json")
+
+    flash("Failed to export database")
+    return redirect(url_for('toetsvragen_view'))
+
 @app.route('/index/<question_id>', methods=['GET', 'POST'])
 def index_questions_prompt(question_id:int|str):
+
     if request.method == 'POST':
         prompt_id = request.form.get('selectedPrompt')
         if prompt_id:
@@ -134,39 +155,22 @@ def index_questions_prompt(question_id:int|str):
         flash("Invalid prompt")
         return redirect(request.url)
 
-    #question = {
-    #    'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-    #    'answer': "Glucose en zuurstof, per onderdeel 1 punt",
-    #    'subject': "biologie",
-    #    'education': "havo",
-    #    'grade': 3,
-    #}
-
     question_model = Questions(database_path)
     question = question_model.get_question(question_id)
 
     prompt_model = Prompts(database_path)
-    prompts = prompt_model.prompt_all_view()
-
-    #
-    #prompts = [
-    #    {
-    #        'id': 0,
-    #        'name': "Één van de prompts"
-    #    },
-    #    {
-    #        'id': 1,
-    #        'name': "Een andere prompt die ook bestaat"
-    #    },
-    #]
+    prompts = prompt_model.get_available_prompts()
 
     return render_template("questions/index_questions_prompt.html.jinja", question=question, prompts=prompts)
 
 @app.route('/index/<question_id>/<int:prompt_id>', methods=['GET', 'POST'])
 def index_questions_taxonomy(question_id:int|str, prompt_id:int):
-
     question_model = Questions(database_path)
     question = question_model.get_question(question_id)
+
+    if not question:
+        flash('Question does not exist', 'error')
+        return redirect(url_for('toetsvragen_view'))
 
     if question['prompts_id']:
         flash('Question already has selection', 'error')
@@ -174,20 +178,21 @@ def index_questions_taxonomy(question_id:int|str, prompt_id:int):
 
     prompt_model = Prompts(database_path)
 
+    prompt = prompt_model.get_prompt(prompt_id)
+    if not prompt:
+        flash('Prompt does not exist', 'error')
+        return redirect(url_for('toetsvragen_view'))
+
+    if prompt['archived']:
+        flash('Prompt is archived', 'error')
+        return redirect(url_for('toetsvragen_view'))
+
     if request.method == 'POST':
         question_model.edit_question(question_id, taxonomy_id=request.form.get('taxonomy'))
         unchanged = request.form.get('autoSuggestion') == request.form.get('taxonomy')
         success = prompt_model.add_prompt_question_result(prompt_id, unchanged)
         flash('', 'success' if success else 'error')
         return redirect(url_for('toetsvragen_view'))
-
-    #question = {
-    #    'question': "Welke twee stoffen ontstaan bij Fotosynthese?",
-    #    'answer': "",
-    #    'subject': "biologie",
-    #    'education': "havo",
-    #    'grade': 3,
-    #}
 
     if not question:
         return redirect(url_for('toetsvragen_view'))
@@ -249,17 +254,20 @@ def edit_prompt(prompt_id):
     prompts_model = Prompts(database_path)
 
     if request.method == 'POST':
-        success = prompts_model.edit_prompt(
-            prompts_id=prompt_id,
-            user_id=int(request.form['user_id']),
-            prompt_name=request.form['prompt_name'],
-            prompt=request.form['prompt'],
-            questions_count=int(request.form['questions_count']),
-            questions_correct=int(request.form['questions_correct'])
-        )
-        if success:
-            flash('Prompt succesvol bijgewerkt!', 'success')
-            return redirect(url_for('prompts_view'))
+
+        model = prompts_model.get_prompt(prompt_id)
+        if session['is_admin'] or session['user_id'] == model['user_id']:
+            success = prompts_model.edit_prompt(
+                prompts_id=prompt_id,
+                user_id=int(request.form.get('user_id')) if session['is_admin'] else None,
+                prompt_name=request.form.get('prompt_name'),
+                prompt=request.form.get('prompt') if model['questions_count'] == 0 else None,
+                questions_count=int(request.form.get('questions_count')),
+                questions_correct=int(request.form.get('questions_correct'))
+            )
+            if success:
+                flash('Prompt succesvol bijgewerkt!', 'success')
+                return redirect(url_for('prompts_view'))
         flash('Er is een fout opgetreden bij het bijwerken van de prompt.', 'error')
         return redirect(url_for('prompts_view'))
 
@@ -269,13 +277,14 @@ def edit_prompt(prompt_id):
         return redirect(url_for('prompts_view'))
 
     users = prompts_model.get_all_users()
-    return render_template('prompts/edit_prompt.html.jinja', prompt=prompt, users=users)
+    return render_template('prompts/edit_prompt.html.jinja', prompt=prompt, users=users, is_admin=session['is_admin'])
 
 @app.route('/prompts/delete/<int:prompt_id>', methods=['POST'])
 def delete_prompt(prompt_id):
     if result := check_login(): return result
 
     prompts_model = Prompts(database_path)
+
     if prompts_model.delete_prompt(prompt_id):
         flash('Prompt succesvol verwijderd!', 'success')
     else:
@@ -285,7 +294,21 @@ def delete_prompt(prompt_id):
 @app.route('/prompts/prompt_details/<int:prompt_id>', methods=['GET', 'POST'])
 def prompt_details(prompt_id:int):
     prompt_model = Prompts(database_path)
-    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_one_prompt(prompt_id))
+    return render_template("prompts/prompt_details.html.jinja", prompt = prompt_model.get_prompt(prompt_id))
+
+@app.route('/prompts/archive/<int:prompt_id>', methods=['POST'])
+def archive_prompt(prompt_id):
+    if result := check_login(): return result
+
+    prompts_model = Prompts(database_path)
+
+    prompt = prompts_model.get_prompt(prompt_id)
+    set_archived = not bool(prompt['archived'])
+    if prompt is not None and prompts_model.edit_prompt(prompt_id, archived=set_archived):
+        flash('Prompt succesvol gearchiveerd!' if set_archived else 'Prompt succesvol hersteld!', 'success')
+    else:
+        flash('Er is een fout opgetreden bij het archiveren van de prompt.', 'error')
+    return redirect(url_for('prompts_view'))
 
 @app.route('/prompts/prompts_view', methods=['GET', 'POST'])
 @app.route('/prompts')
@@ -293,20 +316,50 @@ def prompts_view():
     if result := check_login(): return result
     prompt_models = Prompts(database_path)
     return render_template("prompts/prompts_view.html.jinja", prompts = prompt_models.prompt_all_view())
-    if result := check_login(): return result
-    prompts_model = Prompts(database_path)
-    prompts = prompts_model.prompt_all_view()
-    return render_template('prompts/prompts_view.html.jinja', prompts=prompts)
 
-@app.route('/toetsvragen_view')
+@app.route('/prompts/copy/<int:prompt_id>', methods=['POST'])
+def copy_prompt(prompt_id):
+    if result := check_login(): return result
+
+    prompts_model = Prompts(database_path)
+    new_prompt_id = prompts_model.copy_prompt(prompt_id)
+
+    if new_prompt_id:
+        flash('Prompt successfully copied!', 'success')
+    else:
+        flash('Failed to copy prompt.', 'error')
+
+@app.route('/toetsvragen_view', methods=['GET', 'POST'])
 def toetsvragen_view():
     if result := check_login(): return result
+
     questions_model = Questions(database_path)
-    questions = questions_model.questions_all_view()
 
     taxonomy_model = Taxonomy(database_path)
-    taxonomies = taxonomy_model.get_all_taxonomies()
-    return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
+    if request.method == 'GET':
+        questions = questions_model.questions_all_view()
+        taxonomies = taxonomy_model.get_all_taxonomies()
+        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
+
+    if request.method == 'POST':
+        question_filter = request.form.get('question_filter', '')
+        subject_filter = request.form.get('subject_filter', '')
+        school_grade_filter = request.form.get('school_grade_filter', '')
+
+        questions = questions_model.get_filtered_questions(question_filter, subject_filter, school_grade_filter)
+
+        taxonomy_id = None
+
+        for question in questions:
+            if 'taxonomy_id' in question and question['taxonomy_id'] is not None:
+                taxonomy_id = question['taxonomy_id']
+
+        if taxonomy_id is not None:
+            taxonomies = taxonomy_model.get_filtered_taxonomies(taxonomy_id=taxonomy_id)
+        else:
+            taxonomies = []  # or handle this case as needed
+
+        return render_template('prompts/toetsvragen_view.html.jinja', questions=questions, taxonomies=taxonomies)
 
 @app.route('/toetsvragen/add', methods=['GET', 'POST'])
 def add_question():
@@ -318,9 +371,9 @@ def add_question():
             subject=request.form['subject'],
             grade=request.form['grade'],
             education=request.form['education'],
-            prompts_id=request.form['prompts_id'],
+            prompts_id=int(request.form['prompts_id']),
             answer=request.form['answer'],
-            taxonomy_id=request.form['taxonomy_id']
+            taxonomy_id=int(request.form['taxonomy_id'])
         )
         if question_id:
             flash('Vraag succesvol toegevoegd!', 'success')
@@ -347,9 +400,9 @@ def edit_question(question_id):
             subject=request.form['subject'],
             grade=request.form['grade'],
             education=request.form['education'],
-            prompts_id=request.form['prompts_id'],
+            prompts_id=int(request.form['prompts_id']),
             answer=request.form['answer'],
-            taxonomy_id=request.form['taxonomy_id']
+            taxonomy_id=int(request.form['taxonomy_id'])
         )
         if success:
             flash('Vraag succesvol bijgewerkt!', 'success')
@@ -391,13 +444,68 @@ def lijst_redacteuren():
 @app.route('/redacteurs/nieuwe_redacteur', methods=['GET', 'POST'])
 def nieuwe_redacteuren():
     if result := check_login(): return result
+
+    users_model = Users(database_path)
+
+    if request.method == 'POST':
+        nieuwe_redacteur_id = users_model.register(
+            email=request.form.get('email'),
+            password=request.form.get('password'),
+            username=request.form.get('name'),
+            is_admin=bool(request.form.get('is_admin', False))
+        )
+        if nieuwe_redacteur_id:
+            flash('Redacteur succesvol toegevoegd!', 'success')
+            return redirect(url_for('lijst_redacteuren'))
+
     return render_template("redacteurs/nieuwe_redacteur.html.jinja")
 
 @app.route('/redacteurs/redacteur_wijzigen/<int:id>', methods=['GET', 'POST'])
 def redacteur_wijzigen(id):
     if result := check_login(): return result
+
     users = Users(database_path)
-    return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=users.get(id))
+    editor = users.get(id)
+
+    if not editor:
+        flash('De opgegeven redacteur bestaat niet.', 'danger')
+        return redirect(url_for('lijst_redacteuren'))
+
+    editor_id = editor['id']
+    is_admin = session.get('is_admin', False)
+    current_user_id = session.get('user_id')
+
+    if editor_id != current_user_id and not is_admin:
+        flash('Je kunt alleen je eigen gegevens wijzigen.', 'danger')
+        return redirect(url_for('lijst_redacteuren'))
+
+    if request.method == 'POST':
+        if 'delete' in request.form and is_admin:
+            user_deleted = users.delete(id)
+            if user_deleted:
+                flash('Redacteur succesvol verwijderd. Vragen beoordeeld door deze redacteur blijven bestaan.', 'success')
+            else:
+                flash('Redacteur kon niet worden verwijderd.', 'danger')
+        else:
+            gegevens_wijzigen = users.update(
+                target_id=id,
+                email=request.form.get('email'),
+                password=request.form.get('password'),
+                username=request.form.get('name'),
+                is_admin=bool(request.form.get('is_admin', False)) if is_admin else editor['isAdmin']
+            )
+            if gegevens_wijzigen:
+                flash('Redacteurs gegevens succesvol gewijzigd!', 'success')
+
+        return redirect(url_for('lijst_redacteuren'))  # Terug naar de lijst van redacteurs
+
+    return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=editor)
+
+
+@app.route('/style_guide')
+def style_guide():
+    return render_template("example/style_guide.html.jinja")
+
 
 if __name__ == '__main__':
     app.run(debug=True)

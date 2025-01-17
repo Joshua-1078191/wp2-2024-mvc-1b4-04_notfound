@@ -2,6 +2,8 @@ import sqlite3
 from pathlib import Path
 from venv import create
 
+from src.utils.password import generate_salt, hash_password
+
 
 class WP2DatabaseGenerator:
     def __init__(self, database_file, overwrite=False, initial_data=False):
@@ -45,6 +47,7 @@ class WP2DatabaseGenerator:
             questions_count INTEGER NOT NULL,
             questions_correct INTEGER NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+            archived BOOLEAN DEFAULT FALSE,
             FOREIGN KEY (user_id) REFERENCES users(user_id)            
             );
         """
@@ -84,12 +87,19 @@ class WP2DatabaseGenerator:
         self.__execute_transaction_statement(create_statement)
         print("✅ Questions table created")
 
+    def generate_user_data(self, email: str, password: str, name: str, is_admin: bool):
+        salt = generate_salt()
+        password = hash_password(password, salt)
+
+        return email, password, salt, name, 1 if is_admin else 0
+
     def insert_admin_user(self):
         users = [
-            ( "krugw@hr.nl", "geheim", "Gerard van Kruining", 1),
-            ( "vried@hr.nl", "geheimer", "Diederik de Vries", 0),
+            self.generate_user_data("krugw@hr.nl","geheim", "Gerard van Kruining", True),
+            self.generate_user_data("vried@hr.nl", "geheimer", "Diederik de Vries", False),
+            self.generate_user_data("admin@mail.com", "admin", "admin", True),
         ]
-        insert_statement = "INSERT INTO users (login, password, display_name, is_admin) VALUES (?, ?, ?, ?);"
+        insert_statement = "INSERT INTO users (login, password, salt, display_name, is_admin) VALUES (?, ?, ?, ?, ?);"
         self.__execute_many_transaction_statement(insert_statement, users)
         print("✅ Default teachers / users created")
 
@@ -142,7 +152,6 @@ class WP2DatabaseGenerator:
                 raise ValueError(
                     f"Could not create database file {self.database_file} due to error {e}"
                 )
-
 
 if __name__ == "__main__":
     my_path = Path(__file__).parent.resolve()

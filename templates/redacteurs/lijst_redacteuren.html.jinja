@@ -2,44 +2,48 @@
 {% block title %}Gegevens redacteur wijzigen{% endblock %}
 {% block content %}
 
-<div class="container">
-    <div class="position-relative">
-        <div class="position-absolute top-0 start-0"></div>
-        <h2>Redacteuren</h2>
-    </div>
-    <table class="table table-hover table-bordered table-striped" style="width:80%">
-        <thead>
-        <tr>
-            <th class="col">Redacteuren</th>
-            <th scope="col">Loginnaam</th>
-            <th scope="col">Admin</th>
-            <th scope="col">Acties</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for editor in editors %}
-        <tr>
-            <td scope="row">{{editor.name}}</td>
-            <td>{{editor.email}}</td>
-            <td>
-                <div class="form-check form-switch">
-                    <input type="checkbox" {% if editor.isAdmin %} checked {% endif %} disabled
-                           id="flexSwitchCheckDefault">
-                </div>
-            </td>
-            <td><a href="redacteur_wijzigen/{{editor.id}}" class="btn btn-primary">wijzig</a></td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="button-container">
-        <a href="redacteur_wijzigen"> <!--hier moet nog komen de inloggegevens van de gebruiker-->
-            <button class="btn btn-primary me-md-2" type="button">Wijzig eigen gegevens</button>
-        </a>
-        <a href="nieuwe_redacteur">
-            <button class="btn btn-primary" type="button">Nieuwe redacteur</button>
-        </a>
+<div class="pt-3 container d-flex flex-column">
+    <h1 class="fw-light pb-3">Redacteuren</h1>
+
+    <div class="mb-4 px-4 pt-3 border border-light-subtle bg-light-subtle rounded-3">
+
+        <div class="d-flex flex-row gap-4">
+
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="row">Redacteuren</th>
+                    <th scope="row">Loginnaam</th>
+                    <th scope="row">Admin</th>
+                    <th scope="row">Acties</th>
+                </tr>
+                </thead>
+                {% for editor in editors %}
+                <tr>
+                    <td>{{editor.name}}</td>
+                    <td>{{editor.email}}</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" {% if editor.isAdmin %} checked {% endif %} disabled
+                                   id="flexSwitchCheckDefault">
+                        </div>
+                    </td>
+                    <td><a href="redacteur_wijzigen/{{editor.id}}" class="btn btn-primary">wijzig</a></td>
+                </tr>
+                {% endfor %}
+                {% if 'user_id' in session %}
+            </table>
+            <a href="{{ url_for('redacteur_wijzigen', id=session['user_id']) }}">
+                <!--hier moet nog komen de inloggegevens van de gebruiker-->
+                <button class="btn btn-primary me-md-2" type="button">Wijzig eigen gegevens</button>
+            </a>
+            {% if session.get('is_admin') %}
+            <a href="{{ url_for('nieuwe_redacteuren') }}">
+                <button class="btn btn-primary" type="button">Nieuwe redacteur</button>
+            </a>
+            {% endif %}
+            {% endif %}
+        </div>
     </div>
 </div>
-
 {% endblock %}

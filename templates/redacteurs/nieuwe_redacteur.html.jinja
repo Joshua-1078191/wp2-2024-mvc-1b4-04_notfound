@@ -2,40 +2,35 @@
 {% block title %}Nieuwe redacteur{% endblock %}
 {% block content %}
 
-<div class="container">
-    <div class="row pb-3">
-        <h2>Nieuwe redacteur</h2>
+<div class="pt-3 container d-flex flex-column">
+    <h1 class="fw-light pb-3">Nieuwe redacteur</h1>
+
+    <div class="d-flex gap-3">
+        <div class="mb-4 px-4 py-3 col-4 border border-light-subtle bg-light-subtle rounded-3">
+            <form method="POST" action="{{url_for('nieuwe_redacteuren') }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Naam</label>
+                    <input required="text" type="text" class="form-control" id="name" name="name">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input required="email" type="email" class="form-control" id="email" name="email">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Wachtwoord</label>
+                    <input required="password" type="password" class="form-control" id="password" name="password">
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Is admin?</label>
+                        <input class="form-check-input" name="is_admin" type="checkbox" role="switch"
+                               id="flexSwitchCheckDefault">
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Opslaan</button>
+            </form>
+        </div>
     </div>
-    <form>
-        <div class="row mb-3">
-            <label for="name" class="col-sm-2 col-form-label">Naam</label>
-            <div class="col-sm-10">
-                <input type="text" id="name" name="name">
-            </div>
-        </div>
-        <div class="row pb-3">
-            <label for="email" class="col-sm-2 col-form-label">Email/login</label>
-            <div class="col-sm-10">
-                <input type="email" id="email" name="email">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="password" class="col-sm-2 col-form-label">Wachtwoord</label>
-            <div class="col-sm-10">
-                <input type="password" id="password" name="password">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="form-check form-switch">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Is admin?</label>
-                <input class="form-check-input" type="checkbox" role="switch"
-                       id="flexSwitchCheckDefault">
-            </div>
-        </div>
-        <div class="button-container ">
-            <input class="btn btn-primary me-md-2" type="submit" value="Opslaan">
-        </div>
-    </form>
 </div>
 
 {% endblock %}
