@@ -7,32 +7,35 @@
 
     <div class="d-flex gap-3">
         <div class="mb-4 px-4 py-3 col-4 border border-light-subtle bg-light-subtle rounded-3">
-            <form method="POST" action="{{ url_for('redacteur_wijzigen') }}">
+            <form method="POST" action="{{ url_for('redacteur_wijzigen', id=editor.id) }}">
                 <div class="mb-3">
                     <label for="name" class="form-label">Naam</label>
-                    <input type="text" class="form-control" id="name" value="{{ editor.name }}" name="name">
+                    <input required="text" type="text" class="form-control" id="name" value="{{ editor.name }}" name="name">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="col-sm-2 col-form-label">Email/login</label>
-                    <input type="email" class="form-control" id="email" value="{{ editor.email }}" name="email">
+                    <input required="email" type="email" class="form-control" id="email" value="{{ editor.email }}" name="email">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="col-sm-2 col-form-label">Wachtwoord</label>
-                    <input type="password" class="form-control" id="password" name="password">
+                    <input required="password" type="password" class="form-control" id="password" name="password">
                 </div>
                 <div class="mb-3">
                     <div class="form-check form-switch">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Is admin?</label>
-                        <input class="form-check-input" name="is_admin" type="checkbox" role="switch" {% if editor.isAdmin %} checked {%
+                        <input class="form-check-input" name="is_admin" type="checkbox" role="switch" {% if
+                               editor.isAdmin %} checked {%
                                endif
                                %} id="flexSwitchCheckDefault">
                     </div>
                 </div>
-                <div class="button-container">
-                    <!--<div class="d-grid gap-2 d-md-flex justify-content-md-end">-->
-                    <input class="btn btn-primary me-md-2" type="submit" value="Opslaan">
-                    <input class="btn btn-primary" type="submit" value="Verwijder">
-                </div>
+                <button class="btn btn-primary" type="submit">Opslaan</button>
+            </form>
+
+            <form method="POST" action="{{ url_for('redacteur_wijzigen', id=editor.id) }}"
+                  onsubmit="return confirm('Weet je zeker dat je deze redacteur wilt verwijderen? Vragen beoordeeld door deze redacteur blijven bestaan.')">
+                <input type="hidden" name="delete" value="true">
+                <button class="btn btn-primary" type="submit">Verwijder</button>
             </form>
         </div>
     </div>

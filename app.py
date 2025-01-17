@@ -440,19 +440,37 @@ def redacteur_wijzigen(id):
     if result := check_login(): return result
 
     users = Users(database_path)
+    questions = Questions(database_path)
 
     if request.method == 'POST':
-        gegevens_wijzigen = users.update(
-            email=request.form.get('email'),
-            password=request.form.get('password'),
-            username=request.form.get('name'),
-            is_admin=bool(request.form.get('is_admin', False))
-        )
-        if gegevens_wijzigen:
-            flash('Redacteurs gegevens succesvol gewijzigd!', 'success')
-            return redirect(url_for('lijst_redacteuren'))
+        if 'delete' in request.form:
+            linked_questions = questions.get_by_editor_id(id)
+
+            if linked_questions:
+                for question in linked_questions:
+                    questions.update(question['id'], is_reviewed=True)
+
+            user_deleted = users.delete(id)
+            if user_deleted:
+                flash('Redacteur succesvol verwijderd. Vragen beoordeeld door deze redacteur blijven bestaan.', 'success')
+                return redirect(url_for('lijst_redacteuren'))
+            else:
+                flash('Redacteur kon niet worden verwijderd.', 'danger')
+
+        else:
+            gegevens_wijzigen = users.update(
+                target_id=id,
+                email=request.form.get('email'),
+                password=request.form.get('password'),
+                username=request.form.get('name'),
+                is_admin=bool(request.form.get('is_admin', False))
+            )
+            if gegevens_wijzigen:
+                flash('Redacteurs gegevens succesvol gewijzigd!', 'success')
+                return redirect(url_for('lijst_redacteuren'))
 
     return render_template("redacteurs/redacteur_wijzigen.html.jinja", editor=users.get(id))
+
 
 @app.route('/style_guide')
 def style_guide():
