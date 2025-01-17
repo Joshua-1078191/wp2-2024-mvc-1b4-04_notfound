@@ -234,6 +234,9 @@ class Questions:
 
         SELECT *, prompts.prompt_name
         FROM questions
+        LEFT JOIN prompts ON questions.prompts_id = prompts.prompts_id 
+        WHERE questions.question LIKE ? AND questions.subject LIKE ?
+        AND questions.grade LIKE ?;
         LEFT JOIN prompts ON questions.prompts_id = prompts.prompts_id
         WHERE questions.question like '%?%' AND questions.subject like '%?%'
         AND questions.grade LIKE '%?%';
