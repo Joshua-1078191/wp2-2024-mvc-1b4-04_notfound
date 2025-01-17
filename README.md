@@ -13,13 +13,26 @@ Installeer python (3.12), flask (3.1.0), cryptography (44.0.0), openai (1.57.4) 
 pip install -r requirements.txt
 ```
 
-# applicatie opstarten
+# Applicatie opstarten
 De applicatie start op met het volgende commando:
 ```shell
 flask run
 ```
 
-# coding standerds/conventions:
+# Ontwerpdocumentatie
+## Visuele ontwerpdocumentatie:
+Aan het begin van WP2 hebben we wireframes gemaakt met Balsamiq o.b.v. de voorbeelden uit de casus. We hebben daarna deze gebruikt om 'bare-bones' HTML pagina's te maken. Toen we begonnen met het stijlen van de pagina's liepen we al snel tegen problemen aan. We gebruikten namelijk CSS en dit veroorzaakte verschillende problemen. We hebben daarom beslist om over te stappen op Bootstrap; Een flexibele en krachtige frontend library. Hiermee ging het stijlen van de pagina's een stuk sneller en zag het er een stuk beter uit. 
+
+Omdat we merkten dat de front-end nog niet helemaal gelijk was op elke pagina zijn we aan het eind van sprint 3 begonnen met het maken van een reference page met Bootstrap. Hier hebben we alle veel gebruikte HTML elementen uitgewerkt en met bootstrap gestyled naar de website van Test-correct.
+
+## Technische ontwerpdocumentatie
+We hebben bij ons project gebruik gemaakt van de CRUD-model om het opslaan, aanmaken, wijzigen en verwijderen van data te faciliteren. We hebben die functies als volgt verdeelt:
+- Templates/static: Hier staan alle HTML, CSS en overige bestanden die voor het uiterlijke van de pagina's zorgen (frontend). Variabelen en de vaste layout (d.m.v. inheritance/templating) zijn met Jinja in de HTML files verwerkt.
+- src: In deze map staan alle models die de verbinding leggen tussen de app.py en de database. Deze models zijn met python geschreven en maken gebruik van de SQLite3 package. Deze maakt verbinding met de database (in /lib) en stuurt queries (o.b.v. data van app.py) naar de database en stuurt de data daarna weer terug.
+
+In de app.py file komen al deze verschillende onderdelen samen. We hebben hier routes gemaakt voor alle pagina's/functies. Ook hebben we hier alle functies van de models staan die van hieruit de data versturen naar de models of weergeven op de pagina's. We maken hierbij gebruik van de Flask module die ons handige functies biedt zoals render_template, request en url_for.
+
+# Coding standerds/conventions:
 Afspraken jinja template inheritance/bootstrap/css:
 - Gebruik op elke pagina de layout.html.jinja file uit de templates folder. Voeg deze toe met de {% extends .... %}-functie
 - Houd je op elke pagina aan de HTML code standards/conventions:
