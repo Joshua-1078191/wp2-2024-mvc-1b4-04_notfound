@@ -15,7 +15,7 @@ Afspraken jinja template inheritance/bootstrap/css:
      - Schrijf alle HTML binnen de {% block content %}-functie van Jinja
  
 
-Folder structuur
+# Folder structuur
 ```python
 .
 ├── database/  # sqlite database bestand(en)
@@ -25,3 +25,20 @@ Folder structuur
 ├── static/    # Statische bestanden (PNG, JPG, JS, CSS, Ect.)
 └── templates/  # Jinja/HTML bestanden
 ```
+# Bronnenlijst:
+## Joshua
+- 
+## Roos
+- 
+## Jorik
+- 
+## Tobias
+- Readonly checkboxes: ​(GeeksForGeeks, 2024)​
+- Input types: ​(developer.mozilla, 2024)​
+
+P.S. Voor uitgebreide bronnenlijst/APA 7-vermelding zie bibliografie.
+
+# Bibliografie
+- developer.mozilla. (2024, november 1). <input>: The HTML Input element. Opgehaald van www.developer.mozilla.org: https://developer.mozilla.org/en-     US/docs/Web/HTML/Element/input
+
+- GeeksForGeeks. (2024, januari 5). How to Set Checkboxes Readonly in HTML ? Opgehaald van www.geeksforgeeks.org: https://www.geeksforgeeks.org/how-to-set-checkboxes-readonly-in-html/
