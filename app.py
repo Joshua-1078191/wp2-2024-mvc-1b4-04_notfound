@@ -40,7 +40,7 @@ with app.app_context():
 def check_login(require_admin = False):
     if 'user_id' not in session:
         return redirect('/index/login')
-    if require_admin and session.get('is_admin'):
+    if require_admin and not session.get('is_admin'):
         abort(401)
     return None
 
@@ -477,7 +477,7 @@ def lijst_redacteuren():
 
 @app.route('/redacteurs/nieuwe_redacteur', methods=['GET', 'POST'])
 def nieuwe_redacteuren():
-    if result := check_login(): return result
+    if result := check_login(True): return result
 
     users_model = Users(database_path)
 
