@@ -86,6 +86,7 @@ def logout_route():
 
 @app.route('/import', methods=['GET', 'POST'])
 def import_questions():
+    if result := check_login(): return result
     if request.method == 'POST':
         if 'jsonFile' not in request.files:
             flash("No file part")
@@ -121,6 +122,7 @@ def import_questions():
 
 @app.route('/export', methods=['GET'])
 def export_questions():
+    if result := check_login(): return result
     questions_model = Questions(database_path)
 
     export_all = request.args.get('all', False)
