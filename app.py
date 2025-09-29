@@ -40,8 +40,9 @@ with app.app_context():
 def check_login(require_admin = False):
     if 'user_id' not in session:
         return redirect('/index/login')
-    if require_admin and session.get('is_admin'):
-        abort(401)
+    # Require admin when specified; deny access if current user is not admin
+    if require_admin and not session.get('is_admin'):
+        abort(403)
     return None
 
 @app.route('/')
@@ -287,6 +288,15 @@ def delete_prompt(prompt_id):
 
     prompts_model = Prompts(database_path)
 
+    # Authorization: only owner or admin may delete
+    prompt = prompts_model.get_prompt(prompt_id)
+    if not prompt:
+        flash('Prompt niet gevonden.', 'error')
+        return redirect(url_for('prompts_view'))
+
+    if not (session.get('is_admin') or session.get('user_id') == prompt['user_id']):
+        abort(403)
+
     if prompts_model.delete_prompt(prompt_id):
         flash('Prompt succesvol verwijderd!', 'success')
     else:
@@ -305,8 +315,16 @@ def archive_prompt(prompt_id):
     prompts_model = Prompts(database_path)
 
     prompt = prompts_model.get_prompt(prompt_id)
+    if not prompt:
+        flash('Prompt niet gevonden.', 'error')
+        return redirect(url_for('prompts_view'))
+
+    # Authorization: only owner or admin may archive/unarchive
+    if not (session.get('is_admin') or session.get('user_id') == prompt['user_id']):
+        abort(403)
+
     set_archived = not bool(prompt['archived'])
-    if prompt is not None and prompts_model.edit_prompt(prompt_id, archived=set_archived):
+    if prompts_model.edit_prompt(prompt_id, archived=set_archived):
         flash('Prompt succesvol gearchiveerd!' if set_archived else 'Prompt succesvol hersteld!', 'success')
     else:
         flash('Er is een fout opgetreden bij het archiveren van de prompt.', 'error')
