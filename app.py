@@ -19,7 +19,7 @@ app.secret_key = "adwdafawaf"
 database_path = 'databases/database.db'
 
 def init_db():
-
+    
     # Create the directory if it doesn't exist
     database_dir = os.path.dirname(database_path)
     if not os.path.exists(database_dir):
